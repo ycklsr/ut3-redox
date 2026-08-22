@@ -1,0 +1,9 @@
+# macOS
+.DS_Store
+
+# réglages locaux Claude Code (spécifiques à cette machine)
+.claude/settings.local.json
+
+# node
+node_modules/
+test-results/
