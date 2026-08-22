@@ -302,8 +302,12 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 
 ## 9. L'ordre des travaux
 
-1. **Le squelette et le fil** — 17 étapes, navigation linéaire, bascule des
-   gestes, paillasse vide, jetons CSS, thème sombre.
+1. ~~**Le squelette et le fil**~~ — **fait.** 17 étapes, navigation linéaire,
+   bascule des gestes, paillasse à quatre onglets, jetons CSS, thème à trois
+   états. L'**étape 12 est écrite en entier** et sert d'implémentation de
+   référence : chaîne du calcul, fractions empilées, bloc geste, trois points
+   de contrôle, panneau TI-Nspire. Les seize autres étapes portent leur
+   objectif et leur note de chantier.
 2. **Le cours en entier** — chapitres 1 à 3 plus la corrosion, avec les figures
    redessinées : schéma de pile annoté, échelle des E°, diagramme E-pH du fer.
 3. **L'étape 0** — la boîte à outils maths, écrite en supposant zéro acquis.
@@ -318,12 +322,23 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 ## 10. État du dépôt et pièges
 
 - Dépôt **`ycklsr/ut3-redox`**, privé, branche `main`. Les 12 PDF sont versionnés.
-- **Aucune ligne de site n'existe encore.** Le fichier à créer est `redox.html`
-  à la racine.
-- **Tests** : reprendre le dispositif du dépôt ONDES — Playwright + `node --test`,
-  `githooks/pre-commit` branché par `npm install` (script `prepare`),
-  workflow `.github/workflows/tests.yml`. Playwright n'est **pas** encore installé
-  ici : `npm install -D playwright && npx playwright install chromium`.
+- Le site est **`redox.html`** à la racine — fichier unique, aucune dépendance.
+- **Tests** : `npm test` (Playwright + `node --test`, 18 tests dans
+  `tests/squelette.test.mjs`), branchés en `pre-commit` par `npm install`
+  (script `prepare` → `core.hooksPath githooks`) et en CI par
+  `.github/workflows/tests.yml`. Sur une machine neuve :
+  `npm install && npx playwright install chromium`.
+- **Contrôle visuel** : `npm run captures` rend neuf vues clés en clair et en
+  sombre dans un dossier temporaire. À relire à l'œil après toute modification
+  de mise en page — les tests vérifient la mécanique, pas l'allure.
+- Trois gardes automatiques valent la peine d'être connues avant d'écrire :
+  aucune capitalisation forcée sur une formule ni sur « pH » (elle a déjà
+  attrapé un `E-pH` rendu `E-PH`), aucun débordement horizontal de 375 à
+  1280 px, et un contraste d'au moins 4,5:1 sur fond accent dans les deux
+  thèmes.
+- **Une formule ne se coupe pas.** `.f` est en `nowrap` ; quand une expression
+  dépasse, c'est `.formula .e` ou `.link .expr` qui défile, jamais la page.
+  Toute nouvelle expression longue doit être dans un de ces deux conteneurs.
 - ⚠️ **Ne pas toucher au dépôt ONDES** (`../../PHYSIQUE/ONDES`) : une autre
   session Claude y travaille (conversation forkée) et y a du travail non commité.
 - Les maquettes sont aussi publiées comme artefacts consultables :
@@ -335,5 +350,7 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 
 ## 11. Pour reprendre
 
-> Lis `PLAN.md`, ouvre les maquettes de `design/`, et commence par le point 1 de
-> l'ordre des travaux.
+> Lis `PLAN.md`, ouvre `redox.html` à l'étape 12 — c'est l'implémentation de
+> référence, tout le reste s'écrit sur ce modèle — et prends le point 2 de
+> l'ordre des travaux. Chaque étape porte déjà sa note de chantier : elle dit
+> ce qui doit y être écrit.

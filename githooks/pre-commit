@@ -1,0 +1,11 @@
+#!/bin/sh
+# Les tests de non-régression doivent passer avant tout commit.
+# Branché par `npm install` (script « prepare » → git config core.hooksPath githooks).
+# Pour passer outre en cas d'urgence : git commit --no-verify
+set -e
+if [ ! -d node_modules/playwright ]; then
+  echo "pre-commit : playwright absent — lance « npm install » puis « npx playwright install chromium »." >&2
+  exit 1
+fi
+echo "pre-commit : tests de non-régression…"
+npm test --silent

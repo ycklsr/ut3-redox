@@ -1,0 +1,14 @@
+{
+  "name": "ut3-redox",
+  "private": true,
+  "type": "module",
+  "description": "Site de révision sur l'oxydoréduction — fichier unique, hors ligne",
+  "scripts": {
+    "test": "node --test \"tests/*.test.mjs\"",
+    "captures": "node tests/captures.mjs",
+    "prepare": "git config core.hooksPath githooks"
+  },
+  "devDependencies": {
+    "playwright": "^1.62.1"
+  }
+}
