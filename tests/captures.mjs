@@ -46,8 +46,19 @@ await shot('04-geste',         { after: p => p.evaluate(() => { document.getElem
 await shot('05-paillasse',     { after: p => p.click('.dock .tab[data-tool="ti"]') });
 await shot('06-question',      { after: async p => { await p.click('#e12 .cp[data-cp="12-1"]'); await p.click('#q12-1 .opt[data-ok="0"]'); } });
 await shot('07-gestes',        { after: p => p.click('#m-ges') });
-await shot('08-etape0',        { hash: 'e0' });
-await shot('09-mobile',        { w: 390, h: 844 });
+await shot('08-couple',        { hash: 'e2' });
+await shot('09-no-regles',     { hash: 'e3' });
+await shot('10-demi-equation', { hash: 'e4', after: p => p.evaluate(() => { document.getElementById('read').scrollTop = 700; }) });
+await shot('11-basique',       { hash: 'e5', after: p => p.evaluate(() => { document.getElementById('read').scrollTop = 1500; }) });
+await shot('12-pile',          { hash: 'e7', after: p => p.evaluate(() => { document.getElementById('read').scrollTop = 420; }) });
+await shot('13-pile-sombre',   { hash: 'e7', scheme: 'dark', after: p => p.evaluate(() => { document.getElementById('read').scrollTop = 420; }) });
+await shot('14-echelle',       { hash: 'e11', after: p => p.evaluate(() => { document.getElementById('read').scrollTop = 1150; }) });
+await shot('15-gamma',         { hash: 'e13', after: p => p.evaluate(() => { document.getElementById('read').scrollTop = 260; }) });
+await shot('16-eph',           { hash: 'e14', after: p => p.evaluate(() => { document.getElementById('read').scrollTop = 900; }) });
+await shot('17-eph-sombre',    { hash: 'e14', scheme: 'dark', after: p => p.evaluate(() => { document.getElementById('read').scrollTop = 900; }) });
+await shot('18-corrosion',     { hash: 'e15', after: p => p.evaluate(() => { document.getElementById('read').scrollTop = 900; }) });
+await shot('19-mobile-eph',    { hash: 'e14', w: 390, h: 844, after: p => p.evaluate(() => { document.getElementById('read').scrollTop = 780; }) });
+await shot('20-mobile-pile',   { hash: 'e7', w: 390, h: 844, after: p => p.evaluate(() => { document.getElementById('read').scrollTop = 400; }) });
 
 await b.close();
 srv.close();

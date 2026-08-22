@@ -187,6 +187,54 @@ for (const w of [1280, 1000, 820, 620, 375]) {
   });
 }
 
+/* ── 9 bis · les 17 étapes, pas seulement celle de référence ───────── */
+for (const w of [1280, 375]) {
+  test(`aucune des 17 étapes ne déborde à ${w} px`, async () => {
+    const { ctx, page } = await open({ viewport: { width: w, height: 800 } });
+    const fautes = [];
+    for (let i = 0; i <= 16; i++) {
+      await page.evaluate(n => { location.hash = 'e' + n; }, i);
+      await page.waitForFunction(n => !document.getElementById('e' + n).hidden, i);
+      const d = await page.evaluate(() => {
+        const r = document.getElementById('read');
+        return { read: r.scrollWidth - r.clientWidth, doc: document.documentElement.scrollWidth - document.documentElement.clientWidth };
+      });
+      if (d.read > 1 || d.doc > 1) fautes.push(`e${i} : colonne ${d.read} px, page ${d.doc} px`);
+    }
+    assert.deepEqual(fautes, []);
+    await ctx.close();
+  });
+}
+
+/* ── 9 ter · les figures sont bien dessinées et suivent le thème ───── */
+test('chaque figure a une aire de dessin et une légende', async () => {
+  const { ctx, page } = await open();
+  const bilan = await page.evaluate(async () => {
+    const out = [];
+    for (const f of document.querySelectorAll('.fig')) {
+      const st = f.closest('article.step');
+      const cache = st.hidden; st.hidden = false;
+      const svg = f.querySelector('svg');
+      const b = svg ? svg.getBoundingClientRect() : { width: 0, height: 0 };
+      out.push({
+        etape: st.id,
+        w: Math.round(b.width), h: Math.round(b.height),
+        aria: !!(svg && svg.getAttribute('aria-label')),
+        cap: !!f.querySelector('.cap')
+      });
+      st.hidden = cache;
+    }
+    return out;
+  });
+  assert.ok(bilan.length >= 3, `au moins trois figures redessinées, trouvé ${bilan.length}`);
+  for (const f of bilan) {
+    assert.ok(f.w > 200 && f.h > 100, `${f.etape} : figure de ${f.w}×${f.h} px`);
+    assert.ok(f.aria, `${f.etape} : la figure n'a pas de description accessible`);
+    assert.ok(f.cap, `${f.etape} : la figure n'a pas de légende`);
+  }
+  await ctx.close();
+});
+
 /* ── 10 · impression : la page affichée, jamais les 17 ────────────── */
 test('à l\'impression, une seule étape et aucun élément d\'interface', async () => {
   const { ctx, page } = await open();

@@ -228,6 +228,11 @@ Apprises sur le site Ondes, ou spécifiques à la chimie :
 8. **Thème sombre** dès le départ, via jetons CSS, avec bascule persistée.
 9. **Impression** : seule la page affichée, jamais les 17.
 10. **`prefers-reduced-motion`** respecté si des animations sont ajoutées.
+11. **Une formule ne se coupe jamais.** `.f` est en `nowrap`. Une expression
+    longue va dans `.formula .e` ou `.link .expr`, qui défilent ; un tableau
+    large va dans `.tw`. Et une équation **dans une phrase** doit être découpée
+    en plusieurs `.f` séparés par du texte, sinon elle pousse la page — le test
+    des 375 px l'attrape.
 
 ---
 
@@ -237,32 +242,59 @@ Apprises sur le site Ondes, ou spécifiques à la chimie :
 
 ```
 F2/F-          2,87     ← oxydant le plus fort
-H2O2/H2O       1,77
-PbO2/PbSO4     1,70
-MnO4-/Mn2+     1,51
-Cl2/Cl-        1,36
-Cr2O7 2-/Cr3+  1,33
-O2/H2O         1,23
-Br2/Br-        1,06
-NO3-/NO        0,96
-Ag+/Ag         0,80
-Fe3+/Fe2+      0,77
-O2/H2O2        0,68
-I2/I-          0,62
-Cu2+/Cu        0,34
-Sn4+/Sn2+      0,13
-H+/H2          0        ← électrode de référence (ESH)
-Pb2+/Pb       -0,13
-Sn2+/Sn       -0,14
-PbSO4/Pb      -0,31
-Fe2+/Fe       -0,44
-Zn2+/Zn       -0,76     ← réducteur le plus fort
+H2O2/H2O       1,77          Cu2+/Cu        0,34
+PbO2/PbSO4     1,70          Sn4+/Sn2+      0,13
+MnO4-/Mn2+     1,51          H+/H2          0     ← ESH, référence
+Cl2/Cl-        1,36          Pb2+/Pb       -0,13
+Cr2O7 2-/Cr3+  1,33          Sn2+/Sn       -0,14
+O2/H2O         1,23          PbSO4/Pb      -0,31
+Br2/Br-        1,06          Fe2+/Fe       -0,44
+NO3-/NO        0,96          Zn2+/Zn       -0,76
+Ag+/Ag         0,80          Mg2+/Mg       -2,37
+Fe3+/Fe2+      0,77          Na+/Na        -2,70
+O2/H2O2        0,68          K+/K          -2,92
+I2/I-          0,62          Li+/Li        -3,05  ← réducteur le plus fort
 ```
 
-⚠️ **Incohérence repérée dans le cours** : la diapo 61 du bonus donne
-`E°(O2/H2O) = 0,68 V` alors que la table donne `1,23 V` (0,68 est celui de
-`O2/H2O2`). À vérifier sur le PDF avant d'écrire l'étape 15, et à signaler dans
-le site plutôt qu'à propager en silence.
+⚠️ **Correction d'un relevé antérieur** : la table du cours compte **25 couples**,
+pas 21, et elle descend jusqu'à `Li+/Li` à −3,05 V. Le réducteur le plus fort
+est le **lithium**, pas le zinc. La table est déjà rendue dans l'étape 11.
+
+✅ **Incohérence vérifiée sur le PDF, et signalée dans le site.** La diapositive
+61 du bonus donne `E°(O2/H2O) = 0,68 V` en donnée de l'exercice 15, alors que la
+table de la diapositive 62 du **même document** donne `1,23 V` pour ce couple, et
+`0,68 V` pour `O2/H2O2`, qui est un autre couple. C'est une coquille de l'énoncé.
+Le diagramme de l'étape 15 est tracé avec **1,23 V**, et l'écart est expliqué sur
+place : il ne change pas la réponse de l'exercice, car c'est la droite `H+/H2`
+qui décide du sort du fer.
+
+### Numérotation des diapositives — piège vérifié
+
+Les **numéros imprimés** sur les diapositives sont communs aux deux cours pour
+1 → 59 ; le bonus ajoute 60 → 67. Mais dans `Cours.pdf`, **numéro de page ≠
+numéro de diapositive** (73 pages pour 59 diapositives, à cause des animations) :
+la diapositive 53 y est page 60. Le site renvoie aux **numéros imprimés**, et le
+dit à l'étape 1.
+
+### Les 7 frontières du fer, calculées et vérifiées
+
+Pour `[Fe2+] = [Fe3+] = 10⁻²`, `Ks3 = 10⁻³⁸`, `Ks2 = 8·10⁻¹⁶` :
+
+```
+1  Fe3+/Fe2+       E = 0,77                horizontale
+2  Fe3+/Fe(OH)3    pH = 2,0                verticale
+3  Fe(OH)3/Fe2+    E = 1,13  − 0,18·pH
+4  Fe2+/Fe(OH)2    pH = 7,45               verticale
+5  Fe(OH)3/Fe(OH)2 E = 0,236 − 0,06·pH
+6  Fe2+/Fe         E = −0,50               horizontale
+7  Fe(OH)2/Fe      E = −0,053 − 0,06·pH
+```
+
+Raccords contrôlés : à pH 2, la 3 vaut 0,770 = la 1 ; à pH 7,45, la 3 et la 5
+valent toutes deux −0,211, et la 7 vaut −0,500 = la 6. Un tracé dont les
+frontières ne se rejoignent pas à ces trois points est faux.
+
+**La pente ne se calcule pas**, elle se lit : `−0,06 × (nb de H+) / (nb de e−)`.
 
 ### Calculs de référence, vérifiés
 
@@ -308,8 +340,12 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
    référence : chaîne du calcul, fractions empilées, bloc geste, trois points
    de contrôle, panneau TI-Nspire. Les seize autres étapes portent leur
    objectif et leur note de chantier.
-2. **Le cours en entier** — chapitres 1 à 3 plus la corrosion, avec les figures
-   redessinées : schéma de pile annoté, échelle des E°, diagramme E-pH du fer.
+2. ~~**Le cours en entier**~~ — **fait.** Les seize étapes de cours sont
+   écrites, avec les exercices 1 à 15 du cours déroulés. Quatre figures
+   redessinées en SVG, toutes thématisables : le schéma de pile annoté
+   (étape 7), l'échelle des 25 potentiels (étape 11), la règle du γ (étape 13),
+   et le diagramme E-pH du fer (étape 14), repris avec les droites de l'eau
+   à l'étape 15.
 3. **L'étape 0** — la boîte à outils maths, écrite en supposant zéro acquis.
 4. **Les quatre outils de la paillasse** — dont le traceur E-pH (le morceau de
    bravoure) et le vérificateur TI-Nspire.
@@ -350,7 +386,7 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 
 ## 11. Pour reprendre
 
-> Lis `PLAN.md`, ouvre `redox.html` à l'étape 12 — c'est l'implémentation de
-> référence, tout le reste s'écrit sur ce modèle — et prends le point 2 de
-> l'ordre des travaux. Chaque étape porte déjà sa note de chantier : elle dit
-> ce qui doit y être écrit.
+> Lis `PLAN.md`, ouvre `redox.html`, et prends le **point 3** de l'ordre des
+> travaux : l'étape 0, la boîte à outils maths. Les composants existent tous —
+> `.def`, `.formula`, `.piege`, `.chain`, `.eqs`, `.pas`, `.tw`, `.fig`, `.ex` —
+> il n'y a rien à réinventer, seulement à écrire. Puis les points 4 à 7.
