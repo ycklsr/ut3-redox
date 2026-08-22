@@ -1,0 +1,1106 @@
+Parcours Sciences et Humanités    Niveau 2
+
+
+
+           Physique et Chimie 2
+
+            UE : KSHAY02U
+           Matière : KSHAIY12
+
+
+                CHIMIE
+
+
+                                             1
+Chapitre 1
+
+
+
+
+             2
+1. Introduction
+
+
+
+
+  réactions chimiques.
+                                               combinaison avec
+
+
+
+
+  Antoine Lavoisier à énoncer la loi de la conservation de la matière, rien
+  ne se perd, rien ne se crée, tout se transforme, et à identifier
+
+
+
+  « car rien ne se crée, ni dans les opérations de l'art, ni dans celles de
+  la nature, et l'on peut poser en principe que, dans toute opération, il y a
+  une égale quantité de matière avant et après l'opération ; que la qualité
+       et la quantité des principes est la même, et qu'il n'y a que des
+                      changements, des modifications. »
+    Lavoisier, Traité élémentaire de chimie (1789), p. 140/141                3
+1. Introduction
+
+
+
+
+métallurgie, phénomènes de corrosion, respiration et métabolisme des
+
+
+
+
+                                                                       4
+2. Oxydation, réduction, oxydant, réducteur, couple rédox
+
+
+
+
+        Fe = Fe2+ + 2e
+
+
+
+
+        Fe2+ + 2e = Fe
+
+
+
+
+                                                            5
+2. Oxydation, réduction, oxydant, réducteur, couple rédox
+
+
+
+  Un oxydant est une espèce chimique qui capte un ou plusieurs électrons.
+
+
+  Un réducteur est une espèce chimique qui cède un ou plusieurs électrons.
+
+
+  A chaque oxydant correspond un réducteur et inversement. Ils forment un
+                             couple rédox.
+  Exemple :     Fe2+ est un oxydant
+                Fe est un réducteur
+                Fe2+ et Fe forme un couple rédox
+
+
+
+
+                                                                        6
+2. Oxydation, réduction, oxydant, réducteur, couple rédox et oxydoréduction
+
+
+
+  Ecriture conventionnelle du couple redox   Ox/Red
+        Exemple : Fe2+/Fe
+
+
+                                       rédox sont donc impliqué dans une
+                                       demi-équation redox
+                                                               le sens de
+  la réduction (formation du réducteur).
+        Oxydant + ne = Réducteur
+        ou
+        Ox + ne = Red
+
+
+        Exemple : Fe2+ + 2e = Fe
+                                                                       7
+2. Oxydation, réduction, oxydant, réducteur, couple rédox et oxydoréduction
+
+
+
+                                             rédox, implique 2 couples
+  rédox : Ox1/Red1 et Ox2/Red2.
+                Ox1 + Red2 = Ox2 + Red1
+        Ox1                   1
+
+        et
+        Red2                  2
+
+
+
+
+                                        rédox
+  car la réduction de Ox1 doit faire intervenir exactement le même nombre
+
+                                  2.
+
+
+
+
+  Exemple       Cu2+ + Zn = Cu + Zn2+
+
+                                                                         8
+2. Oxydation, réduction, oxydant, réducteur, couple rédox et oxydoréduction
+
+
+
+
+                                  rédox peut se décomposer en deux
+  demi-équations rédox
+        Ox1 + Red2 = Ox2 + Red1
+        Ox1 + ne = Red1
+        Red2      = Ox2 + ne
+
+
+
+        Exemple          Cu2+ + Zn = Cu + Zn2+
+                         Cu2+ + 2e = Cu
+                         Zn        = 2e + Zn2+
+
+
+
+
+                                                                       9
+2. Oxydation, réduction, oxydant, réducteur, couple rédox et oxydoréduction
+
+       Ex 1
+          Donner les deux couples rédox              rédox ci-dessous.
+          Donner les deux demi-équations rédox associées
+
+
+
+
+                        Cl2 + Zn = Zn2+ + 2Cl-
+
+
+
+
+                                                                         10
+Un même élément peut être impliqué dans plusieurs couples redox
+
+
+
+
+Le no exprime la charge formelle
+                                                              etc
+
+
+
+
+      Ex 2
+                                            2+, Cu, Cl-
+
+
+
+
+                                                                    11
+                                            2   no(A) = 0
+
+
+2. Elément oxygène : dans O2 no(O) = 0 (règle 1)
+                     dans H2O2 no(O) = -I
+                     Dans tout autre composé no(O) = -II
+
+
+3. Elément hydrogène : dans H2 no(H) = 0 (règle 1)
+
+
+                     métallique no(H) = I
+
+
+4. Eléments halogènes : dans X2 no(X) = 0 (règle 1)
+                        dans tout composé ne contenant pas        -I
+                                                             12
+dans une espèce chimique polyatomique neutre ou ionique
+
+
+                       Principe :
+
+
+                       chimique
+
+
+
+
+                                                          13
+Ex 3
+
+
+Cl2, H2O, ClO4-, TiCl4, CO32-
+
+
+
+
+                                14
+                                                    -équations redox
+
+
+
+Ex 4
+  Vérifier si les couples rédox suivants sont bien écrits selon la
+  convention Ox/Red
+Cl2/Cl- ; MnO4-/Mn2+ ; O2/H2O ; H+/H2
+
+
+
+
+  Equilibrer les demi-équations redox des couples rédox ci-dessus :
+
+
+
+
+                                                                     15
+                             -équations redox
+
+
+Ex 5
+                          coefficients
+       -équations redox
+
+
+
+
+                                          16
+                                                         -équations redox
+
+                                                          coefficients
+                                  -équations redox
+Ecrire la demi-équation dans le sens conventionnel
+      (réduction Ox + ne = Red)
+Ajuster les coefficients des composés contenant des éléments autres
+que H et O
+
+
+rajoutant H2O
+
+
+rajoutant des H+ (le milieu est acide par défaut)
+Equilibrer les charges électriques en ajoutant des électrons
+
+
+
+                                                                         17
+Repérer les deux couples rédox
+Ecrire les demi-
+
+
+«                                         rédox
+car la réduction de Ox1 doit faire intervenir exactement le même nombre
+
+                                 2. » :
+
+intervenant dans les 2 demi-équations rédox                    ,
+                                                         -équations afin
+
+
+Combiner les 2 demi-équations rédox
+Eventuellement procéder à des simplifications des nombres
+
+
+                                                                    18
+                                                          -équations redox
+
+
+    Ex 6
+                                                       équations rédox
+    suivantes
+
+Fe2+ + H2      Fe + H+    en milieu acide
+Fe3+ + H2       Fe + H+   en milieu acide
+ClO- + AsO2-        Cl- + AsO43-   en milieu acide
+ClO- + AsO2-        Cl- + AsO43-   en milieu basique
+SO2 + Cr2O72-        Cr3+ + HSO4- en milieu acide
+
+
+
+
+                                                                         19
+6. Réaction de dismutation
+
+
+
+  Un composé chimique peut intervenir dans 2 couples rédox différents
+
+
+   Ex : H2O2/H2O ; O2/H202
+
+
+  Une réaction de dismutation est une réaction rédox dans laquelle un
+  même composé subit à la fois une oxydation et une réduction (ce
+  composé est oxydant dans un couple et réducteur dans un autre)
+
+
+       Ex 7
+       Ecrire la réaction de dismutation                    2O2
+
+
+
+
+                                                                        20
+ Chapitre 2
+La pile Daniell
+
+
+
+
+                  21
+  1. Cellule électrochimique
+
+
+Une cellule électrochimique est composée de 2 couples rédox reliés par des
+conducteurs électroniques et ioniques.
+
+En pratique on a 2 électrodes (Zn
+et Cu par ex.) immergées dans des
+solutions électrolytiques (sulfate de
+zinc et sulfate de cuivre par ex.).
+La cellule est généralement
+compartimentée pour éviter que les
+solutions réagissent entre elles.
+Des fils électriques et un pont salin
+permettent de faire la jonction
+électrique.
+
+                                                                             22
+1. Cellule électrochimique
+
+
+
+
+        Une cellule électrochimique peut fonctionner :
+        - soit en générateur
+        - soit en récepteur
+
+
+
+
+                                   Alessandro Volta, physicien
+                                   italien (1745-1827) réalisa
+                                   en 1800 la première « pile
+                                           électrique »
+
+
+                                                                 23
+1. Cellule électrochimique
+
+Cellule voltaïque = pile
+
+
+
+Un voltmètre indique une différence
+de potentiel entre les 2 électrodes
+(1,1 V à 298 K si la concentration des
+électrolytes est de 1 mol.L-1.)
+
+
+Si on réunit les 2 électrodes par un
+fil métallique et une ampoule on
+
+
+
+
+                                         24
+1. Cellule électrochimique
+
+Cellule voltaïque = pile
+
+Pendant que la pile débite du courant
+
+
+dans chaque compartiment : à gauche
+
+
+la concentration en Zn2+ augmente ; à
+
+
+augmente et la concentration en Cu2+
+diminue.
+
+
+
+
+                                        A électrode        A électrode
+différence de potentiel aussi) la
+                                        Zn    2e + Zn2+    Cu2+ + 2e          Cu
+
+                                                                         25
+                                               Zn + Cu2+   Zn2+ + Cu
+1. Cellule électrochimique
+
+Cellule voltaïque = pile
+
+Pendant que la pile débite du courant
+
+
+dans chaque compartiment : à gauche
+
+
+la concentration en Zn2+ augmente ; à
+
+
+augmente et la concentration en Cu2+
+diminue.
+
+
+
+
+                                        A électrode        A électrode
+différence de potentiel aussi) la
+                                        Zn    2e + Zn2+    Cu2+ + 2e          Cu
+
+Sens de circulation des électrons, du
+                                                                         26
+                                               Zn + Cu2+   Zn2+ + Cu
+courant ? Pôles des électrodes ?
+1. Cellule électrochimique
+
+Cellule voltaïque = pile
+                                                               i
+Pendant que la pile débite du courant
+
+                                              e-                       e-
+dans chaque compartiment : à gauche
+                                                   -               +
+la concentration en Zn2+ augmente ; à
+
+
+augmente et la concentration en Cu2+
+diminue.
+
+
+
+
+                                        A électrode        A électrode
+différence de potentiel aussi) la
+                                        Zn    2e + Zn2+    Cu2+ + 2e          Cu
+
+Sens de circulation des électrons, du
+                                                                         27
+                                               Zn + Cu2+   Zn2+ + Cu
+courant ? Pôles des électrodes ?
+1. Cellule électrochimique
+
+Cellule voltaïque = pile
+
+
+
+                                              e-                       e-
+
+ Anode : oxydation de Zn, signe -        anode -                   + cathode
+ Cathode : réduction de Cu2+, signe +
+
+
+
+
+Ecriture conventionnelle de la pile
+
+       -                +
+ Anode Zn/Zn2+ // Cu2+/Cu cathode
+
+                                        A électrode        A électrode
+                                        Zn    2e + Zn2+    Cu2+ + 2e          Cu
+
+                                                                         28
+                                               Zn + Cu2+   Zn2+ + Cu
+                                                                  -+
+  1. Cellule électrochimique
+                                                    e-                           e-
+
+Le courant électrique fournit par une pile
+
+
+de potentiel élevé vers un point de
+potentiel bas. On peut forcer la circulation
+dans le sens opposé en appliquant aux
+bornes de la cellule une force
+électromotrice externe en opposion avec
+
+
+Le processus électrochimique est alors
+inversé : dans le compartiment de gauche,
+                                               A électrode             A électrode
+
+la concentration en Zn2+ diminue ; dans le     2e + Zn2+     Zn        Cu     Cu2+ + 2e
+
+                                                      Zn2+ + Cu     Zn + Cu2+
+est consommée et la concentration en Cu2+       Oxydation du Cu et réduction de Zn2+.
+                                                                                     29
+augmente.
+1. Cellule électrochimique
+
+                                                                -+
+
+                                               e-                                e-
+
+
+
+
+                                          cathode                                anode
+ Anode : oxydation de Cu (reliée au
+ pôle + du générateur)
+ Cathode : réduction de Zn2+ (reliée au
+ pôle - du générateur)
+
+
+
+
+                                          A électrode                 A électrode
+                                          2e + Zn2+     Zn            Cu     Cu2+ + 2e
+
+                                                                                  30
+                                                    Zn2+ + Cu        Zn + Cu2+
+2. Rôle du pont salin
+
+
+
+ Dans une cellule électrochimique, le passage du courant électrique est assuré par
+ le déplacement des électrons dans le circuit métallique (circuit extérieur) et des
+ ions dans les compartiments (demi-piles).
+
+
+ Entre les deux compartiments de la cellule, les solutions sont mises en relation du
+ point de vue de la conduction électrique par un pont salin contenant des sels tels
+ que le chlorure de potassium (KCl) ou nitrate de potassium (KNO3).
+
+
+ Les cations et les anions du pont salin peuvent migrer vers un compartiment ou
+ l'autre afin d'assurer la neutralité électrique dans les deux compartiments de la
+ cellule. En revanche, les solutions ne sont pas mélangées, ce qui permet d'éviter
+ des réactions redox indésirables.
+
+
+
+                                                                                      31
+2. Rôle du pont salin
+
+      Ex 8
+                  -                +
+      Dans la pile Zn/Zn2+ // Cu2+/Cu , indiquer le sens de migration des
+                                      KCl.
+
+
+
+
+                                                                            32
+2. Rôle du pont salin
+
+      Ex 8
+                  -                +
+      Dans la pile Zn/Zn2+ // Cu2+/Cu , indiquer le sens de migration des
+                                      KCl.
+
+
+
+                                     e-                        e-
+
+                                anode -                      + cathode
+
+
+
+Zn + Cu2+     Zn2+ + Cu
+
+
+
+
+                                A électrode            A électrode
+                                                                            33
+                                Zn        2e + Zn2+    Cu2+ + 2e     Cu
+2. Rôle du pont salin
+
+
+      Ex 8
+                   -                +
+      Dans la pile Zn/Zn2+ // Cu2+/Cu , indiquer le sens de migration des
+                                      KCl.
+
+
+
+
+                                                                            34
+2. Rôle du pont salin
+
+
+
+                                                2+, il présente un excès de charges
+
+
+     positives
+                                                    2+ il présente un excès de charges
+
+
+     négatives
+créant une différence de charge et violant la neutralité électrique des solutions.
+Sans pont salin, cette situation aboutirait à l'arrêt du courant électrique entre les
+deux demi-piles.
+
+
+Lorsque ce pont contient une solution de chlorure de potassium (KCl) :
+     Cl-
+  au même moment
+     K+
+
+
+
+                                                                                      35
+2. Rôle du pont salin
+
+
+                                                2+, il présente un excès de charges
+
+
+     positives
+                                                    2+ il présente un excès de charges
+
+
+     négatives
+créant une différence de charge et violant la neutralité électrique des solutions.
+Sans pont salin, cette situation aboutirait à l'arrêt du courant électrique entre les
+deux demi-piles.
+
+
+Lorsque ce pont contient une solution de chlorure de potassium (KCl) :
+     2 anions Cl-
+     Zn2+
+  Au même moment
+     2 cations de K+ vont vers le compartiment cathodique pour compenser le défaut
+                 2+
+
+                                                                                      36
+2. Rôle du pont salin
+
+
+
+
+ ne pourrait pas passer.
+
+
+
+ Le pont salin encore appelé électrolyte, ferme le circuit électrique et
+ préserve aussi aux deux demi-piles des potentiels différents.
+
+
+
+                                                     électroneutralité
+  des solutions et fermer le circuit.
+
+
+
+
+  et une conduction ionique
+
+                                                                           37
+                                            fem
+
+
+
+La différence de potentiel mesurée aux bornes du voltmètre est la fem de la pile.
+      un nombre toujours positif exprimée en volt.
+
+
+
+
+                                                  e-                        e-
+
+fem = Epôle+ - Epôle- = Ecathode   Eanode              -                +
+
+
+
+
+                                                                                 38
+                                             fem
+
+
+
+  La différence de potentiel mesurée aux bornes du voltmètre est la fem de la pile.
+        un nombre toujours positif exprimée en volt.
+
+
+
+
+                                                   e-                         e-
+
+ fem = Epôle+ - Epôle- = Ecathode   Eanode              -                 +
+
+
+Les potentiels
+Ecathode et Eanode sont des grandeurs qui
+indiquent la tendance relative des
+électrodes à produire (oxydation)      ou
+consommer (réduction) des électrons.
+
+                                                                                   39
+4. La pile Daniell
+
+
+
+ La pile Zn/Zn2+ // Cu2+/Cu est appelé Pile Daniell. Le principe de son
+ fonctionnement a été donné Edmond Becquerel puis le britannique John
+ Daniell      perfectionnée en 1836, au moment où le développement du
+ télégraphe faisait apparaître un besoin urgent de sources de courant sûres
+ et constantes.
+
+
+
+
+ John Frederic Daniell (1790-1845)                                       40
+4. La pile Daniell
+
+
+
+
+                     41
+      Chapitre 3
+     Loi de Nernst
+          Et
+Diagrammes potentiel-pH
+
+
+
+                          42
+                                                                 °
+
+
+
+Il est impossible de mesure le potentiel        seule électrode, on ne peut mesurer
+       différence de potentiel entre deux électrodes.
+
+
+On mesure la différence de potentiel entre une électrode dont on veut connaitre le
+potentiel et une électrode de référence à laquelle on assigne arbitrairement un
+potentiel égal à zéro.
+
+
+            de référence est               à hydrogène.
+
+
+
+
+                                                                                 43
+                                                                      °
+
+
+
+Lorsque les concentrations des espèces dissoutes sont de 1 mol.L-1 et la
+pression des gaz de 1 bar, on dit que les conditions sont standard.
+
+
+
+
+Dans les conditions standards, le potentiel             E      couple est appelé
+potentiel standard             il est alors noté E°.
+
+
+
+                                                                          ° des différents
+couples rédox.
+
+                                                                                        44
+                                                          °
+
+
+
+Rappel sur les états physiques des composés chimiques :
+
+
+  Solide
+
+
+
+
+  Gazeux
+
+
+
+
+  Liquide
+
+
+
+
+  Aqueux
+
+
+
+                                                              45
+                                                           °
+                                           Couples rédox   E° (volts)
+                   Oxydant le plus fort         F2/F-         2,87
+                                             H2O2/H2O         1,77
+                                            PbO2/PbSO4         1,7
+                                            MnO4-/Mn2+        1,51
+                                               Cl2/Cl-        1,36
+                                            Cr2O7=/Cr3+       1,33
+                                              O2/H2O          1,23
+                                              Br2/Br-         1,06
+                                             NO3-/NO          0,96
+                                              Ag+/Ag           0,8
+ Valeurs de E°                               Fe3+/Fe2+        0,77
+données à 25 °C                               O2/H2O2         0,68
+                                                I2/I-         0,62
+                                              Cu2+/Cu         0,34
+                                             Sn4+/Sn2+        0,13
+                  Electrode de référence       H+/H2            0
+                                              Pb2+/Pb        -0,13
+                                              Sn2+/Sn        -0,14
+                                             PbSO4/Pb        -0,31
+                                              Fe2+/Fe        -0,44
+                                              Zn2+/Zn        -0,76
+                                             Mg2+/Mg         -2,37
+                                              Na+/Na          -2,7
+                                                K+/K         -2,92
+                  Réducteur le plus fort       Li+/Li        -3,05      46
+                               rédox
+
+
+
+Règle : «
+autre couple »
+
+
+
+
+Application : règle du gamma
+
+
+
+
+                                       47
+                                         rédox
+
+
+Ex 9 : En vous aidant de la liste des potentiels standards de la diapositive 46,
+indiquer si les réactions rédox sont spontanément possibles entre les composés
+suivants lorsque les conditions de réaction sont standard. Si les réactions sont
+possibles donner les équations chimiques.
+A. eau oxygénée et argent métallique.
+B. Mn2+ et NO3- (ion nitrate)
+
+
+
+
+                                                                             48
+                                         rédox
+
+
+Ex 9 : En vous aidant de la liste des potentiels standards de la diapositive 46,
+indiquer si les réactions rédox sont spontanément possibles entre les composés
+suivants lorsque les conditions de réaction sont standard. Si les réactions sont
+possibles donner les équations chimiques.
+A. eau oxygénée et argent métallique.
+B. Mn2+ et NO3- (ion nitrate)
+
+
+E°             Couples rédox            E° (volts)
+                    F2/F-                  2,87
+                 H2O2/H2O                  1,77
+                PbO2/PbSO4                  1,7
+                MnO4-/Mn2+                 1,51
+                   Cl2/Cl-                 1,36
+                Cr2O7=/Cr3+                1,33
+                  O2/H2O                   1,23
+                  Br2/Br-                  1,06
+                 NO3-/NO                   0,96
+                  Ag+/Ag                    0,8
+                 Fe3+/Fe2+                 0,77
+                  O2/H2O2                  0,68
+                                                                             49
+                                      rédox
+
+
+                                               -
+                                              4 )
+                                  -                 2+).
+
+
+Quelle sera la réaction préférentielle ?
+
+
+
+
+                                                     50
+                                       rédox
+
+
+                                                 -
+                                                4 )
+                                   -                  2+).
+
+
+ Quelle sera la réaction préférentielle ?
+
+
+
+
+E°           Couples rédox         E° (volts)
+                  F2/F-               2,87
+               H2O2/H2O               1,77
+              PbO2/PbSO4               1,7
+              MnO4-/Mn2+              1,51
+                 Cl2/Cl-              1,36
+              Cr2O7=/Cr3+             1,33
+                O2/H2O                1,23
+                Br2/Br-               1,06
+               NO3-/NO                0,96
+                Ag+/Ag                 0,8
+               Fe3+/Fe2+              0,77
+                O2/H2O2               0,68
+                                                       51
+                                                         rédox
+
+
+
+
+Ex 11 : à 25°
+
+
+
+
+explication.
+Données à 25°C : E°(Fe3+/Fe(s)) = -0,036 V ; E°(Fe2+/Fe(s)) = -0,440 V ; E°(H+/H2(g) = 0 V ;
+E°(Cl2(g)/Cl-) = 1,36 V
+
+
+
+
+                                                                                               52
+3. Loi de Nernst
+
+
+
+   Lorsque les concentrations des espèces dissoutes sont de 1 mol.L-1 et la
+   pression des gaz de 1 bar, on dit que les conditions sont standards.
+
+
+         Si [H+] = 1 mol.L-1 alors pH = 0 donc dans les conditions standard pH = 0
+
+
+
+
+   25°                                        °
+
+
+
+
+                                                                                     53
+3. Loi de Nernst
+
+
+Loi de Nernst :
+
+                      x Ox + ne + a A = y Red + b B
+
+
+
+
+R = constante des gaz parfait 8,31 J.K-1.mol-1
+F = Faraday = 96 500 C
+T = température absolue (K)
+
+
+
+
+conditions).
+                                (l) est égale à 1.
+                                (s) est égale à 1.
+
+
+
+                                                      54
+3. Loi de Nernst
+
+
+Loi de Nernst :
+
+                      x Ox + ne + a A = y Red + b B
+
+
+
+
+R = constante des gaz parfait 8,31 J.K-1.mol-1
+F = Faraday = 96 500 C
+T = température absolue (K)
+
+
+      Si T = 298 K (et logarithme décimal et non népérien)   =   =
+
+
+
+
+                                                                     55
+ 3. Loi de Nernst
+
+
+                                                      2+/Fe
+                                                           (s)
+
+
+
+1.   Calculer à 25°
+     sulfate de fer(II) dont la concentration en Fe(II) est 10-2 mol.L-1.
+2. Calculer à 25°
+     sulfate de fer(II) dont la concentration en Fe(II) est 5.10-3 mol.L-1.
+
+Données à 25°C : E°(Fe2+/Fe) = -0,440 V ;    = 0,06 logX
+
+
+
+
+                                                                              56
+3. Loi de Nernst
+
+
+                                                         -   2+
+                                                        4 /Mn
+
+
+
+1.   Calculer à 25°                                                      -    2+ lorsque les
+                                                                        4 /Mn
+
+     concentrations sont [MnO4-]=10-3 mol.L-1 et [Mn2+]=10-1 mol.L-1.
+2. Retrouver la valeur de ce potentiel en commençant par exprimer E en fonction du pH,
+     E=f(pH), puis en effectuant le calcul lorsque pH=2.
+
+Donnée à 25°C : E°(MnO4-/Mn2+)=1,51V ;            =0,06 logX
+
+
+
+
+                                                                                        57
+4. Diagramme potentiel-pH
+
+Les diagrammes potentiel-pH, aussi appelés diagrammes de Pourbaix, indiquent
+
+
+pH. Ils sont utiles pour prévoir des réactions rédox.
+Exemple du diagramme potentiel-pH du fer donné pour [Fe2+]=[Fe3+]=10-2 mol.L-1
+
+
+
+
+                                                        5 domaines de
+                                                        prédominance et
+                                                        7 frontières
+
+
+
+
+                                                                          58
+4. Diagramme potentiel-pH
+
+
+
+
+ Les réactions de solubilisation de Fe(OH)3(s) et Fe(OH)2(s) sont respectivement
+                                                 s3 et Ks2.
+
+
+ Fe(OH)3(s)    Fe3+ + 3 OH- Ks3=10-38
+
+ Fe(OH)2(s)   Fe2+ + 2 OH-    Ks2=8.10-16
+
+ 1. Calculer relations mathématiques exprimant les 7 frontières du diagramme E=f(pH)
+ du fer pour [Fe2+]=[Fe3+]=10-2 mol.L-1.
+
+ 2. Tracer le diagramme potentiel-pH du fer à 25 °C et dans les conditions de
+ concentrations de la question 1.
+
+ Données à 25°C : E°(Fe3+/Fe(s))= -0,036 V ; E°(Fe2+/Fe(s))= -0,440 V ;     = 0,06 log
+
+
+
+
+                                                                                    59
+

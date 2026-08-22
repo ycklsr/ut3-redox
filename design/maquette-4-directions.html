@@ -1,0 +1,775 @@
+<title>Quatre directions pour Redox</title>
+
+<style>
+/* ══════════════════════════════════════════════════════════════
+   CHROME DE LA PLANCHE
+   ══════════════════════════════════════════════════════════════ */
+:root{
+  --bg:#F8F7F4; --ink:#18191D; --mut:#65686F; --line:#E3E1DB;
+  --acc:#6E2A8F;            /* violet permanganate */
+  --acc2:#0F6E7A;           /* bleu-vert cuivre */
+  --mark:#B3352A;           /* rouge correction */
+  --ok:#1C6B44;
+  --stage:#EBE9E4;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --serif:ui-serif,"New York",Charter,"Iowan Old Style",Georgia,serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#111114; --ink:#E9E8E4; --mut:#9B9DA5; --line:#2A2A31;
+    --acc:#C08AD8; --acc2:#4FC3CE; --mark:#E88276; --ok:#63C793; --stage:#191A1F;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111114; --ink:#E9E8E4; --mut:#9B9DA5; --line:#2A2A31;
+  --acc:#C08AD8; --acc2:#4FC3CE; --mark:#E88276; --ok:#63C793; --stage:#191A1F;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);
+     font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1140px;margin:0 auto;padding:0 clamp(18px,4vw,46px) 6rem}
+.mono{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;font-weight:500}
+.doc{max-width:34em}
+.doc p{margin:0 0 .9em}
+.doc b{font-weight:600}
+.doc em{font-style:italic}
+
+header.top{padding:clamp(48px,8vw,96px) 0 2rem}
+.top .eyebrow{color:var(--acc);display:flex;align-items:center;gap:.8rem}
+.top .eyebrow::after{content:"";flex:1;height:1px;background:var(--line);max-width:200px}
+h1{font-family:var(--serif);font-weight:600;font-size:clamp(2.1rem,5.6vw,3.4rem);line-height:1.06;
+   letter-spacing:-.022em;margin:1.1rem 0 .8rem;max-width:15ch;text-wrap:balance}
+h1 span{color:var(--acc)}
+h2.sec{font-family:var(--serif);font-weight:600;font-size:1.5rem;letter-spacing:-.015em;margin:0 0 .9rem;text-wrap:balance}
+section.blk{padding-top:4.6rem}
+
+/* ── constat : le squelette des CC ── */
+.skel{width:100%;border-collapse:collapse;margin:1.4rem 0 .6rem;font-size:.9rem}
+.skel th{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
+         color:var(--mut);text-align:left;padding:.5em .8em .5em 0;border-bottom:1.5px solid var(--ink);font-weight:600}
+.skel td{padding:.55em .8em .55em 0;border-bottom:1px solid var(--line);vertical-align:top}
+.skel td:first-child{font-family:var(--mono);font-size:.78rem;color:var(--acc);white-space:nowrap}
+.skel .y{font-family:var(--mono);font-size:.72rem;color:var(--mut);white-space:nowrap}
+.zone{border-left:3px solid var(--mark);padding:.2em 0 .2em 1.1em;margin:1.6rem 0;max-width:36em}
+.zone b{color:var(--mark);font-weight:600}
+
+/* ── scène ── */
+.stage{background:var(--stage);border:1px solid var(--line);padding:clamp(12px,2.4vw,30px);
+       margin-top:1.5rem;overflow-x:auto}
+.stage-cap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;color:var(--mut);margin-top:.7rem}
+.mk{min-width:860px;box-shadow:0 1px 2px rgba(0,0,0,.05),0 16px 44px -26px rgba(0,0,0,.42)}
+
+/* ── fiches direction ── */
+.dir{padding-top:5rem}
+.dir-head{display:grid;grid-template-columns:4rem 1fr;gap:1.6rem;align-items:start;max-width:36em}
+@media(max-width:640px){.dir-head{grid-template-columns:1fr;gap:.4rem}}
+.dir-num{font-family:var(--mono);font-weight:600;font-size:1.5rem;color:var(--line);letter-spacing:-.02em;padding-top:.35rem}
+.dir h2{margin-bottom:.35rem}
+.dir .conv{font-size:1.06rem;color:var(--mut);font-style:italic;margin:0 0 .9rem}
+.verdict{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6rem;margin-top:2.4rem;
+         border-top:1px solid var(--line);padding-top:1rem}
+@media(max-width:820px){.verdict{grid-template-columns:1fr;gap:1rem}}
+.verdict h4{margin:0 0 .4rem;font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);font-weight:600}
+.verdict p{margin:0;font-size:.94rem;line-height:1.5}
+.verdict .plus h4{color:var(--ok)}
+.verdict .moins h4{color:var(--mark)}
+.nerst-note{font-size:.94rem;color:var(--mut);border-left:2px solid var(--acc);padding-left:1rem;margin:1rem 0 0;max-width:36em}
+.nerst-note b{color:var(--ink);font-weight:600}
+
+/* ── à trancher ── */
+.ask{border:1px solid var(--ink);padding:clamp(20px,3.4vw,38px);margin-top:1.5rem;max-width:52em}
+.ask ol{margin:1rem 0 0;padding-left:1.3rem}
+.ask li{margin-bottom:1.1rem;padding-left:.3rem}
+.ask li::marker{color:var(--acc);font-family:var(--mono);font-size:.85rem}
+.ask .opt{display:block;font-size:.93rem;color:var(--mut);margin-top:.2rem}
+.ask .reco{color:var(--ok);font-weight:600}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+
+/* ══════════════════════════════════════════════════════════════
+   NOTATION CHIMIQUE — commune aux quatre maquettes
+   ══════════════════════════════════════════════════════════════ */
+.f{white-space:nowrap;font-variant-numeric:lining-nums;text-transform:none!important}
+/* en chimie la casse porte du sens : Co (cobalt) ≠ CO (monoxyde de carbone).
+   Aucune capitalisation forcée ne doit toucher une formule. */
+.f sub{font-size:.68em;vertical-align:-.25em;margin-left:.02em}
+.f sup{font-size:.68em;vertical-align:.42em;margin-left:.02em}
+.f .st{font-size:.72em;color:currentColor;opacity:.62}      /* (s) (aq) (g) */
+.ox{color:#8E2F6B}      /* espèce oxydée */
+.rd{color:#1B5E8E}      /* espèce réduite */
+.el{color:#B26A00}      /* électrons */
+
+/* ══════════════════════════════════════════════════════════════
+   01 · PAILLASSE
+   ══════════════════════════════════════════════════════════════ */
+.p1{--pl-bg:#FCFCFB;--pl-ink:#17181C;--pl-mut:#6A6D75;--pl-line:#E6E5E0;--pl-acc:#6E2A8F;--pl-amb:#A05B00;
+    background:var(--pl-bg);color:var(--pl-ink);font-family:var(--sans);font-size:14.5px;line-height:1.6;
+    display:grid;grid-template-rows:1fr auto;min-height:520px}
+.p1 .body{display:grid;grid-template-columns:150px minmax(0,1fr);gap:0}
+.p1 .nav{border-right:1px solid var(--pl-line);padding:16px 12px;font-size:12px}
+.p1 .nav .t{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--pl-mut);margin:0 0 8px}
+.p1 .nav a{display:block;color:var(--pl-ink);text-decoration:none;padding:3px 0;opacity:.72}
+.p1 .nav a.on{color:var(--pl-acc);font-weight:600;opacity:1}
+.p1 .rd2{padding:20px 26px 24px;max-width:44em}
+.p1 h4{font-family:var(--sans);font-size:19px;font-weight:600;letter-spacing:-.01em;margin:0 0 4px}
+.p1 .sub{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--pl-mut);margin:0 0 14px}
+.p1 p{margin:0 0 10px}
+.p1 .eqbox{background:#F6F4F8;border-left:2px solid var(--pl-acc);padding:9px 13px;margin:12px 0;font-size:15px}
+.p1 .num{font-family:var(--mono);font-size:13px;background:#FFF9F0;border-left:2px solid var(--pl-amb);padding:9px 13px;margin:12px 0;line-height:1.75}
+.p1 .num b{color:var(--pl-amb)}
+.p1 .dock{border-top:1px solid var(--pl-line);background:#F7F6F3;display:flex;align-items:stretch;gap:0}
+.p1 .dock .tab{padding:9px 16px;font-size:12px;font-weight:600;color:var(--pl-mut);border-right:1px solid var(--pl-line);cursor:default;display:flex;align-items:center;gap:7px}
+.p1 .dock .tab.on{background:var(--pl-bg);color:var(--pl-acc);box-shadow:inset 0 2px 0 var(--pl-acc)}
+.p1 .dock .sp{flex:1}
+.p1 .dock .hint{padding:9px 16px;font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--pl-mut);display:flex;align-items:center}
+.p1 .panel{background:var(--pl-bg);border-top:1px solid var(--pl-line);padding:14px 18px;display:grid;
+           grid-template-columns:minmax(0,1fr) 300px;gap:22px}
+.p1 .slot{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;font-family:var(--mono);font-size:12.5px;margin-bottom:7px}
+.p1 .slot .k{color:var(--pl-mut);min-width:74px}
+.p1 .slot input{font-family:var(--mono);font-size:12.5px;width:74px;border:1px solid var(--pl-line);
+                border-radius:5px;padding:2px 6px;background:#fff;color:var(--pl-ink)}
+.p1 .out{font-family:var(--mono);font-size:12.5px;background:#F6F4F8;border-radius:6px;padding:8px 11px;line-height:1.8;margin-top:6px}
+.p1 .out .res{color:var(--pl-acc);font-weight:600;font-size:14px}
+
+/* ══════════════════════════════════════════════════════════════
+   02 · CAHIER DE LABORATOIRE
+   ══════════════════════════════════════════════════════════════ */
+.p2{--c-paper:#FBFAF4;--c-ink:#1E2A3A;--c-mut:#6F7688;--c-grid:#D8DDE4;--c-red:#B3352A;
+    background:var(--c-paper);color:var(--c-ink);font-family:Charter,Palatino,"Palatino Linotype",Georgia,serif;
+    font-size:15.5px;line-height:1.58;position:relative;padding:26px 30px 30px;min-height:520px}
+.p2::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    repeating-linear-gradient(#0000 0 23px,var(--c-grid) 23px 23.5px),
+    repeating-linear-gradient(90deg,#0000 0 23px,var(--c-grid) 23px 23.5px);
+  opacity:.42}
+.p2 .in{position:relative}
+.p2 .hd{display:flex;align-items:baseline;gap:12px;border-bottom:1.5px solid var(--c-ink);padding-bottom:5px;margin-bottom:14px}
+.p2 .hd .no{font-family:var(--mono);font-size:11px;color:var(--c-mut);letter-spacing:.08em}
+.p2 h4{font-family:Charter,Palatino,Georgia,serif;font-size:19px;font-weight:600;margin:0;letter-spacing:-.005em}
+.p2 .hd .date{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--c-mut)}
+.p2 p{margin:0 0 9px}
+.p2 .grid2{display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:26px;align-items:start}
+.p2 .calc{margin:12px 0;font-size:16px;line-height:2.05}
+.p2 .calc .l{display:grid;grid-template-columns:1.6em auto 1fr;align-items:baseline;column-gap:.5em}
+.p2 .calc .n{font-family:var(--mono);font-size:10px;color:var(--c-mut)}
+.p2 .calc .eq{text-align:right;padding-right:.35em}
+.p2 .calc .why{font-family:var(--mono);font-size:10px;letter-spacing:.02em;color:var(--c-mut)}
+.p2 .res{border-top:1px solid var(--c-ink);border-bottom:3px double var(--c-ink);display:inline-block;padding:2px 10px;font-weight:600}
+.p2 .marge{font-size:12.5px;color:var(--c-mut);line-height:1.5}
+.p2 .marge .t{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:4px}
+.p2 .hand{font-family:"Bradley Hand","Chalkboard SE","Segoe Print",cursive;color:var(--c-red);
+          font-size:16px;line-height:1.25;transform:rotate(-1.8deg);display:block;margin-top:14px}
+.p2 .hand::before{content:"";display:block;width:30px;height:1.5px;background:var(--c-red);opacity:.55;margin-bottom:5px}
+.p2 .ti{border:1px solid var(--c-grid);background:#fff;border-radius:4px;padding:8px 11px;margin-top:12px;font-size:12.5px}
+.p2 .ti .k{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--c-mut);display:block;margin-bottom:5px}
+.p2 .ti code{font-family:var(--mono);font-size:11.5px;background:#F1F0EA;border-radius:3px;padding:1px 5px}
+
+/* ══════════════════════════════════════════════════════════════
+   03 · PAR LE GESTE
+   ══════════════════════════════════════════════════════════════ */
+.p3{--g-bg:#FFFFFF;--g-ink:#111214;--g-mut:#6E7178;--g-line:#E8E7E4;--g-acc:#6E2A8F;
+    background:var(--g-bg);color:var(--g-ink);
+    font-family:"Avenir Next",Avenir,Futura,-apple-system,system-ui,sans-serif;font-size:14.5px;line-height:1.6;
+    min-height:520px}
+.p3 .top{display:flex;gap:0;border-bottom:1px solid var(--g-line);overflow:hidden}
+.p3 .top .g{flex:1;padding:11px 12px;border-right:1px solid var(--g-line);font-size:11.5px;color:var(--g-mut);
+            display:flex;flex-direction:column;gap:2px}
+.p3 .top .g:last-child{border-right:0}
+.p3 .top .g .n{font-family:var(--mono);font-size:9px;letter-spacing:.1em}
+.p3 .top .g.on{background:var(--g-acc);color:#fff}
+.p3 .top .g.on .n{color:#E7CDF3}
+.p3 .top .g b{font-weight:600;font-size:12.5px}
+.p3 .in{padding:22px 28px 26px;display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:30px;align-items:start}
+.p3 h4{font-family:inherit;font-size:23px;font-weight:600;letter-spacing:-.02em;margin:0 0 3px}
+.p3 .sub{font-size:12.5px;color:var(--g-mut);margin:0 0 16px}
+.p3 ol.rec{list-style:none;counter-reset:s;margin:0;padding:0}
+.p3 ol.rec li{counter-increment:s;position:relative;padding:0 0 11px 34px;font-size:14px;line-height:1.55}
+.p3 ol.rec li::before{content:counter(s);position:absolute;left:0;top:1px;width:22px;height:22px;border-radius:50%;
+   background:var(--g-acc);color:#fff;font-family:var(--mono);font-size:11px;display:grid;place-items:center;font-weight:600}
+.p3 ol.rec li b{font-weight:600}
+.p3 .tombe{border:1px solid var(--g-line);border-radius:8px;padding:11px 14px;font-size:12.5px}
+.p3 .tombe .k{font-family:var(--mono);font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--g-mut);display:block;margin-bottom:6px}
+.p3 .tombe .y{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+.p3 .tombe .y span{font-family:var(--mono);font-size:10px;border:1px solid var(--g-line);border-radius:99px;padding:1px 8px;color:var(--g-mut)}
+.p3 .drill{background:#FAF7FC;border-radius:8px;padding:13px 15px;margin-top:14px}
+.p3 .drill .k{font-family:var(--mono);font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--g-acc);display:block;margin-bottom:7px;font-weight:600}
+.p3 .drill .q{font-size:14px;margin-bottom:9px}
+.p3 .drill .in2{display:flex;gap:7px;align-items:center;flex-wrap:wrap;font-family:var(--mono);font-size:12.5px}
+.p3 .drill input{font-family:var(--mono);font-size:12.5px;width:70px;border:1px solid var(--g-line);border-radius:6px;padding:3px 7px;background:#fff}
+.p3 .drill button{font-family:inherit;font-size:12px;font-weight:600;background:var(--g-acc);color:#fff;border:0;border-radius:6px;padding:4px 12px;cursor:default}
+
+/* ══════════════════════════════════════════════════════════════
+   04 · LA CHAÎNE DU CALCUL
+   ══════════════════════════════════════════════════════════════ */
+.p4{--k-bg:#FDFDFC;--k-ink:#16171A;--k-mut:#676A71;--k-line:#E5E4E0;--k-acc:#6E2A8F;--k-ok:#1C6B44;
+    background:var(--k-bg);color:var(--k-ink);font-family:var(--serif);font-size:15px;line-height:1.6;
+    padding:22px 26px 26px;min-height:520px}
+.p4 .hd{display:flex;align-items:baseline;gap:10px;margin-bottom:4px}
+.p4 h4{font-family:var(--serif);font-size:21px;font-weight:600;letter-spacing:-.015em;margin:0}
+.p4 .hd .tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--k-acc);
+             border:1px solid var(--k-acc);border-radius:99px;padding:1px 8px}
+.p4 .sub{font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--k-mut);margin:0 0 16px}
+.p4 .chain{display:grid;gap:0}
+.p4 .link{display:grid;grid-template-columns:26px minmax(0,1fr) 250px;gap:0 16px;
+          border-top:1px solid var(--k-line);padding:13px 0;align-items:start}
+.p4 .link:last-child{border-bottom:1px solid var(--k-line)}
+.p4 .link .no{font-family:var(--mono);font-size:11px;color:var(--k-mut);padding-top:3px}
+.p4 .link.done .no{color:var(--k-ok)}
+.p4 .link .main{min-width:0}
+.p4 .link .t{font-family:var(--sans);font-size:12px;font-weight:600;color:var(--k-mut);margin-bottom:5px}
+.p4 .link .expr{font-size:16.5px;line-height:1.75}
+.p4 .link .num{font-family:var(--mono);font-size:13px;color:var(--k-ink);margin-top:5px}
+.p4 .link .num .v{color:var(--k-acc);font-weight:600}
+.p4 .link .aside{font-size:12.5px;color:var(--k-mut);line-height:1.5;border-left:1px solid var(--k-line);padding-left:14px}
+.p4 .link .aside b{color:var(--k-ink);font-weight:600}
+.p4 .link .aside code{font-family:var(--mono);font-size:11px;background:#F2F1ED;border-radius:3px;padding:1px 5px}
+.p4 .fin{display:flex;align-items:baseline;gap:12px;margin-top:14px;flex-wrap:wrap}
+.p4 .fin .res{font-family:var(--mono);font-size:17px;font-weight:600;color:var(--k-acc);
+              border-bottom:2.5px double var(--k-acc);padding-bottom:2px}
+.p4 .fin .ctrl{font-size:12.5px;color:var(--k-mut)}
+
+/* graphique E-pH partagé */
+
+/* ── carte de couverture ── */
+.cov{width:100%;border-collapse:collapse;margin:1.3rem 0 .5rem;font-size:.88rem}
+.cov th{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);
+        text-align:left;padding:.5em .7em .5em 0;border-bottom:1.5px solid var(--ink);font-weight:600}
+.cov td{padding:.5em .7em .5em 0;border-bottom:1px solid var(--line);vertical-align:top}
+.cov tr.ch td{border-bottom:0;padding-top:1.1em;padding-bottom:.2em}
+.cov tr.ch b{font-family:var(--mono);font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;color:var(--acc)}
+.cov .n{font-family:var(--mono);font-size:.74rem;color:var(--mut);white-space:nowrap}
+.cov .g{font-family:var(--mono);font-size:.68rem;white-space:nowrap;border:1px solid var(--line);
+        border-radius:99px;padding:1px 7px;color:var(--mut)}
+.cov .g.cc{border-color:var(--acc);color:var(--acc)}
+.cov .g.bonus{border-color:var(--ok);color:var(--ok)}
+
+/* ── spécimen « monter une pile » ── */
+.pile{--g-bg:#fff;--g-ink:#111214;--g-mut:#6E7178;--g-line:#E8E7E4;--g-acc:#6E2A8F;
+  background:#fff;color:#111214;font-family:"Avenir Next",Avenir,Futura,-apple-system,system-ui,sans-serif;
+  font-size:14.5px;line-height:1.6;padding:22px 28px 26px}
+.pile h4{font-size:23px;font-weight:600;letter-spacing:-.02em;margin:0 0 3px}
+.pile .sub{font-size:12.5px;color:#6E7178;margin:0 0 16px}
+.pile .two{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:28px;align-items:start}
+.pile .cell{display:block;width:100%;height:auto;max-width:470px}
+.pile .cell text{font-family:"Avenir Next",system-ui,sans-serif;font-size:9.5px;fill:#111214}
+.pile .cell .lab{font-family:ui-monospace,Menlo,monospace;font-size:8px;fill:#6E7178;letter-spacing:.06em}
+.pile .chk{border:1px solid var(--g-line);border-radius:8px;padding:11px 14px;font-size:12.8px}
+.pile .chk .k{font-family:ui-monospace,Menlo,monospace;font-size:9px;letter-spacing:.11em;text-transform:uppercase;
+  color:#6E7178;display:block;margin-bottom:7px}
+.pile .chk li{margin:0 0 4px;list-style:none;padding-left:17px;position:relative}
+.pile .chk li::before{content:"☐";position:absolute;left:0;color:#6E7178}
+.pile .chk li.ok::before{content:"☑";color:#1C6B44}
+.pile .sym{font-family:ui-monospace,Menlo,monospace;font-size:13px;background:#FAF7FC;border-radius:6px;
+  padding:9px 12px;margin-top:12px;text-align:center}
+
+.epH{display:block;width:100%;height:auto;max-width:300px}
+.epH .ax{stroke:currentColor;opacity:.4;stroke-width:1}
+.epH .gr{stroke:currentColor;opacity:.12;stroke-width:.6}
+.epH .fr{stroke:var(--fr,#6E2A8F);stroke-width:2.2;fill:none}
+.epH .pt{fill:#B26A00}
+.epH text{font-family:var(--mono);font-size:7.5px;fill:currentColor;opacity:.62}
+.epH .dom{font-size:8.5px;opacity:.85;font-family:var(--sans)}
+</style>
+
+<div class="wrap">
+
+<header class="top">
+  <p class="mono eyebrow">Maquettes · dossier REDOX · à trancher avant codage</p>
+  <h1>Quatre directions pour <span>Redox</span></h1>
+  <div class="doc">
+    <p>J'ai lu les 12 PDF du dossier : le cours (73 diapositives), le cours bonus (67), le diagramme E-pH du fer, et les <b>quatre sujets de contrôle avec leurs corrigés</b> — 2022, 2023, 2024, 2025.</p>
+    <p>Deux constats commandent tout le reste, et aucun ne ressemble à ce qu'on a fait pour Ondes.</p>
+  </div>
+</header>
+
+<section class="blk" style="padding-top:1.6rem">
+  <h2 class="sec">Constat 1 — le contrôle est le même depuis quatre ans</h2>
+  <div class="doc"><p>Ce ne sont pas des sujets « du même genre » : c'est le <b>même squelette</b>, exercice par exercice, avec d'autres espèces chimiques. Quatre années de suite.</p></div>
+
+  <table class="skel">
+    <tr><th>Exercice</th><th>Ce qui est demandé, chaque année</th><th>Années</th></tr>
+    <tr><td>1 · Définitions</td><td>Définir oxydation, réduction, dismutation ; écriture conventionnelle d'un couple et d'une demi-équation</td><td class="y">22 · 24 · 25</td></tr>
+    <tr><td>2 · n.o. + équilibrage</td><td>n.o. de 4 espèces ; écrire le couple dans le sens conventionnel ; équilibrer <b>en milieu acide puis basique</b> ; qui s'est réduit ; dismutation de <span class="f">H<sub>2</sub>O<sub>2</sub></span> ; deux espèces peuvent-elles réagir</td><td class="y">22 · 23 · 24 · 25</td></tr>
+    <tr><td>3 · Pile</td><td>Ions en solution ; réactions anode / cathode ; schéma annoté (signes, sens des e⁻, sens du courant) ; écriture symbolique ; rôle du pont ; fem</td><td class="y">22 · 23 · 24 · 25</td></tr>
+    <tr><td>4 · Loi de Nernst</td><td>Écrire Nernst pour un couple donné, puis <b>calculer</b> E avec des concentrations en 10⁻² et un pH imposé</td><td class="y">22 · 23 · 24</td></tr>
+    <tr><td>5 · Diagramme E-pH</td><td>Placer les espèces dans les domaines ; justifier ; exploiter les coordonnées de points ; retrouver les frontières</td><td class="y">22 · 23 · 24</td></tr>
+  </table>
+  <div class="doc"><p style="color:var(--mut);font-size:.94rem">Autrement dit : réviser ce module, c'est apprendre <b>cinq gestes</b>. Pas dix chapitres.</p></div>
+</section>
+
+<section class="blk">
+  <h2 class="sec">Constat 2 — la zone de rupture commence à Nernst</h2>
+  <div class="zone">
+    <p style="margin:0"><b>Ce que tu m'as dit :</b> tu redoubles cette UE, l'aspect calculatoire de la loi de Nernst t'a beaucoup gêné, et le tracé du diagramme E-pH n'était pas compris. Tout ce qui part de Nernst mérite un renforcement approfondi.</p>
+  </div>
+  <div class="doc">
+    <p>Or les exercices 4 et 5 du contrôle — <b>Nernst et E-pH — sont exactement cette zone</b>, et pèsent à eux deux près de la moitié du sujet. Ce n'est pas un détail à traiter en fin de site : c'est ce autour de quoi il faut construire.</p>
+    <p>Et il y a une raison mathématique précise à la difficulté, qui n'a rien de honteux : entre l'exercice 4 et l'exercice 5, on passe sans prévenir d'un <em>calcul</em> à une <em>fonction</em>. Écrire E = 1,486 − 0,096·pH, c'est écrire <span class="f">y = ax + b</span> — une droite. Personne ne le dit jamais explicitement, et sans ça le diagramme reste un dessin incompréhensible.</p>
+    <p>Les quatre directions ci-dessous rendent toutes le même extrait — le couple <span class="f ox">MnO<sub>4</sub><sup>−</sup></span>/<span class="f rd">Mn<sup>2+</sup></span>, sa loi de Nernst, l'application numérique à pH = 2, puis le passage à la droite du diagramme. C'est l'exercice du cours <em>et</em> celui du contrôle. À toi de voir laquelle te fait comprendre ce chemin.</p>
+    <p style="color:var(--mut);font-size:.94rem">Typographie système uniquement : ce que tu vois ici est ce que tu auras, hors ligne, sans téléchargement de police. Chaque direction utilise des polices différentes, déjà présentes sur ton Mac.</p>
+  </div>
+</section>
+
+<section class="blk" id="couverture">
+  <h2 class="sec">Couverture — tout le cours, pas seulement Nernst</h2>
+  <div class="doc">
+    <p>Les quatre maquettes rendent le même extrait <em>pour être comparables</em> — ce n'est pas le périmètre du site. Voici le plan complet des deux cours : <b>3 chapitres, 15 sections, 140 diapositives</b>. Tout y passe.</p>
+    <p>Un point à signaler : le chapitre <b>corrosion et passivation</b> n'existe que dans le <i>cours bonus</i>. Il n'est jamais tombé aux quatre CC — mais il est au programme, et il donne son sens à tout le reste (le diagramme E-pH du fer sert exactement à ça).</p>
+  </div>
+
+  <table class="cov">
+    <tr><th>Section</th><th>Ce que ça contient</th><th>Diapos</th><th>Statut</th></tr>
+
+    <tr class="ch"><td colspan="4"><b>Chapitre 1 — Les réactions rédox</b></td></tr>
+    <tr><td>1 · Introduction</td><td>Lavoisier, conservation de la matière ; les enjeux : énergie, stockage, métallurgie, corrosion, respiration</td><td class="n">3–4</td><td><span class="g">cours</span></td></tr>
+    <tr><td>2 · Couple rédox</td><td>Oxydation, réduction, oxydant, réducteur ; écriture conventionnelle <span class="f">Ox/Red</span> ; demi-équation ; un élément dans plusieurs couples</td><td class="n">5–11</td><td><span class="g cc">exercice 1</span></td></tr>
+    <tr><td>3 · Nombre d'oxydation</td><td>Les 7 règles (corps simple, O, H, halogènes, molécule neutre, ion, somme) ; n.o. sur une formule donnée</td><td class="n">12–14</td><td><span class="g cc">exercice 2</span></td></tr>
+    <tr><td>4 · Équilibrer une demi-équation</td><td>La méthode en 5 temps : élément, puis O avec <span class="f">H<sub>2</sub>O</span>, puis H avec <span class="f">H<sup>+</sup></span>, puis charges avec <span class="f">e<sup>−</sup></span>, puis vérification par le n.o.</td><td class="n">15–19</td><td><span class="g cc">exercice 2</span></td></tr>
+    <tr><td>5 · Équilibrer une équation</td><td>Repérer les deux couples ; égaliser les électrons ; combiner ; simplifier ; <b>passage en milieu basique</b> avec <span class="f">OH<sup>−</sup></span></td><td class="n">20–24</td><td><span class="g cc">exercice 2</span></td></tr>
+    <tr><td>6 · Dismutation</td><td>Définition ; le cas de <span class="f">H<sub>2</sub>O<sub>2</sub></span>, demandé chaque année</td><td class="n">25–26</td><td><span class="g cc">exercices 1 et 2</span></td></tr>
+
+    <tr class="ch"><td colspan="4"><b>Chapitre 2 — Les piles</b></td></tr>
+    <tr><td>1 · Cellule électrochimique</td><td>Demi-piles, électrodes, anode et cathode, signes, sens des électrons et du courant, écriture symbolique</td><td class="n">28–36</td><td><span class="g cc">exercice 3</span></td></tr>
+    <tr><td>2 · Rôle du pont salin</td><td>Fermer le circuit, maintenir l'électroneutralité, sens de migration des ions</td><td class="n">37–43</td><td><span class="g cc">exercice 3</span></td></tr>
+    <tr><td>3 · Force électromotrice</td><td>fem = E(cathode) − E(anode) ; mesure ; signe</td><td class="n">44–45</td><td><span class="g cc">exercice 3</span></td></tr>
+    <tr><td>4 · La pile Daniell</td><td>L'exemple canonique <span class="f">Zn/Cu</span> ; électrolyse comme pile inversée</td><td class="n">46–47</td><td><span class="g cc">exercice 3</span></td></tr>
+
+    <tr class="ch"><td colspan="4"><b>Chapitre 3 — Potentiels et diagrammes</b></td></tr>
+    <tr><td>1 · Potentiel E et E°</td><td>Électrode standard à hydrogène ; table des E° ; conditions standard (dont <b>pH = 0</b>)</td><td class="n">49–52</td><td><span class="g cc">exercices 3 et 4</span></td></tr>
+    <tr><td>2 · Sens spontané, règle du γ</td><td>« L'oxydant le plus fort réagit avec le réducteur le plus fort » ; le gamma tracé sur l'échelle ; prédire si deux espèces réagissent</td><td class="n">53–59</td><td><span class="g cc">exercice 2</span></td></tr>
+    <tr><td>3 · Loi de Nernst</td><td>La formule générale ; le passage à 0,06/n à 25 °C ; les solides et liquides à 1 ; l'application numérique</td><td class="n">60–66</td><td><span class="g cc">exercice 4</span></td></tr>
+    <tr><td>4 · Diagramme potentiel-pH</td><td>Domaines de prédominance et d'existence, frontières, conventions de tracé ; le diagramme du fer (5 domaines, 7 frontières) ; produits de solubilité</td><td class="n">67–73</td><td><span class="g cc">exercice 5</span></td></tr>
+    <tr><td>5 · Corrosion et passivation</td><td>Corrosion, immunité, passivation ; les couples de l'eau <span class="f">H<sup>+</sup>/H<sub>2</sub></span> et <span class="f">O<sub>2</sub>/H<sub>2</sub>O</span> superposés au diagramme ; corrosion du fer et de l'aluminium ; 1 ampère dissout 9 kg d'acier par an</td><td class="n">bonus 60–67</td><td><span class="g bonus">bonus seul</span></td></tr>
+  </table>
+
+  <div class="doc" style="margin-top:1.2rem">
+    <p>S'y ajoutent, hors cours : <b>l'échelle des 21 potentiels standards</b> à garder sous la main, <b>le diagramme E-pH du fer</b> (PDF séparé), et <b>les 4 sujets de CC avec leurs corrigés</b> — aujourd'hui des scans manuscrits, à retranscrire.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════ 01 ═══════════════════════ -->
+<section class="dir" id="d1">
+  <div class="dir-head">
+    <div class="dir-num">01</div>
+    <div>
+      <h2 class="sec">Paillasse</h2>
+      <p class="conv">Le cours se lit normalement, mais les trois instruments du chimiste restent posés sur la paillasse, à portée de main.</p>
+      <div class="doc">
+        <p>Une barre d'outils ancrée en bas de l'écran, toujours visible : <b>l'échelle des E°</b>, <b>le calculateur de Nernst</b>, <b>le traceur E-pH</b>. On lit le cours ; quand une formule tombe, on ouvre l'outil sans quitter la page, et il arrive <em>pré-rempli avec le couple qu'on est en train de lire</em>.</p>
+        <p>C'est la réponse « le cours d'abord » : la structure reste celle d'un cours, mais le calcul n'est jamais à plus d'un clic — et surtout, il est <em>toujours au même endroit</em>, ce qui compte quand on refait le même geste vingt fois.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="mk p1">
+      <div class="body">
+        <nav class="nav">
+          <p class="t">Cours</p>
+          <a href="#" onclick="return false">1 · Couples rédox</a>
+          <a href="#" onclick="return false">2 · Nombres d'oxydation</a>
+          <a href="#" onclick="return false">3 · Équilibrage</a>
+          <a href="#" onclick="return false">4 · Piles</a>
+          <a href="#" onclick="return false">5 · Potentiels E°</a>
+          <a href="#" class="on" onclick="return false">6 · Loi de Nernst</a>
+          <a href="#" onclick="return false">7 · Diagrammes E-pH</a>
+        </nav>
+        <div class="rd2">
+          <h4>La loi de Nernst</h4>
+          <p class="sub">Cours · § 6 — diapositives 53 à 57</p>
+          <p>Le potentiel standard <span class="f">E°</span> ne vaut que dans les conditions standard : toutes les espèces dissoutes à 1 mol·L⁻¹, donc <b>pH = 0</b>. Dès qu'on s'en écarte, le potentiel change, et la loi de Nernst dit de combien.</p>
+          <div class="eqbox">Pour <span class="f"><span class="ox">x</span> Ox + <span class="el">n e<sup>−</sup></span> + a A = y Red + b B</span> :<br>
+            <span class="f">E = E° + <sup>0,06</sup>⁄<sub>n</sub> · log <sup>[Ox]<sup>x</sup>·[A]<sup>a</sup></sup>⁄<sub>[Red]<sup>y</sup>·[B]<sup>b</sup></sub></span></div>
+          <p>Sur le couple <span class="f ox">MnO<sub>4</sub><sup>−</sup></span>/<span class="f rd">Mn<sup>2+</sup></span>, la demi-équation fait entrer <b>8 <span class="f">H<sup>+</sup></span></b> : le potentiel dépend donc du pH.</p>
+          <div class="num">E = 1,51 + <b>0,012</b> · log([MnO<sub>4</sub><sup>−</sup>]/[Mn<sup>2+</sup>]) − <b>0,096</b> · pH</div>
+        </div>
+      </div>
+      <div class="dock">
+        <div class="tab">📊 Échelle des E°</div>
+        <div class="tab on">🧮 Nernst</div>
+        <div class="tab">📈 Traceur E-pH</div>
+        <div class="sp"></div>
+        <div class="hint">toujours accessible · pré-rempli</div>
+      </div>
+      <div class="panel">
+        <div>
+          <div class="slot"><span class="k">couple</span><b class="f"><span class="ox">MnO<sub>4</sub><sup>−</sup></span>/<span class="rd">Mn<sup>2+</sup></span></b><span style="color:var(--pl-mut)">· E° = 1,51 V · n = 5 · 8 H⁺</span></div>
+          <div class="slot"><span class="k">[MnO₄⁻]</span><input value="1e-3" readonly><span class="k" style="min-width:52px">[Mn²⁺]</span><input value="1e-1" readonly><span class="k" style="min-width:34px">pH</span><input value="2" readonly></div>
+          <div class="out">
+            E = 1,51 + (0,06/5)·log(10⁻³/10⁻¹) − (0,06/5)·8·2<br>
+            E = 1,51 + 0,012·(−2) − 0,096·2<br>
+            E = 1,51 − 0,024 − 0,192 &nbsp;→&nbsp; <span class="res">E = 1,29 V</span>
+          </div>
+        </div>
+        <div>
+          <div class="slot"><span class="k">TI-Nspire</span></div>
+          <div class="out" style="font-size:11.5px;line-height:1.7">
+            log(1e−3/1e−1) → touche <b>log</b>, pas <b>ln</b><br>
+            saisir 1e−3 : <b>1</b> <b>EE</b> <b>(−)</b> <b>3</b><br>
+            le <b>(−)</b> du bas, pas le − de soustraction
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="stage-cap"><span class="mono">Maquette 01 · Paillasse</span><span class="mono">SF Pro · SF Mono · dock permanent</span></div>
+  </div>
+
+  <p class="nerst-note"><b>Sur Nernst :</b> l'outil est ouvert en permanence et se remplit tout seul avec le couple lu. On refait le calcul dix fois sans jamais chercher où il est. Le passage à E = f(pH) se fait dans le troisième onglet, qui reprend les mêmes chiffres.</p>
+
+  <div class="verdict">
+    <div class="plus"><h4>Ce que ça règle</h4><p>Le calcul cesse d'être « un chapitre à la fin » : il est à portée à chaque page. Et les E° — qu'on cherche sans arrêt — ne sont plus à aller chercher.</p></div>
+    <div class="moins"><h4>Ce que ça coûte</h4><p>Le dock mange 120 px de hauteur en permanence. Et la structure reste celle d'un cours linéaire : elle ne dit pas que le contrôle, lui, est fait de cinq gestes.</p></div>
+    <div><h4>Effort</h4><p>Moyen. Trois outils à écrire, dont le traceur E-pH qui est le plus délicat.</p></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ 02 ═══════════════════════ -->
+<section class="dir" id="d2">
+  <div class="dir-head">
+    <div class="dir-num">02</div>
+    <div>
+      <h2 class="sec">Cahier de laboratoire</h2>
+      <p class="conv">Le sujet le répète chaque année : « l'attention est attirée sur l'importance d'une rédaction claire ». Alors le site montre la copie, pas le résultat.</p>
+      <div class="doc">
+        <p>Papier quadrillé, encre, marge. Chaque calcul est <b>posé ligne par ligne, aligné sur le signe =</b>, avec à droite de chaque ligne la raison de ce qu'on vient de faire. C'est exactement la copie qu'on attend de toi au contrôle — le site ne donne pas la réponse, il donne <em>la mise en page de la réponse</em>.</p>
+        <p>Une annotation manuscrite rouge par page, pas plus, là où un correcteur écrirait « attention ». Et un encadré <b>TI-Nspire</b> quand une touche prête à confusion.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="mk p2">
+      <div class="in">
+        <div class="hd">
+          <span class="no">§ 6.3</span>
+          <h4>Potentiel du couple MnO₄⁻ / Mn²⁺ à pH = 2</h4>
+          <span class="date">exercice du cours · diapo 57 · tombé en 2022, 2023, 2024</span>
+        </div>
+        <div class="grid2">
+          <div>
+            <p><i>Données :</i> E° = 1,51 V · [MnO₄⁻] = 10⁻³ mol·L⁻¹ · [Mn²⁺] = 10⁻¹ mol·L⁻¹ · pH = 2.</p>
+            <div class="calc">
+              <div class="l"><span class="n">1</span><span class="eq"><span class="f"><span class="ox">MnO<sub>4</sub><sup>−</sup></span> + 8 H<sup>+</sup> + <span class="el">5 e<sup>−</sup></span> =</span></span><span class="f"><span class="rd">Mn<sup>2+</sup></span> + 4 H<sub>2</sub>O <span class="why">&nbsp;&nbsp;demi-équation</span></span></div>
+              <div class="l"><span class="n">2</span><span class="eq">E =</span><span class="f">E° + <sup>0,06</sup>⁄<sub>5</sub> · log <sup>[MnO<sub>4</sub><sup>−</sup>]·[H<sup>+</sup>]<sup>8</sup></sup>⁄<sub>[Mn<sup>2+</sup>]</sub> <span class="why">&nbsp;&nbsp;Nernst</span></span></div>
+              <div class="l"><span class="n">3</span><span class="eq">E =</span><span class="f">1,51 + 0,012·log <sup>10<sup>−3</sup></sup>⁄<sub>10<sup>−1</sup></sub> − 0,096·pH <span class="why">&nbsp;&nbsp;log(a·b) = log a + log b</span></span></div>
+              <div class="l"><span class="n">4</span><span class="eq">E =</span><span class="f">1,51 + 0,012·(−2) − 0,096 × 2 <span class="why">&nbsp;&nbsp;log 10<sup>−2</sup> = −2</span></span></div>
+              <div class="l"><span class="n">5</span><span class="eq">E =</span><span><span class="res">1,29 V</span> <span class="why">&nbsp;&nbsp;2 chiffres après la virgule</span></span></div>
+            </div>
+            <p style="margin-top:14px"><i>Pour le diagramme,</i> on garde le pH comme inconnue au lieu de le remplacer :</p>
+            <div class="calc">
+              <div class="l"><span class="n">6</span><span class="eq">E =</span><span class="f">1,486 − 0,096 · pH <span class="why">&nbsp;&nbsp;c'est y = a·x + b : une droite</span></span></div>
+              <div class="l"><span class="n">7</span><span class="eq">→</span><span class="f">pH = 0 : E = 1,49 &nbsp;·&nbsp; pH = 14 : E = 0,14 <span class="why">&nbsp;&nbsp;deux points suffisent</span></span></div>
+            </div>
+            <svg class="epH" viewBox="0 0 320 200" style="--fr:#1E2A3A;max-width:250px;margin-top:6px" role="img" aria-label="Frontière tracée sur papier quadrillé">
+              <line class="ax" x1="40" y1="175" x2="300" y2="175"></line>
+              <line class="ax" x1="40" y1="25" x2="40" y2="175"></line>
+              <path class="fr" d="M40 63.6 L300 164.4"></path>
+              <g stroke="#B3352A" stroke-width="1.6">
+                <path d="M35 59 l10 9 M45 59 l-10 9"></path>
+                <path d="M295 160 l10 9 M305 160 l-10 9"></path>
+              </g>
+              <text class="dom" x="150" y="52">MnO₄⁻</text>
+              <text class="dom" x="95" y="150">Mn²⁺</text>
+              <text x="36" y="186">0</text><text x="292" y="186">14</text>
+              <text x="150" y="196" text-anchor="middle">pH</text><text x="14" y="20">E (V)</text>
+            </svg>
+          </div>
+          <div class="marge">
+            <span class="t">Pourquoi 0,096</span>
+            0,06/5 × 8 = 0,096. Le 8 vient des 8 <span class="f">H<sup>+</sup></span> de la demi-équation ; le 5, des 5 électrons.
+            <div class="ti"><span class="k">TI-Nspire CX CAS II</span>
+              <code>log(10^(−2))</code> donne −2.<br>
+              Touche <code>log</code> (pas <code>ln</code>) :<br>
+              <b>ctrl</b> + <b>10ˣ</b>.
+            </div>
+            <span class="hand">le − du pH ne s'oublie<br>jamais : 8 H⁺ ⟹ −0,096</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="stage-cap"><span class="mono">Maquette 02 · Cahier de laboratoire</span><span class="mono">Charter · Bradley Hand · papier quadrillé</span></div>
+  </div>
+
+  <p class="nerst-note"><b>Sur Nernst :</b> chaque ligne du calcul porte sa justification à droite. La ligne 3 est celle qui manquait : c'est là que log(a·b) se casse en deux et que le terme en pH apparaît. Le site pose la copie que tu dois savoir écrire.</p>
+
+  <div class="verdict">
+    <div class="plus"><h4>Ce que ça règle</h4><p>La rédaction — notée à chaque contrôle — et le pas-à-pas du calcul. C'est la seule direction où l'on voit <em>pourquoi</em> chaque ligne suit la précédente.</p></div>
+    <div class="moins"><h4>Ce que ça coûte</h4><p>La plus fragile à exécuter : le quadrillage et l'écriture manuscrite virent vite au pastiche. Et c'est une direction qui vieillit mal si on en abuse.</p></div>
+    <div><h4>Effort</h4><p>Moyen. Surtout du CSS, mais chaque calcul du site doit être réécrit en lignes justifiées.</p></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ 03 ═══════════════════════ -->
+<section class="dir" id="d3">
+  <div class="dir-head">
+    <div class="dir-num">03</div>
+    <div>
+      <h2 class="sec">Par le geste</h2>
+      <p class="conv">Le contrôle est le même depuis quatre ans. Alors la colonne vertébrale du site, ce sont ses cinq exercices — pas les chapitres du cours.</p>
+      <div class="doc">
+        <p>Cinq pages, une par geste : <b>définir</b>, <b>équilibrer</b>, <b>monter une pile</b>, <b>appliquer Nernst</b>, <b>lire un diagramme E-pH</b>. Chaque page donne la recette en étapes numérotées, l'exemple entièrement rédigé, le piège, les années où le geste est tombé, et un entraîneur qui régénère l'exercice avec d'autres espèces.</p>
+        <p>Le cours ne disparaît pas : il devient la <em>justification</em>, dépliable sous chaque étape. On inverse l'ordre habituel — on apprend le geste, puis pourquoi il marche.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="mk p3">
+      <div class="top">
+        <div class="g"><span class="n">Geste 1</span><b>Définir</b></div>
+        <div class="g"><span class="n">Geste 2</span><b>Équilibrer</b></div>
+        <div class="g"><span class="n">Geste 3</span><b>Monter une pile</b></div>
+        <div class="g on"><span class="n">Geste 4</span><b>Appliquer Nernst</b></div>
+        <div class="g"><span class="n">Geste 5</span><b>Lire un E-pH</b></div>
+      </div>
+      <div class="in">
+        <div>
+          <h4>Appliquer la loi de Nernst</h4>
+          <p class="sub">Tombé en 2022, 2023 et 2024 — toujours au même format : « écrire la loi de Nernst pour le couple … et calculer le potentiel d'électrode ».</p>
+          <ol class="rec">
+            <li><b>Écris la demi-équation équilibrée</b> du couple, en milieu acide. C'est elle qui donne <i>n</i> (les électrons) et le nombre de <span class="f">H<sup>+</sup></span>.<br><span style="color:var(--g-mut);font-size:13px">Ici : <span class="f"><span class="ox">MnO<sub>4</sub><sup>−</sup></span> + 8 H<sup>+</sup> + <span class="el">5 e<sup>−</sup></span> = <span class="rd">Mn<sup>2+</sup></span> + 4 H<sub>2</sub>O</span> ⟹ n = 5, 8 H⁺</span></li>
+            <li><b>Pose Nernst</b> : oxydant en haut du log, réducteur en bas, chacun à la puissance de son coefficient. <span class="f">H<sup>+</sup></span> compte comme un réactif.</li>
+            <li><b>Casse le log</b> : log(a·b) = log a + log b. Le terme en <span class="f">[H<sup>+</sup>]<sup>8</sup></span> devient <span class="f">8·log[H<sup>+</sup>] = −8·pH</span>.</li>
+            <li><b>Remplace</b> et calcule. Les concentrations en 10⁻ⁿ rendent le log immédiat : <span class="f">log(10<sup>−3</sup>/10<sup>−1</sup>) = −2</span>.</li>
+            <li><b>Vérifie l'ordre de grandeur</b> : E doit rester proche de E°, à quelques dixièmes de volt près.</li>
+          </ol>
+          <div style="border:1px solid var(--g-line);border-left:3px solid #B3352A;border-radius:8px;padding:11px 14px;margin-top:4px">
+            <span style="font-family:var(--mono);font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:#B3352A;font-weight:600;display:block;margin-bottom:5px">Le piège</span>
+            <span style="font-size:13.5px">Oublier que <span class="f">[H<sup>+</sup>]</span> est <em>dans</em> le log. Le terme en pH ne s'ajoute pas après coup : il sort du log, avec le coefficient 8 de la demi-équation. Un signe perdu ici coûte tout l'exercice 5.</span>
+          </div>
+          <details style="margin-top:12px;font-size:13.5px">
+            <summary style="cursor:default;color:var(--g-mut)">Exemple entièrement rédigé — sujet 2023, couple <span class="f">FeO<sub>4</sub><sup>2−</sup>/Fe<sup>3+</sup></span></summary>
+          </details>
+          <details style="margin-top:5px;font-size:13.5px">
+            <summary style="cursor:default;color:var(--g-mut)">Pourquoi ça marche — la justification du cours (§ 6)</summary>
+          </details>
+        </div>
+        <aside>
+          <div class="tombe"><span class="k">Où ça tombe</span>
+            Exercice 4 du sujet, 3 points sur 20. Couples déjà tombés : <span class="f">HSO<sub>4</sub><sup>−</sup>/SO<sub>2</sub></span>, <span class="f">FeO<sub>4</sub><sup>2−</sup>/Fe<sup>3+</sup></span>, <span class="f">MnO<sub>2</sub>/Mn<sup>3+</sup></span>.
+            <div class="y"><span>2024</span><span>2023</span><span>2022</span></div>
+          </div>
+          <div class="drill"><span class="k">Entraîneur — nouveau tirage</span>
+            <div class="q">Couple <span class="f"><span class="ox">Cr<sub>2</sub>O<sub>7</sub><sup>2−</sup></span>/<span class="rd">Cr<sup>3+</sup></span></span>, E° = 1,33 V.<br>[Cr₂O₇²⁻] = 10⁻², [Cr³⁺] = 10⁻¹, pH = 1.</div>
+            <div class="in2">E = <input value="" placeholder="?" readonly> V <button>vérifier</button></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+    <div class="stage-cap"><span class="mono">Maquette 03 · Par le geste</span><span class="mono">Avenir Next · SF Mono · 5 gestes = 5 pages</span></div>
+  </div>
+
+  <p class="nerst-note"><b>Sur Nernst :</b> le geste devient une page entière avec sa recette en 5 étapes et un entraîneur qui retire un couple différent à chaque fois. C'est la direction qui te fait <em>répéter</em> le calcul, pas seulement le lire.</p>
+
+  <div class="verdict">
+    <div class="plus"><h4>Ce que ça règle</h4><p>La panique de la feuille blanche : le site est rangé comme le sujet. Et l'entraîneur permet de refaire le geste vingt fois avec d'autres nombres — c'est ce qui manque quand on redouble.</p></div>
+    <div class="moins"><h4>Ce que ça coûte</h4><p>Le cours passe au second plan : pour comprendre <em>pourquoi</em>, il faut déplier. Et il faut écrire cinq entraîneurs, dont ceux d'équilibrage et de E-pH sont du vrai travail.</p></div>
+    <div><h4>Effort</h4><p>Le plus élevé des quatre. Cinq générateurs d'exercices avec correction automatique.</p></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ 04 ═══════════════════════ -->
+<section class="dir" id="d4">
+  <div class="dir-head">
+    <div class="dir-num">04</div>
+    <div>
+      <h2 class="sec">La chaîne du calcul</h2>
+      <p class="conv">Nernst, E = f(pH) et le diagramme E-pH ne sont pas trois sujets : c'est un seul chemin, en cinq maillons. Le site est ce chemin.</p>
+      <div class="doc">
+        <p>Chaque maillon est une ligne : à gauche l'expression, au milieu son application numérique, à droite <b>la maths de niveau 3ᵉ qui la débloque</b> et, quand il faut, les touches de la TI-Nspire. On descend la chaîne et on arrive au diagramme sans avoir jamais sauté d'étape.</p>
+        <p>Le maillon 4 est celui qui a manqué : <b>E = 1,486 − 0,096·pH est une droite</b> <span class="f">y = ax + b</span>. Une fois ce mot posé, le diagramme E-pH cesse d'être un dessin et devient un graphique qu'on sait tracer avec deux points.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="mk p4">
+      <div class="hd"><h4>De la loi de Nernst à la frontière du diagramme</h4><span class="tag">chaîne 3 / 7</span></div>
+      <p class="sub" style="text-transform:none;letter-spacing:.02em;font-size:11px">Couple <span class="f ox">MnO<sub>4</sub><sup>−</sup></span> / <span class="f rd">Mn<sup>2+</sup></span> · E° = 1,51 V · concentrations 10⁻³ et 10⁻¹ mol·L⁻¹</p>
+
+      <div class="chain">
+        <div class="link done">
+          <div class="no">01</div>
+          <div class="main">
+            <div class="t">La demi-équation donne n et le nombre de H⁺</div>
+            <div class="expr"><span class="f"><span class="ox">MnO<sub>4</sub><sup>−</sup></span> + 8 H<sup>+</sup> + <span class="el">5 e<sup>−</sup></span> = <span class="rd">Mn<sup>2+</sup></span> + 4 H<sub>2</sub>O</span></div>
+            <div class="num">n = <span class="v">5</span> · coefficient de H⁺ = <span class="v">8</span></div>
+          </div>
+          <div class="aside">Tout part de là. Se tromper de <b>n</b>, c'est se tromper sur toute la suite.</div>
+        </div>
+
+        <div class="link done">
+          <div class="no">02</div>
+          <div class="main">
+            <div class="t">Nernst : oxydant en haut, réducteur en bas</div>
+            <div class="expr"><span class="f">E = E° + <sup>0,06</sup>⁄<sub>5</sub> · log <sup>[MnO<sub>4</sub><sup>−</sup>]·[H<sup>+</sup>]<sup>8</sup></sup>⁄<sub>[Mn<sup>2+</sup>]</sub></span></div>
+          </div>
+          <div class="aside"><b>Un logarithme, c'est un compteur de zéros.</b> log(10⁻²) = −2, log(10³) = 3. Rien d'autre à savoir ici.</div>
+        </div>
+
+        <div class="link done">
+          <div class="no">03</div>
+          <div class="main">
+            <div class="t">Casser le log en deux morceaux</div>
+            <div class="expr"><span class="f">E = 1,51 + 0,012·log <sup>[MnO<sub>4</sub><sup>−</sup>]</sup>⁄<sub>[Mn<sup>2+</sup>]</sub> + 0,012 × 8 × log[H<sup>+</sup>]</span></div>
+            <div class="num">0,012 × 8 = <span class="v">0,096</span> &nbsp;et&nbsp; log[H⁺] = <span class="v">−pH</span></div>
+          </div>
+          <div class="aside"><b>log(a·b) = log a + log b.</b> C'est la seule règle de log dont tu as besoin de tout le module.<br><code>log(x)</code> sur la TI : <b>ctrl</b> + <b>10ˣ</b>.</div>
+        </div>
+
+        <div class="link">
+          <div class="no">04</div>
+          <div class="main">
+            <div class="t">Le résultat est une droite — c'est le maillon qui manquait</div>
+            <div class="expr"><span class="f">E = 1,486 − 0,096 · pH</span></div>
+            <div class="num">forme <span class="v">y = a·x + b</span> · pente a = <span class="v">−0,096</span> · ordonnée b = <span class="v">1,486</span></div>
+          </div>
+          <div class="aside"><b>Une droite se trace avec deux points.</b> pH = 0 → E = 1,49 ; pH = 14 → E = 0,14. On relie : c'est la frontière.</div>
+        </div>
+
+        <div class="link">
+          <div class="no">05</div>
+          <div class="main">
+            <div class="t">La droite est la frontière du diagramme E-pH</div>
+            <svg class="epH" viewBox="0 0 320 200" style="--fr:#6E2A8F;max-width:270px" role="img" aria-label="Diagramme E-pH : frontière MnO4- / Mn2+">
+              <line class="gr" x1="40" y1="25" x2="300" y2="25"></line>
+              <line class="gr" x1="40" y1="100" x2="300" y2="100"></line>
+              <line class="gr" x1="133" y1="25" x2="133" y2="175"></line>
+              <line class="gr" x1="226" y1="25" x2="226" y2="175"></line>
+              <line class="ax" x1="40" y1="175" x2="300" y2="175"></line>
+              <line class="ax" x1="40" y1="25" x2="40" y2="175"></line>
+              <path class="fr" d="M40 63.6 L300 164.4"></path>
+              <circle class="pt" cx="40" cy="63.6" r="3"></circle>
+              <circle class="pt" cx="300" cy="164.4" r="3"></circle>
+              <circle cx="77" cy="78" r="3" fill="#B26A00" opacity=".5"></circle>
+              <text class="dom" x="150" y="52" fill="#8E2F6B">MnO₄⁻</text>
+              <text class="dom" x="90" y="150" fill="#1B5E8E">Mn²⁺</text>
+              <text x="36" y="186">0</text><text x="129" y="186">5</text><text x="222" y="186">10</text><text x="292" y="186">14</text>
+              <text x="12" y="66">1,5</text><text x="12" y="103">1,0</text><text x="12" y="141">0,5</text>
+              <text x="150" y="196" text-anchor="middle">pH</text>
+              <text x="14" y="20">E (V)</text>
+              <text x="46" y="58" fill="#B26A00">(0 ; 1,49)</text>
+              <text x="236" y="157" fill="#B26A00">(14 ; 0,14)</text>
+            </svg>
+          </div>
+          <div class="aside">Au-dessus de la droite, l'espèce <b>oxydée</b> ; en dessous, la <b>réduite</b>. Le point orange marque ton calcul : pH = 2, E = 1,29 V — dans le domaine de <span class="f ox">MnO<sub>4</sub><sup>−</sup></span>.</div>
+        </div>
+      </div>
+
+      <div class="fin">
+        <span class="res">E = 1,29 V à pH = 2</span>
+        <span class="ctrl">Contrôle : E reste à quelques dixièmes de E° = 1,51 V ✓</span>
+      </div>
+    </div>
+    <div class="stage-cap"><span class="mono">Maquette 04 · La chaîne du calcul</span><span class="mono">New York · SF Mono · 5 maillons, aucun saut</span></div>
+  </div>
+
+  <p class="nerst-note"><b>Sur Nernst :</b> c'est la direction entièrement construite pour ta difficulté. Elle refuse le saut entre « calculer E » et « tracer le diagramme » en posant le maillon 4 — <em>c'est une droite</em> — que ni le cours ni le corrigé n'énoncent jamais.</p>
+
+  <div class="verdict">
+    <div class="plus"><h4>Ce que ça règle</h4><p>Exactement ce que tu as raté : le chemin Nernst → E(pH) → droite → frontière, sans trou. Et les maths de 3ᵉ sont dans la colonne de droite, jamais supposées connues.</p></div>
+    <div class="moins"><h4>Ce que ça coûte</h4><p>C'est une direction pour la zone difficile, pas pour tout le module : les définitions et le schéma de pile n'ont pas de « chaîne ». Il faudra une autre mise en page pour eux.</p></div>
+    <div><h4>Effort</h4><p>Moyen à élevé. Le traceur E-pH interactif est le morceau de bravoure.</p></div>
+  </div>
+</section>
+
+<section class="blk" id="reco">
+  <h2 class="sec">Ce que je te propose</h2>
+  <div class="ask">
+    <div class="doc" style="max-width:none">
+      <p><b>Deux entrées sur un seul contenu.</b> Le site couvre l'intégralité des trois chapitres — les 15 sections de la carte ci-dessus, corrosion comprise. Ce qui change d'une direction à l'autre, ce n'est pas ce qui est couvert, c'est <em>par où l'on entre</em>.</p>
+      <p>Je propose de garder les deux chemins vers le même contenu : <b>le cours complet, chapitre par chapitre</b>, pour lire et comprendre ; et <b>les cinq gestes</b>, qui sont un index vers ce cours pour réviser à l'approche du contrôle. Un geste n'est pas un résumé du cours : c'est un raccourci qui pointe vers ses sections, avec la recette, le piège et l'entraîneur.</p>
+      <p><b>La mise en page, elle, s'adapte au contenu</b> — c'est tout l'intérêt de ne pas dupliquer Ondes : la chaîne de 04 pour Nernst et le diagramme E-pH ; les lignes justifiées de 02 pour tous les calculs (fem, n.o., équilibrage) ; le schéma annoté et sa liste de contrôle pour les piles ; l'échelle des E° et le gamma pour la prévision ; le dock de 01 pour garder la table des potentiels accessible partout.</p>
+    </div>
+  <div class="doc" style="max-width:36em;margin-top:1.6rem">
+    <p><b>Preuve que la mise en page ne se réduit pas au calcul.</b> Voici le geste 3 — monter une pile — dans la direction recommandée. Aucune formule à manipuler : un schéma à annoter et six éléments à ne pas oublier, exactement ce que le sujet réclame chaque année.</p>
+  </div>
+
+  <div class="stage">
+    <div class="mk pile">
+      <h4>Monter et annoter une pile</h4>
+      <p class="sub">Tombé en 2022, 2023, 2024 et 2025 — le seul geste présent aux quatre sujets. Exemple : la pile Daniell <span class="f rd">Zn</span>/<span class="f ox">Cu</span>.</p>
+      <div class="two">
+        <div>
+          <svg class="cell" viewBox="0 0 470 250" role="img" aria-label="Schéma annoté d'une pile Daniell">
+            <!-- fil extérieur -->
+            <path d="M105 55 L105 30 L365 30 L365 55" fill="none" stroke="#111214" stroke-width="1.6"/>
+            <!-- électrons -->
+            <path d="M180 22 L215 22" stroke="#B26A00" stroke-width="1.6"/>
+            <path d="M215 22 l-5 -3 M215 22 l-5 3" stroke="#B26A00" stroke-width="1.6" fill="none"/>
+            <text x="150" y="18" fill="#B26A00">e⁻</text>
+            <!-- courant -->
+            <path d="M290 22 L255 22" stroke="#6E2A8F" stroke-width="1.6"/>
+            <path d="M255 22 l5 -3 M255 22 l5 3" stroke="#6E2A8F" stroke-width="1.6" fill="none"/>
+            <text x="296" y="18" fill="#6E2A8F">I</text>
+            <!-- béchers -->
+            <path d="M45 100 L45 215 L175 215 L175 100" fill="none" stroke="#111214" stroke-width="1.4"/>
+            <path d="M295 100 L295 215 L425 215 L425 100" fill="none" stroke="#111214" stroke-width="1.4"/>
+            <rect x="46" y="128" width="128" height="86" fill="#DCE9F5"/>
+            <rect x="296" y="128" width="128" height="86" fill="#CFE3F0"/>
+            <!-- pont salin -->
+            <path d="M130 165 L130 80 Q130 70 140 70 L330 70 Q340 70 340 80 L340 165"
+                  fill="none" stroke="#6E7178" stroke-width="7" stroke-linecap="round" opacity=".35"/>
+            <text x="196" y="62" class="lab">pont salin — KNO₃</text>
+            <path d="M215 88 L245 88" stroke="#111214" stroke-width="1.2"/>
+            <path d="M245 88 l-4 -2.5 M245 88 l-4 2.5" stroke="#111214" stroke-width="1.2" fill="none"/>
+            <text x="186" y="91">K⁺</text>
+            <path d="M255 104 L225 104" stroke="#111214" stroke-width="1.2"/>
+            <path d="M225 104 l4 -2.5 M225 104 l4 2.5" stroke="#111214" stroke-width="1.2" fill="none"/>
+            <text x="259" y="107">NO₃⁻</text>
+            <!-- électrodes -->
+            <rect x="99" y="55" width="12" height="130" fill="#8FA3B0"/>
+            <rect x="359" y="55" width="12" height="130" fill="#C08457"/>
+            <!-- annotations gauche -->
+            <text x="60" y="50" font-weight="600">⊖ ANODE</text>
+            <text x="60" y="200" font-weight="600" fill="#1B5E8E">Zn(s)</text>
+            <text x="60" y="120" class="lab">Zn²⁺ 10⁻¹ M</text>
+            <text x="46" y="238" fill="#1B5E8E">oxydation : Zn → Zn²⁺ + 2 e⁻</text>
+            <!-- annotations droite -->
+            <text x="330" y="50" font-weight="600">⊕ CATHODE</text>
+            <text x="330" y="200" font-weight="600" fill="#8E2F6B">Cu(s)</text>
+            <text x="330" y="120" class="lab">Cu²⁺ 10⁻¹ M</text>
+            <text x="286" y="238" fill="#8E2F6B">réduction : Cu²⁺ + 2 e⁻ → Cu</text>
+          </svg>
+          <div class="sym">⊖ &nbsp;<span class="f rd">Zn<span class="st">(s)</span></span> &nbsp;|&nbsp; <span class="f">Zn<sup>2+</sup></span> &nbsp;‖&nbsp; <span class="f">Cu<sup>2+</sup></span> &nbsp;|&nbsp; <span class="f ox">Cu<span class="st">(s)</span></span>&nbsp; ⊕</div>
+        </div>
+        <aside>
+          <div class="chk"><span class="k">Les six oublis qui coûtent des points</span>
+            <ul style="margin:0;padding:0">
+              <li class="ok">le signe de chaque électrode</li>
+              <li class="ok">anode / cathode nommées</li>
+              <li class="ok">sens des électrons dans le fil</li>
+              <li class="ok">sens du courant — l'inverse</li>
+              <li class="ok">sens de migration des ions du pont</li>
+              <li>l'écriture symbolique, avec la double barre</li>
+            </ul>
+          </div>
+          <div class="chk" style="margin-top:12px;border-left:3px solid #B3352A">
+            <span class="k" style="color:#B3352A">Le piège</span>
+            L'anode est le pôle <b>⊖</b> dans une pile, mais le pôle <b>⊕</b> dans une électrolyse. Ce qui ne change jamais : <b>l'oxydation a toujours lieu à l'anode</b>.
+          </div>
+        </aside>
+      </div>
+    </div>
+    <div class="stage-cap"><span class="mono">Spécimen · geste 3 — monter une pile</span><span class="mono">aucun calcul, un schéma et six annotations</span></div>
+  </div>
+
+    <ol>
+      <li><b>La structure : par gestes ou par chapitres ?</b> Le sujet ne change pas d'une année sur l'autre — je penche pour les gestes.
+        <span class="opt"><span class="reco">Je recommande les 5 gestes</span>, avec le cours accessible en dépliant sous chaque étape.</span></li>
+      <li><b>Le niveau de maths.</b> Je pars du principe qu'aucun logarithme n'est acquis : une page « boîte à outils » explique de zéro les puissances de 10, log comme compteur de zéros, log(a·b), pH = −log[H⁺], et y = ax + b.
+        <span class="opt"><span class="reco">Recommandé</span> — c'est le socle sans lequel les gestes 4 et 5 ne passent pas.</span></li>
+      <li><b>La TI-Nspire CX CAS II.</b> Encadrés de touches à chaque endroit où une saisie prête à confusion (log vs ln, la touche (−), la notation 1e−3, l'affichage exact du CAS qui donne des fractions au lieu de décimales).
+        <span class="opt">Dis-moi si tu veux aussi un mode « vérifier mon calcul » qui montre la séquence de touches complète.</span></li>
+      <li><b>Les corrigés des 4 CC.</b> Ils sont scannés (manuscrits). Je peux les retranscrire entièrement en texte, exercice par exercice, pour qu'ils soient lisibles, cherchables et imprimables.
+        <span class="opt"><span class="reco">Recommandé</span> : c'est le matériau le plus proche du contrôle, et il est aujourd'hui illisible sur écran.</span></li>
+      <li><b>Les points de contrôle</b> — comme sur Ondes, une pastille par fait, question de compréhension.
+        <span class="opt">Même mécanique, mais adaptée : ici beaucoup de questions seront des <em>mini-calculs</em> plutôt que des QCM.</span></li>
+    </ol>
+  </div>
+  <div class="doc" style="margin-top:1.5rem">
+    <p style="color:var(--mut)">Le dépôt <b>ut3-redox</b> est créé (privé) avec les 12 PDF versionnés. Aucune ligne de site n'est encore écrite : dis-moi la direction — ou le mélange — et je construis.</p>
+  </div>
+</section>
+
+</div>

@@ -1,0 +1,233 @@
+<title>Les fractions du parcours</title>
+
+<style>
+:root{
+  --bg:#F8F7F4; --ink:#18191D; --mut:#65686F; --line:#E3E1DB;
+  --acc:#6E2A8F; --mark:#B3352A; --ok:#1C6B44; --stage:#EBE9E4; --paper:#FCFCFA;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --serif:ui-serif,"New York",Charter,"Iowan Old Style",Georgia,serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#111114;--ink:#E9E8E4;--mut:#9B9DA5;--line:#2A2A31;--acc:#C08AD8;--mark:#E88276;--ok:#63C793;--stage:#191A1F;--paper:#16171B}}
+:root[data-theme="dark"]{--bg:#111114;--ink:#E9E8E4;--mut:#9B9DA5;--line:#2A2A31;--acc:#C08AD8;--mark:#E88276;--ok:#63C793;--stage:#191A1F;--paper:#16171B}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1060px;margin:0 auto;padding:0 clamp(18px,4vw,46px) 6rem}
+.mono{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;font-weight:500}
+.doc{max-width:34em}.doc p{margin:0 0 .9em}.doc b{font-weight:600}.doc em{font-style:italic}
+header.top{padding:clamp(48px,8vw,88px) 0 1.6rem}
+.top .eyebrow{color:var(--acc);display:flex;align-items:center;gap:.8rem}
+.top .eyebrow::after{content:"";flex:1;height:1px;background:var(--line);max-width:190px}
+h1{font-weight:600;font-size:clamp(2rem,5.4vw,3.1rem);line-height:1.06;letter-spacing:-.022em;margin:1.1rem 0 .8rem;max-width:15ch;text-wrap:balance}
+h1 span{color:var(--acc)}
+h2.sec{font-weight:600;font-size:1.42rem;letter-spacing:-.015em;margin:0 0 .8rem}
+section.blk{padding-top:4rem}
+.k{font-family:var(--mono);font-size:.66rem;letter-spacing:.11em;text-transform:uppercase;color:var(--mut);font-weight:600}
+
+/* ════════════ NOTATION CHIMIQUE ════════════ */
+.f{white-space:nowrap;text-transform:none!important}
+.f sub{font-size:.68em;vertical-align:-.25em}
+.f sup{font-size:.68em;vertical-align:.42em}
+.ox{color:#8E2F6B}.rd{color:#1B5E8E}.el{color:#A05B00}
+
+/* ════════════════════════════════════════════════════════════
+   LA FRACTION — empilée, comme on l'écrit à la main
+   ════════════════════════════════════════════════════════════ */
+.fr{
+  display:inline-block;
+  vertical-align:middle;          /* la barre se cale sur l'axe des maths */
+  text-align:center;
+  margin:0 .24em;
+  line-height:1.24;
+  white-space:nowrap;
+}
+.fr>.n{display:block;padding:0 .38em .12em;border-bottom:1.15px solid currentColor}
+.fr>.d{display:block;padding:.14em .38em 0}
+/* une fraction dans une fraction rétrécit d'un cran */
+.fr .fr{font-size:.92em}
+/* l'opérateur qui précède une fraction se centre sur elle */
+.op{vertical-align:middle}
+/* les lignes qui portent une fraction ont besoin d'air */
+.eqline{line-height:2.9;margin:0}
+
+/* ════════════ mise en page de la planche ════════════ */
+.stage{background:var(--stage);border:1px solid var(--line);padding:clamp(14px,2.4vw,30px);margin-top:1.4rem}
+.paper{background:var(--paper);padding:clamp(16px,2.6vw,30px)}
+.cap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;color:var(--mut);margin-top:.7rem}
+
+.ab{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);margin-top:1.4rem}
+@media(max-width:760px){.ab{grid-template-columns:1fr}}
+.ab>div{background:var(--paper);padding:1.1rem 1.3rem 1.3rem}
+.ab .lab{display:flex;align-items:baseline;gap:.6rem;margin-bottom:.9rem}
+.ab .lab .t{font-family:var(--mono);font-size:.62rem;letter-spacing:.11em;text-transform:uppercase;font-weight:600}
+.ab .before .t{color:var(--mark)}
+.ab .after .t{color:var(--ok)}
+.ab .lab small{color:var(--mut);font-size:.78rem}
+.ab .eq{font-size:19px;text-align:center;padding:.5rem 0}
+.ab .before .eq{line-height:2.1}
+
+/* le catalogue */
+.cat{display:grid;grid-template-columns:auto 1fr;gap:0;border-top:1px solid var(--line);margin-top:1.3rem}
+.cat>div{border-bottom:1px solid var(--line);padding:1rem .6rem 1.05rem 0;display:flex;align-items:center}
+.cat>div.d{padding-left:1.4rem;font-size:.92rem;color:var(--mut);line-height:1.5;display:block}
+.cat .eq{font-size:18px}
+.cat .d b{color:var(--ink);font-weight:600}
+.cat .d code{font-family:var(--mono);font-size:.82em;background:var(--stage);border-radius:4px;padding:1px 5px}
+
+/* la règle */
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(238px,1fr));gap:1px;background:var(--line);
+       border-block:1px solid var(--line);margin-top:1.4rem}
+.rules div{background:var(--bg);padding:.95rem 1.1rem 1.05rem}
+.rules b{display:block;font-size:.95rem;margin:.3rem 0 .3rem}
+.rules p{margin:0;font-size:.88rem;line-height:1.45;color:var(--mut)}
+
+/* contexte : un maillon de la chaîne */
+.link{display:grid;grid-template-columns:24px minmax(0,1fr) 210px;gap:0 15px;border-top:1px solid var(--line);
+      padding:12px 0;align-items:start;background:var(--paper)}
+.link:last-of-type{border-bottom:1px solid var(--line)}
+.link .no{font-family:var(--mono);font-size:10.5px;color:var(--mut);padding-top:4px}
+.link .t{font-family:var(--sans);font-size:11.5px;font-weight:600;color:var(--mut);margin-bottom:2px}
+.link .expr{font-size:17px}
+.link .val{font-family:var(--mono);font-size:12.5px;margin-top:4px}
+.link .val .v{color:var(--acc);font-weight:600}
+.link .aide{font-size:12px;color:var(--mut);line-height:1.45;border-left:1px solid var(--line);padding-left:13px}
+.link .aide b{color:var(--ink)}
+.link .aide .lvl{font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:#A05B00;display:block;margin-bottom:3px}
+
+.note{border-left:2px solid var(--acc);padding-left:1.1rem;margin:1.2rem 0 0;max-width:36em;font-size:.95rem;color:var(--mut)}
+.note b{color:var(--ink)}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+</style>
+
+<div class="wrap">
+
+<header class="top">
+  <p class="mono eyebrow">Maquette · un seul sujet : les fractions</p>
+  <h1>Les fractions du <span>parcours</span></h1>
+  <div class="doc">
+    <p>Tu as raison, et c'est un défaut réel : j'avais utilisé la fraction <em>typographique</em> — numérateur en exposant, barre oblique, dénominateur en indice. Elle convient à « ½ » dans une phrase, pas à <span class="f">[Ox]<sup>x</sup>·[A]<sup>a</sup></span> sur <span class="f">[Red]<sup>y</sup>·[B]<sup>b</sup></span>.</p>
+    <p>Voici la fraction telle qu'on l'écrit à la main : <b>numérateur seul en haut, barre pleine, dénominateur seul en bas</b>, sur toutes les fractions du cours.</p>
+  </div>
+</header>
+
+<section class="blk" style="padding-top:1.2rem">
+  <h2 class="sec">Avant / après, sur la formule qui compte</h2>
+  <div class="ab">
+    <div class="before">
+      <div class="lab"><span class="t">Avant</span><small>fraction typographique</small></div>
+      <div class="eq"><span class="f">E = E° + <sup>0,06</sup>⁄<sub>n</sub> · log <sup>[Ox]<sup>x</sup> · [A]<sup>a</sup></sup>⁄<sub>[Red]<sup>y</sup> · [B]<sup>b</sup></sub></span></div>
+    </div>
+    <div class="after">
+      <div class="lab"><span class="t">Après</span><small>fraction empilée</small></div>
+      <div class="eq"><span class="f">E = E° + <span class="fr"><span class="n">0,06</span><span class="d">n</span></span> · <span class="op">log</span> <span class="fr"><span class="n">[Ox]<sup>x</sup> · [A]<sup>a</sup></span><span class="d">[Red]<sup>y</sup> · [B]<sup>b</sup></span></span></span></div>
+    </div>
+  </div>
+  <div class="note"><b>Ce qui change concrètement :</b> la barre est pleine et horizontale, elle prend la largeur du plus large des deux étages, et rien n'est réduit en exposant. Les indices et exposants chimiques restent lisibles parce qu'ils ne sont plus <em>dans</em> un exposant.</div>
+</section>
+
+<section class="blk">
+  <h2 class="sec">Toutes les fractions du cours</h2>
+  <div class="doc"><p>Le catalogue complet des cas qui apparaissent dans les trois chapitres, rendus avec le même composant.</p></div>
+
+  <div class="stage"><div class="paper">
+    <div class="cat">
+      <div class="eq"><span class="f"><span class="fr"><span class="n">0,06</span><span class="d">n</span></span></span></div>
+      <div class="d">Le coefficient de Nernst à 25 °C. <b>Le cas le plus fréquent</b> : deux caractères en haut, un en bas.</div>
+
+      <div class="eq"><span class="f"><span class="fr"><span class="n">R · T</span><span class="d">n · F</span></span></span></div>
+      <div class="d">La forme générale avant simplification, avec <code>R = 8,31</code>, <code>F = 96 500</code>. La barre s'étire au plus large des deux étages.</div>
+
+      <div class="eq"><span class="f"><span class="op">log</span> <span class="fr"><span class="n">[<span class="ox">MnO<sub>4</sub><sup>−</sup></span>] · [H<sup>+</sup>]<sup>8</sup></span><span class="d">[<span class="rd">Mn<sup>2+</sup></span>]</span></span></span></div>
+      <div class="d">Le cas critique : <b>des exposants et des indices dans les deux étages</b>. C'est celui qui était illisible en fraction typographique. Le <code>log</code> se centre sur la fraction au lieu de rester sur la ligne de base.</div>
+
+      <div class="eq"><span class="f"><span class="op">log</span> <span class="fr"><span class="n">[<span class="ox">HSO<sub>4</sub><sup>−</sup></span>] · [H<sup>+</sup>]<sup>3</sup></span><span class="d">[<span class="rd">SO<sub>2</sub></span>]</span></span></span></div>
+      <div class="d">Le sujet 2024. Même structure, autre couple.</div>
+
+      <div class="eq"><span class="f"><span class="fr"><span class="n">10<sup>−2</sup></span><span class="d">10<sup>−2</sup></span></span> = 1</span></div>
+      <div class="d">Les concentrations égales. Voir les deux <span class="f">10<sup>−2</sup></span> l'un au-dessus de l'autre rend <b>évident</b> que le rapport vaut 1 — ce qui est exactement le raisonnement à faire.</div>
+
+      <div class="eq"><span class="f">E = E° + <span class="fr"><span class="n">0,06</span><span class="d">2</span></span> · <span class="op">log</span> <span class="fr"><span class="n">[<span class="ox">Fe<sup>3+</sup></span>]</span><span class="d">1</span></span></span></div>
+      <div class="d">Quand le réducteur est un <b>solide</b>, il compte pour 1. Écrire ce 1 au dénominateur avant de le faire disparaître évite l'erreur classique du « j'ai oublié un terme ».</div>
+
+      <div class="eq"><span class="f"><span class="fr"><span class="n">[<span class="ox">Cr<sub>2</sub>O<sub>7</sub><sup>2−</sup></span>] · [H<sup>+</sup>]<sup>14</sup></span><span class="d">[<span class="rd">Cr<sup>3+</sup></span>]<sup>2</sup></span></span></span></div>
+      <div class="d">Le pire cas du programme : 14 protons, un coefficient 2 au dénominateur. Il tient sur une ligne et reste lisible.</div>
+
+      <div class="eq"><span class="f">pente = − <span class="fr"><span class="n">0,06 × 8</span><span class="d">5</span></span> = − 0,096</span></div>
+      <div class="d">La pente d'une frontière du diagramme E-pH. <b>Le calcul est visible dans la fraction</b>, pas caché derrière un résultat.</div>
+
+      <div class="eq"><span class="f">fem = E<sub>cathode</sub> − E<sub>anode</sub></span></div>
+      <div class="d">Sans fraction — pour mémoire, tout n'en a pas besoin.</div>
+
+      <div class="eq"><span class="f">K<sub>s3</sub> = <span class="fr"><span class="n">[<span class="ox">Fe<sup>3+</sup></span>] · [OH<sup>−</sup>]<sup>3</sup></span><span class="d">1</span></span> = 10<sup>−38</sup></span></div>
+      <div class="d">Les produits de solubilité du diagramme du fer.</div>
+
+      <div class="eq"><span class="f">E = E° + <span class="fr"><span class="n">0,06</span><span class="d">n</span></span> · <span class="op">log</span> <span class="fr"><span class="n"><span class="fr"><span class="n">[Ox]</span><span class="d">C°</span></span></span><span class="d"><span class="fr"><span class="n">[Red]</span><span class="d">C°</span></span></span></span></span></div>
+      <div class="d">Une fraction <b>dans</b> une fraction (activités rapportées à C° = 1 mol·L⁻¹). L'étage intérieur rétrécit d'un cran pour rester lisible. Hors programme, mais le composant le gère.</div>
+    </div>
+  </div>
+  <div class="cap"><span class="mono">Catalogue · 11 cas réels des trois chapitres</span><span class="mono">un seul composant, aucun réglage manuel</span></div>
+  </div>
+</section>
+
+<section class="blk">
+  <h2 class="sec">Les quatre règles du composant</h2>
+  <div class="rules">
+    <div><span class="k">Alignement</span><b>La barre se cale sur l'axe des maths</b><p>Pas sur la ligne de base : la fraction est centrée verticalement sur le milieu des minuscules, comme dans un livre. Le <code>=</code> et le <code>+</code> tombent en face de la barre.</p></div>
+    <div><span class="k">Largeur</span><b>La barre prend le plus large des deux étages</b><p>Elle ne dépasse jamais et ne rétrécit jamais. Un dénominateur d'un seul caractère donne une barre courte, et c'est correct.</p></div>
+    <div><span class="k">Interlignage</span><b>Les lignes d'équation respirent</b><p>Une ligne portant une fraction reçoit un interligne de 2,9 — sinon les étages mordent sur le paragraphe voisin. Les lignes sans fraction gardent l'interligne normal.</p></div>
+    <div><span class="k">Imbrication</span><b>Une fraction dans une fraction rétrécit</b><p>L'étage intérieur passe à 92 % pour rester lisible sans faire exploser la hauteur de ligne.</p></div>
+  </div>
+</section>
+
+<section class="blk">
+  <h2 class="sec">En contexte — la chaîne du calcul, réécrite</h2>
+  <div class="doc"><p>Les trois maillons de l'étape 12 qui portaient des fractions, avec le nouveau composant.</p></div>
+
+  <div class="stage"><div class="paper" style="padding-top:1.4rem">
+    <div class="link">
+      <div class="no">02</div>
+      <div>
+        <div class="t">Poser Nernst : oxydant en haut, réducteur en bas, H⁺ avec le reste</div>
+        <p class="eqline expr"><span class="f">E = E° + <span class="fr"><span class="n">0,06</span><span class="d">2</span></span> · <span class="op">log</span> <span class="fr"><span class="n">[<span class="ox">HSO<sub>4</sub><sup>−</sup></span>] · [H<sup>+</sup>]<sup>3</sup></span><span class="d">[<span class="rd">SO<sub>2</sub></span>]</span></span></span></p>
+        <div class="val"><span class="f">0,06 / 2 = <span class="v">0,03</span></span></div>
+      </div>
+      <div class="aide"><span class="lvl">Maths — niveau 3ᵉ</span><b>Un logarithme compte les zéros.</b> log(10⁻²) = −2, et <b>log(1) = 0</b>.</div>
+    </div>
+
+    <div class="link">
+      <div class="no">03</div>
+      <div>
+        <div class="t">Casser le log en deux : les concentrations d'un côté, le pH de l'autre</div>
+        <p class="eqline expr"><span class="f">E = E° + 0,03 · <span class="op">log</span> <span class="fr"><span class="n">[<span class="ox">HSO<sub>4</sub><sup>−</sup></span>]</span><span class="d">[<span class="rd">SO<sub>2</sub></span>]</span></span> + 0,03 × 3 × <span class="op">log</span> [H<sup>+</sup>]</span></p>
+        <div class="val"><span class="f">0,03 × 3 = <span class="v">0,09</span> &nbsp;et&nbsp; log[H⁺] = <span class="v">− pH</span></span></div>
+      </div>
+      <div class="aide"><span class="lvl">Maths — niveau 3ᵉ</span><b>log(a × b) = log a + log b.</b> La seule règle de log du module.</div>
+    </div>
+
+    <div class="link">
+      <div class="no">04</div>
+      <div>
+        <div class="t">Remplacer — ici les deux concentrations sont égales</div>
+        <p class="eqline expr"><span class="f">E = 0,17 + 0,03 × <span class="op">log</span> <span class="fr"><span class="n">10<sup>−2</sup></span><span class="d">10<sup>−2</sup></span></span> − 0,09 × 3</span></p>
+        <div class="val"><span class="f">log(1) = <span class="v">0</span> : le terme de concentration <b>disparaît</b></span></div>
+      </div>
+      <div class="aide"><span class="lvl">À repérer</span>Quand l'énoncé donne <b>la même concentration</b> aux deux espèces, ce terme s'annule toujours.</div>
+    </div>
+  </div>
+  <div class="cap"><span class="mono">Étape 12 · maillons 02 à 04</span><span class="mono">même contenu, fractions empilées</span></div>
+  </div>
+
+  <div class="note"><b>Un effet secondaire utile :</b> au maillon 04, voir <span class="f"><span class="fr" style="font-size:.9em"><span class="n">10<sup>−2</sup></span><span class="d">10<sup>−2</sup></span></span></span> avec les deux étages identiques l'un au-dessus de l'autre rend le « ça vaut 1 » immédiat. En fraction oblique, il fallait le déduire.</div>
+</section>
+
+<section class="blk">
+  <h2 class="sec">Deux points techniques</h2>
+  <div class="doc">
+    <p><b>À l'impression</b>, la fraction reste empilée : c'est du HTML, pas une image, et la barre est une bordure. Rien à faire de spécial.</p>
+    <p><b>Sur écran étroit</b>, une fraction large ne peut pas se couper en deux — un dénominateur ne passe jamais à la ligne. La ligne d'équation défile horizontalement dans son propre cadre plutôt que de déborder la page, exactement comme les tableaux larges.</p>
+    <p style="color:var(--mut)">Le composant fait quatre lignes de CSS et ne dépend d'aucune bibliothèque : il reste compatible avec la contrainte « 100 % hors ligne, aucune fonte distante ».</p>
+  </div>
+</section>
+
+</div>
