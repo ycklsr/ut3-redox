@@ -163,7 +163,7 @@ test('aucune capitalisation forcée sur une formule ni sur « pH »', async () =
       if (getComputedStyle(el).textTransform !== 'uppercase') continue;
       if (el.classList.contains('f')) { out.push('.f en majuscules : ' + el.textContent.slice(0, 30)); continue; }
       const propre = [...el.childNodes].filter(n => n.nodeType === 3).map(n => n.textContent).join('');
-      if (/pH|[A-Z][a-z]?[0-9₀-₉]|MnO|H2O/.test(propre)) out.push('texte chimique en majuscules : ' + propre.slice(0, 40));
+      if (/\bpH\b|\bpOH\b|[A-Z][a-z]?[0-9₀-₉]|MnO|H2O/.test(propre)) out.push('texte chimique en majuscules : ' + propre.slice(0, 40));
     }
     return out;
   });

@@ -47,6 +47,10 @@ await shot('05-paillasse',     { after: p => p.click('.dock .tab[data-tool="ti"]
 await shot('06-question',      { after: async p => { await p.click('#e12 .cp[data-cp="12-1"]'); await p.click('#q12-1 .opt[data-ok="0"]'); } });
 await shot('07-gestes',        { after: p => p.click('#m-ges') });
 await shot('08-couple',        { hash: 'e2' });
+await shot('21-outils-log',    { hash: 'e0', after: p => p.evaluate(() => { document.getElementById('read').scrollTop = 1150; }) });
+await shot('22-outils-droite', { hash: 'e0', after: p => p.evaluate(() => { document.getElementById('read').scrollTop = 3050; }) });
+await shot('23-outils-ti',     { hash: 'e0', after: p => p.evaluate(() => { document.getElementById('read').scrollTop = 4150; }) });
+await shot('24-outils-sombre', { hash: 'e0', scheme: 'dark', after: p => p.evaluate(() => { document.getElementById('read').scrollTop = 1150; }) });
 await shot('09-no-regles',     { hash: 'e3' });
 await shot('10-demi-equation', { hash: 'e4', after: p => p.evaluate(() => { document.getElementById('read').scrollTop = 700; }) });
 await shot('11-basique',       { hash: 'e5', after: p => p.evaluate(() => { document.getElementById('read').scrollTop = 1500; }) });

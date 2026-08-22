@@ -159,7 +159,8 @@ a{color:var(--acc)}
 .fr>.n{display:block;padding:0 .38em .12em;border-bottom:1.15px solid currentColor}
 .fr>.d{display:block;padding:.14em .38em 0}
 .fr .fr{font-size:.92em}
-.op{vertical-align:middle}
+.op{vertical-align:baseline}
+.op:has(+ .fr){vertical-align:middle}   /* centré seulement devant une fraction */
 .expr,.formula .e{line-height:2.6}
 
 /* l'encadré formule */
@@ -446,16 +447,306 @@ table.tab{border-collapse:collapse;margin:0;font-size:14.5px;width:100%;min-widt
   <h1><span class="num"></span><span class="t">La boîte à outils maths</span><span class="cnt"></span></h1>
   <div class="obj"><span class="k">En sortant de cette étape, tu sais</span>
     <p>Lire et écrire une <b>puissance de 10</b>, calculer un <b>logarithme</b> de tête quand c'est une puissance de 10, passer de <span class="f">[H<sup>+</sup>]</span> au <span class="f">pH</span> et revenir, reconnaître une <b>droite</b> <span class="f">y = a·x + b</span> — et saisir tout ça sans faute sur la TI-Nspire.</p></div>
+
   <p>Cette étape n'est pas dans le cours. Elle y est ajoutée parce que sans elle, les étapes 12 et 14 restent inaccessibles : ce ne sont pas les idées de chimie qui bloquent, c'est la marche mathématique qu'on saute en silence.</p>
-  <div class="chantier"><span class="k">Chantier — point 3 de l'ordre des travaux</span>
-    <ul>
-      <li>Les <b>puissances de 10</b> : ce que veut dire l'exposant, et pourquoi <span class="f">10<sup>−2</sup></span> est petit.</li>
-      <li>Le <b>logarithme comme compteur de zéros</b> : <span class="f">log(10<sup>3</sup>) = 3</span>, <span class="f">log(10<sup>−2</sup>) = −2</span>, <span class="f">log(1) = 0</span>.</li>
-      <li>La <b>seule règle de log</b> du module : <span class="f">log(a × b) = log a + log b</span>.</li>
-      <li><span class="f">pH = −log[H<sup>+</sup>]</span> — d'où vient le signe moins, et comment revenir en arrière.</li>
-      <li>La <b>fonction affine</b> <span class="f">y = a·x + b</span> : pente, ordonnée à l'origine, et deux points suffisent.</li>
-      <li>La <b>TI-Nspire CX CAS II</b> : <span class="f">ctrl + 10<sup>x</sup></span> pour <code>log</code>, la touche <span class="f">(−)</span>, et <span class="f">ctrl + enter</span> pour sortir de la fraction exacte.</li>
-    </ul></div>
+
+  <p>Rien de ce qui suit n'est supposé acquis. Tout est repris à zéro, et chaque outil est présenté <b>avec l'endroit exact du parcours où il sert</b>.</p>
+
+  <h2>1 · Les puissances de 10</h2>
+
+  <div class="def"><span class="k">Ce que dit l'exposant</span>
+    <p>L'exposant compte les déplacements de la virgule. <span class="f">10<sup>3</sup></span>, c'est 1 suivi de <b>trois zéros</b>. <span class="f">10<sup>−3</sup></span>, c'est la virgule déplacée de <b>trois rangs vers la gauche</b>.</p></div>
+
+  <div class="tw"><table class="tab">
+    <tr><th>Écriture</th><th>Valeur</th><th></th></tr>
+    <tr><td class="num"><span class="f">10<sup>3</sup></span></td><td class="num">1 000</td><td class="sm">grand</td></tr>
+    <tr><td class="num"><span class="f">10<sup>2</sup></span></td><td class="num">100</td><td></td></tr>
+    <tr><td class="num"><span class="f">10<sup>1</sup></span></td><td class="num">10</td><td></td></tr>
+    <tr><td class="num"><span class="f">10<sup>0</sup></span></td><td class="num">1</td><td class="sm">le pivot — toute puissance zéro vaut 1</td></tr>
+    <tr><td class="num"><span class="f">10<sup>−1</sup></span></td><td class="num">0,1</td><td></td></tr>
+    <tr><td class="num"><span class="f">10<sup>−2</sup></span></td><td class="num">0,01</td><td></td></tr>
+    <tr><td class="num"><span class="f">10<sup>−3</sup></span></td><td class="num">0,001</td><td class="sm">petit</td></tr>
+  </table></div>
+
+  <div class="piege"><span class="k">Un exposant négatif ne donne pas un nombre négatif</span>
+    <p><span class="f">10<sup>−2</sup></span> vaut <b>0,01</b>. C'est un nombre <b>positif</b>, simplement très petit. Le signe moins est <b>dans l'exposant</b>, pas devant le nombre. Une concentration de <span class="f">10<sup>−2</sup> mol·L⁻¹</span> est une petite concentration, jamais une concentration négative.</p></div>
+
+  <h3 style="font-family:var(--serif);font-size:1rem;font-weight:600;margin:22px 0 8px">Les quatre opérations dont tu auras besoin</h3>
+  <p>Aucune ne demande de calculer les valeurs : on ne touche qu'aux <b>exposants</b>.</p>
+
+  <div class="tw"><table class="tab">
+    <tr><th>Opération</th><th>Sur les exposants</th><th>L'exemple du cours</th></tr>
+    <tr><td>multiplier</td><td class="num">on <b>additionne</b></td><td class="num"><span class="f">10<sup>4</sup> × 10<sup>−2</sup> = 10<sup>2</sup></span></td></tr>
+    <tr><td>diviser</td><td class="num">on <b>soustrait</b></td><td class="num"><span class="f"><span class="fr"><span class="n">10<sup>−38</sup></span><span class="d">10<sup>−2</sup></span></span> = 10<sup>−36</sup></span><br><span class="sm">étape 14, frontière verticale</span></td></tr>
+    <tr><td>élever à une puissance</td><td class="num">on <b>multiplie</b></td><td class="num"><span class="f">(10<sup>−14</sup>)<sup>3</sup> = 10<sup>−42</sup></span><br><span class="sm">étape 14, le cube du produit ionique</span></td></tr>
+    <tr><td>prendre une racine</td><td class="num">on <b>divise</b></td><td class="num"><span class="f"><sup>3</sup>√(10<sup>−36</sup>) = 10<sup>−12</sup></span><br><span class="sm">étape 14, encore</span></td></tr>
+  </table></div>
+
+  <div class="piege"><span class="k">Soustraire un nombre négatif</span>
+    <p>C'est là que les erreurs arrivent. <span class="f">−38 − (−2)</span> se lit « moins 38, <b>moins</b> moins 2 », c'est-à-dire <span class="f">−38 + 2 = −36</span>. <b>Deux moins font un plus.</b> Écris-le en deux temps plutôt que de le faire de tête.</p></div>
+
+  <div class="def"><span class="k">L'écriture scientifique</span>
+    <p>Un nombre écrit <span class="f">5 × 10<sup>−3</sup></span> se lit en deux morceaux : un nombre entre 1 et 10, puis une puissance de 10. Cela vaut <b>0,005</b>. Le cours l'utilise à l'exercice 12, et pour <span class="f">K<sub>s2</sub> = 8 × 10<sup>−16</sup></span> à l'étape 14.</p></div>
+
+  <h2>2 · Le logarithme, ou comment compter les zéros</h2>
+
+  <p>Le logarithme fait peur parce qu'on ne dit jamais ce qu'il fait. Il fait une seule chose, et elle est simple.</p>
+
+  <div class="formula">
+    <span class="k">La définition qui suffit pour tout le module</span>
+    <span class="e f"><span class="op">log</span>(10<sup>n</sup>) = n</span>
+    <p class="note">Le logarithme d'une puissance de 10, <b>c'est son exposant</b>. Rien d'autre. Il ne calcule pas, il <b>lit l'exposant</b>.</p>
+  </div>
+
+  <div class="fig">
+    <svg viewBox="0 0 600 152" role="img" aria-label="Échelle des puissances de 10 : à chaque pas le nombre est multiplié par 10 et son logarithme augmente de 1.">
+      <line class="ax" x1="92" y1="86" x2="580" y2="86"/>
+      <line class="ax" x1="110" y1="82" x2="110" y2="90"/>
+      <text class="lb" style="font-size:14px" x="110" y="46" text-anchor="middle">10⁻³</text>
+      <text class="lbs" x="110" y="66" text-anchor="middle">0,001</text>
+      <text class="lb" x="110" y="112" text-anchor="middle" style="fill:var(--acc);font-weight:600">−3</text>
+      <line class="ax" x1="182" y1="82" x2="182" y2="90"/>
+      <text class="lb" style="font-size:14px" x="182" y="46" text-anchor="middle">10⁻²</text>
+      <text class="lbs" x="182" y="66" text-anchor="middle">0,01</text>
+      <text class="lb" x="182" y="112" text-anchor="middle" style="fill:var(--acc);font-weight:600">−2</text>
+      <line class="ax" x1="254" y1="82" x2="254" y2="90"/>
+      <text class="lb" style="font-size:14px" x="254" y="46" text-anchor="middle">10⁻¹</text>
+      <text class="lbs" x="254" y="66" text-anchor="middle">0,1</text>
+      <text class="lb" x="254" y="112" text-anchor="middle" style="fill:var(--acc);font-weight:600">−1</text>
+      <line class="ax" x1="326" y1="82" x2="326" y2="90"/>
+      <text class="lb" style="font-size:14px" x="326" y="46" text-anchor="middle">1</text>
+      <text class="lbs" x="326" y="66" text-anchor="middle">1</text>
+      <text class="lb" x="326" y="112" text-anchor="middle" style="fill:var(--acc);font-weight:600">0</text>
+      <line class="ax" x1="398" y1="82" x2="398" y2="90"/>
+      <text class="lb" style="font-size:14px" x="398" y="46" text-anchor="middle">10</text>
+      <text class="lbs" x="398" y="66" text-anchor="middle">10</text>
+      <text class="lb" x="398" y="112" text-anchor="middle" style="fill:var(--acc);font-weight:600">1</text>
+      <line class="ax" x1="470" y1="82" x2="470" y2="90"/>
+      <text class="lb" style="font-size:14px" x="470" y="46" text-anchor="middle">10²</text>
+      <text class="lbs" x="470" y="66" text-anchor="middle">100</text>
+      <text class="lb" x="470" y="112" text-anchor="middle" style="fill:var(--acc);font-weight:600">2</text>
+      <line class="ax" x1="542" y1="82" x2="542" y2="90"/>
+      <text class="lb" style="font-size:14px" x="542" y="46" text-anchor="middle">10³</text>
+      <text class="lbs" x="542" y="66" text-anchor="middle">1000</text>
+      <text class="lb" x="542" y="112" text-anchor="middle" style="fill:var(--acc);font-weight:600">3</text>
+      <text class="mt" x="86" y="50" text-anchor="end">le nombre</text>
+      <text class="mt" x="86" y="112" text-anchor="end">son log</text>
+      <path class="ax" d="M120 24 L172 24" marker-end="url(#l1)"/>
+      <text class="lbs" x="180" y="28">× 10 à chaque pas</text>
+      <path class="ax" d="M120 134 L172 134" marker-end="url(#l1)" style="stroke:var(--acc)"/>
+      <text class="lbs" x="180" y="138" style="fill:var(--acc)">+ 1 à chaque pas</text>
+      <defs><marker id="l1" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L8 4 L0 8 z" style="fill:currentColor"/></marker></defs>
+    </svg>
+    <p class="cap"><b>À chaque pas vers la droite, le nombre est multiplié par 10 — et son logarithme augmente de 1.</b> C'est toute la définition du logarithme : il transforme une multiplication en addition. Le reste du module n'est que l'usage de cette idée.</p>
+  </div>
+
+  <div class="tw"><table class="tab">
+    <tr><th>Tu vois</th><th>Tu écris</th><th>Pourquoi</th></tr>
+    <tr><td class="num"><span class="f"><span class="op">log</span>(10<sup>3</sup>)</span></td><td class="num">3</td><td class="sm">l'exposant, tel quel</td></tr>
+    <tr><td class="num"><span class="f"><span class="op">log</span>(10<sup>−2</sup>)</span></td><td class="num">−2</td><td class="sm">l'exposant, signe compris</td></tr>
+    <tr><td class="num"><span class="f"><span class="op">log</span>(1)</span></td><td class="num">0</td><td class="sm">1 s'écrit <span class="f">10<sup>0</sup></span> — <b>le cas le plus utile de tous</b></td></tr>
+    <tr><td class="num"><span class="f"><span class="op">log</span>(10)</span></td><td class="num">1</td><td class="sm">10 s'écrit <span class="f">10<sup>1</sup></span></td></tr>
+    <tr><td class="num"><span class="f"><span class="op">log</span>(5)</span></td><td class="num">≈ 0,70</td><td class="sm">5 n'est pas une puissance de 10 : calculatrice</td></tr>
+    <tr><td class="num"><span class="f"><span class="op">log</span>(8)</span></td><td class="num">≈ 0,90</td><td class="sm">calculatrice — c'est le cas de <span class="f">K<sub>s2</sub></span>, étape 14</td></tr>
+  </table></div>
+
+  <div class="def"><span class="k">Trois repères qui évitent les fautes de signe</span>
+    <p>Le log de <b>1</b> vaut <b>0</b>. Le log d'un nombre <b>plus petit que 1</b> est <b>négatif</b>. Le log d'un nombre <b>plus grand que 1</b> est <b>positif</b>.</p>
+    <p>Une concentration vaut presque toujours moins que 1 mol·L⁻¹ : dans ce module, <b>les logs sont donc presque toujours négatifs</b>. Un log positif au milieu d'un calcul de concentration mérite une relecture.</p></div>
+
+  <div class="piege"><span class="k">Le log ne se distribue pas comme une multiplication</span>
+    <p><span class="f"><span class="op">log</span>(a + b)</span> ne vaut <b>pas</b> <span class="f"><span class="op">log</span> a + <span class="op">log</span> b</span>. Le logarithme ne sait rien faire des additions — il ne travaille que sur les <b>multiplications</b>, les divisions et les puissances. C'est l'objet de la section suivante.</p></div>
+
+  <h2>3 · La seule règle de log du module</h2>
+
+  <div class="formula">
+    <span class="k">Le logarithme transforme les multiplications en additions</span>
+    <span class="e f"><span class="op">log</span>(a × b) = <span class="op">log</span> a + <span class="op">log</span> b</span>
+    <p class="note">Elle a deux conséquences immédiates, et c'est tout ce que le module utilise.</p>
+  </div>
+
+  <div class="eqs">
+    <div class="row"><span class="e f"><span class="op">log</span> <span class="fr"><span class="n">a</span><span class="d">b</span></span> = <span class="op">log</span> a − <span class="op">log</span> b</span><span class="lab">une division devient<br>une <b>soustraction</b></span></div>
+    <div class="row"><span class="e f"><span class="op">log</span>(a<sup>n</sup>) = n × <span class="op">log</span> a</span><span class="lab">une puissance devient<br>une <b>multiplication</b></span></div>
+  </div>
+
+  <div class="def"><span class="k">Pourquoi c'est vrai, en une ligne</span>
+    <p>Multiplier deux puissances de 10 revient à additionner leurs exposants — la règle de la section 1. Comme le log <em>est</em> l'exposant, il ne fait que relire cette règle-là. Il n'y a rien de plus à comprendre.</p></div>
+
+  <div class="ex"><span class="k">Le seul endroit où elle sert — et elle y sert à chaque fois</span>
+    <p class="en">Dans la loi de Nernst, l'argument du log est toujours de la même forme : un rapport de concentrations, multiplié par <span class="f">[H<sup>+</sup>]</span> à une certaine puissance. La règle sert à le <b>casser en deux</b>.</p>
+    <div class="eqs" style="margin-top:0">
+      <div class="row"><span class="e f"><span class="op">log</span> <span class="fr"><span class="n">[<span class="ox">Ox</span>] · [H<sup>+</sup>]<sup>3</sup></span><span class="d">[<span class="rd">Red</span>]</span></span></span><span class="lab">le point de départ</span></div>
+      <div class="row bilan"><span class="e f"><span class="op">log</span> <span class="fr"><span class="n">[<span class="ox">Ox</span>]</span><span class="d">[<span class="rd">Red</span>]</span></span> + 3 × <span class="op">log</span> [H<sup>+</sup>]</span><span class="lab">une <b>addition</b> par la première règle,<br>puis un <b>× 3</b> par la seconde</span></div>
+    </div>
+    <p style="font-size:14px;color:var(--mut);margin-top:10px">Le second terme est celui qui va devenir le terme en pH. C'est le maillon 3 de l'étape 12, et le maillon 4 de l'étape 14.</p>
+  </div>
+
+  <h2>4 · Le <span class="f">pH</span> n'est qu'un logarithme déguisé</h2>
+
+  <div class="formula">
+    <span class="k">Définition du <span class="f">pH</span></span>
+    <span class="e f">pH = − <span class="op">log</span> [H<sup>+</sup>]</span>
+    <p class="note">Un logarithme, et un signe moins. Le signe moins n'est là que pour rendre le nombre agréable : les concentrations sont petites, leurs logs sont négatifs, le moins les remet à l'endroit.</p>
+  </div>
+
+  <div class="formula">
+    <span class="k">La ligne à retenir, celle qui débloque le calcul de Nernst</span>
+    <span class="e f"><span class="op">log</span> [H<sup>+</sup>] = − pH</span>
+    <p class="note">C'est la définition, retournée. Chaque fois que tu vois <span class="f"><span class="op">log</span>[H<sup>+</sup>]</span> dans un calcul, tu écris <span class="f">− pH</span> à la place. C'est de là, et de nulle part ailleurs, que vient le signe moins du terme en pH.</p>
+  </div>
+
+  <div class="tw"><table class="tab">
+    <tr><th>Concentration</th><th><span class="f">pH</span></th><th>Et retour</th></tr>
+    <tr><td class="num"><span class="f">[H<sup>+</sup>] = 10<sup>−1</sup></span></td><td class="num">1</td><td class="sm">on lit l'exposant, on change le signe</td></tr>
+    <tr><td class="num"><span class="f">[H<sup>+</sup>] = 10<sup>−3</sup></span></td><td class="num">3</td><td class="sm">idem</td></tr>
+    <tr><td class="num"><span class="f">[H<sup>+</sup>] = 1</span></td><td class="num">0</td><td class="sm">c'est <b>la condition standard</b> — étape 11</td></tr>
+    <tr><td class="num"><span class="f">[H<sup>+</sup>] = 10<sup>−7</sup></span></td><td class="num">7</td><td class="sm">l'eau pure, ni acide ni basique</td></tr>
+    <tr><td class="num"><span class="f">[H<sup>+</sup>] = 10<sup>−pH</sup></span></td><td class="num">pH</td><td class="sm">la formule inverse, dans le cas général</td></tr>
+  </table></div>
+
+  <div class="def"><span class="k">Le <span class="f">pOH</span>, pour l'étape 14</span>
+    <p>Exactement la même définition, sur l'autre ion : <span class="f">pOH = − <span class="op">log</span> [OH<sup>−</sup>]</span>. Et dans l'eau à 25 °C, les deux sont liés par une seule ligne :</p>
+    <p style="text-align:center;font-size:17px;margin-top:10px"><span class="f">pH + pOH = 14</span></p>
+    <p>C'est ce couple de formules qui transforme un produit de solubilité en <b>frontière verticale</b> du diagramme E-pH.</p></div>
+
+  <h2>5 · Une droite, c'est <span class="f">y = a·x + b</span></h2>
+
+  <p>C'est la marche manquante. Personne ne t'a dit que <span class="f">E = 1,486 − 0,096 · pH</span> est une droite — et tant qu'on ne le dit pas, l'étape 14 reste un mystère.</p>
+
+  <div class="formula">
+    <span class="k">La forme, et le nom de chaque morceau</span>
+    <span class="e f">y = a · x + b</span>
+    <p class="note"><b>b</b> est l'<b>ordonnée à l'origine</b> : la valeur de <span class="f">y</span> quand <span class="f">x</span> vaut 0.<br><b>a</b> est la <b>pente</b> : de combien <span class="f">y</span> change quand <span class="f">x</span> augmente de 1.</p>
+  </div>
+
+  <div class="def"><span class="k">Ce que le signe de la pente veut dire</span>
+    <p>Une pente <b>positive</b> fait monter la droite de gauche à droite. Une pente <b>négative</b> la fait descendre. Toutes les frontières du diagramme E-pH ont une pente <b>négative ou nulle</b> : elles descendent ou restent plates, jamais elles ne montent.</p></div>
+
+  <h3 style="font-family:var(--serif);font-size:1rem;font-weight:600;margin:22px 0 8px">La traduction, terme à terme</h3>
+
+  <div class="tw"><table class="tab">
+    <tr><th>En maths</th><th>En chimie</th><th>Dans <span class="f">E = 1,486 − 0,096 · pH</span></th></tr>
+    <tr><td class="num">y</td><td>le potentiel <span class="f">E</span></td><td class="sm">ce qu'on cherche, en volts</td></tr>
+    <tr><td class="num">x</td><td>le <span class="f">pH</span></td><td class="sm">ce qui varie, de 0 à 14</td></tr>
+    <tr><td class="num">a</td><td>la pente</td><td class="num">− 0,096</td></tr>
+    <tr><td class="num">b</td><td>l'ordonnée à l'origine</td><td class="num">1,486</td></tr>
+  </table></div>
+
+  <div class="piege"><span class="k">L'ordre des termes n'a aucune importance</span>
+    <p><span class="f">E = 1,486 − 0,096 · pH</span> et <span class="f">E = − 0,096 · pH + 1,486</span> sont <b>la même droite</b>. Le cours écrit la constante d'abord, les manuels de maths écrivent la pente d'abord. Ne cherche pas <span class="f">a·x</span> en tête de ligne : cherche <b>le nombre collé au pH</b>, c'est lui la pente, signe compris.</p></div>
+
+  <div class="fig">
+    <svg viewBox="0 0 600 310" role="img" aria-label="Droite E égale 1,486 moins 0,096 fois pH, avec son ordonnée à l'origine et son triangle de pente.">
+      <line class="gr" x1="58.0" y1="22" x2="58.0" y2="268"/>
+      <line class="gr" x1="132.6" y1="22" x2="132.6" y2="268"/>
+      <line class="gr" x1="207.1" y1="22" x2="207.1" y2="268"/>
+      <line class="gr" x1="281.7" y1="22" x2="281.7" y2="268"/>
+      <line class="gr" x1="356.3" y1="22" x2="356.3" y2="268"/>
+      <line class="gr" x1="430.9" y1="22" x2="430.9" y2="268"/>
+      <line class="gr" x1="505.4" y1="22" x2="505.4" y2="268"/>
+      <line class="gr" x1="580.0" y1="22" x2="580.0" y2="268"/>
+      <line class="gr" x1="58" y1="206.5" x2="580" y2="206.5"/>
+      <line class="gr" x1="58" y1="145.0" x2="580" y2="145.0"/>
+      <line class="gr" x1="58" y1="83.5" x2="580" y2="83.5"/>
+      <line class="gr" x1="58" y1="22.0" x2="580" y2="22.0"/>
+      <line class="ax" x1="58" y1="22" x2="58" y2="268"/>
+      <line class="ax" x1="58" y1="268" x2="580" y2="268"/>
+      <text class="mt" x="58.0" y="283" text-anchor="middle">0</text>
+      <text class="mt" x="132.6" y="283" text-anchor="middle">2</text>
+      <text class="mt" x="207.1" y="283" text-anchor="middle">4</text>
+      <text class="mt" x="281.7" y="283" text-anchor="middle">6</text>
+      <text class="mt" x="356.3" y="283" text-anchor="middle">8</text>
+      <text class="mt" x="430.9" y="283" text-anchor="middle">10</text>
+      <text class="mt" x="505.4" y="283" text-anchor="middle">12</text>
+      <text class="mt" x="580.0" y="283" text-anchor="middle">14</text>
+      <text class="mt" x="51" y="210.0" text-anchor="end">0,4</text>
+      <text class="mt" x="51" y="148.5" text-anchor="end">0,8</text>
+      <text class="mt" x="51" y="87.0" text-anchor="end">1,2</text>
+      <text class="mt" x="51" y="25.5" text-anchor="end">1,6</text>
+      <text class="lbs" x="319" y="301" text-anchor="middle">pH</text>
+      <text class="lbs" x="15" y="145" text-anchor="middle" transform="rotate(-90 15 145)">E en volts</text>
+      <path d="M207.1 98.6 L393.6 98.6 L393.6 172.4" style="stroke:var(--mut);stroke-width:1.2;fill:none;stroke-dasharray:4 3"/>
+      <text class="lbs" x="300.4" y="89.6" text-anchor="middle">+ 5 en pH</text>
+      <text class="lbs" x="402.6" y="139.5">− 0,48 en E</text>
+      <path class="fr2" d="M58.0 39.5 L580.0 246.2"/>
+      <circle cx="58.0" cy="39.5" r="3.4" style="fill:var(--acc)"/>
+      <circle cx="580.0" cy="246.2" r="3.4" style="fill:var(--acc)"/>
+      <text class="lb" x="75.0" y="35.5" style="fill:var(--acc);font-weight:600">b = 1,486</text>
+      <text class="lb" x="570.0" y="264.2" text-anchor="end" style="fill:var(--acc);font-weight:600">0,142</text>
+    </svg>
+    <p class="cap"><b>Les deux points marqués sont ceux qu'on place pour tracer.</b> Celui de gauche, à <span class="f">pH = 0</span>, donne <span class="f">b</span> sans calcul : il ne reste que la constante. Celui de droite, à <span class="f">pH = 14</span>, demande une multiplication et une soustraction. Le triangle en pointillés donne la pente : cinq unités de pH font descendre de 0,48 volt, soit <b>0,096 volt par unité</b> — c'est le nombre collé au pH.</p>
+  </div>
+
+  <div class="ex"><span class="k">Tracer une droite — la seule méthode dont tu aies besoin</span>
+    <p class="en">Deux points suffisent pour tracer une droite, et les deux plus faciles sont <b>les deux bords du diagramme</b>.</p>
+    <ol class="pas" style="margin-top:0">
+      <li><b>Le point de gauche : <span class="f">pH = 0</span>.</b><span class="co">Le terme en pH s'annule, il ne reste que <span class="f">b</span>. Ici <span class="f">E = 1,486 V</span>. Aucun calcul.</span></li>
+      <li><b>Le point de droite : <span class="f">pH = 14</span>.</b><span class="co"><span class="f">E = 1,486 − 0,096 × 14 = 1,486 − 1,344 = 0,142 V</span>. Une multiplication et une soustraction.</span></li>
+      <li><b>Place les deux points, trace le trait entre eux.</b><span class="co">Et arrête-le aux bornes du domaine — c'est le piège de l'étape 14.</span></li>
+    </ol>
+  </div>
+
+  <div class="ex"><span class="k">Lire une droite à l'envers, quand l'énoncé donne deux points</span>
+    <p class="en">L'exercice peut donner deux coordonnées et demander l'équation. C'est la même formule, prise dans l'autre sens.</p>
+    <div class="eqs" style="margin-top:0">
+      <div class="row"><span class="e f">a = <span class="fr"><span class="n">E<sub>2</sub> − E<sub>1</sub></span><span class="d">pH<sub>2</sub> − pH<sub>1</sub></span></span></span><span class="lab">la pente : ce qu'on gagne en E<br>divisé par ce qu'on gagne en pH</span></div>
+      <div class="row"><span class="e f">b = E<sub>1</sub> + a × pH<sub>1</sub></span><span class="lab">une fois <i>a</i> connu, n'importe lequel<br>des deux points donne <i>b</i></span></div>
+    </div>
+    <p style="font-size:14px;color:var(--mut);margin-top:10px">Sur la frontière <span class="f">(2 ; 0,77)</span> et <span class="f">(7,45 ; −0,21)</span> de l'étape 14 : <span class="f">a = (−0,21 − 0,77) / (7,45 − 2)</span>, soit <span class="f">−0,98 / 5,45</span>, soit <span class="f">−0,18</span>. Puis <span class="f">b = 0,77 + 0,18 × 2 = 1,13</span>. On retrouve bien <span class="f">E = 1,13 − 0,18 · pH</span>.</p>
+  </div>
+
+  <h2>6 · Ta TI-Nspire CX CAS II</h2>
+
+  <p>Quatre habitudes suffisent. Les trois premières évitent des résultats faux ; la quatrième évite une saisie fausse, ce qui est pire, parce qu'elle passe inaperçue.</p>
+
+  <ol class="pas">
+    <li><b>Le logarithme décimal, c'est <span class="key dark">ctrl</span> <span class="key">10ˣ</span>.</b><span class="co">La touche <span class="key">ln</span> est le logarithme <b>népérien</b>, en base e : ce n'est pas le même. Sur le calcul de l'étape 12 elle donnerait −0,23 au lieu de −0,10, sans le moindre message d'erreur.</span></li>
+    <li><b>Pour un nombre négatif, la touche <span class="key">(−)</span>.</b><span class="co">En bas à gauche du clavier. Ce n'est pas le <span class="key">−</span> de la soustraction, qui est dans la colonne des opérations à droite. Les deux se ressemblent ; la machine, elle, ne les confond pas et refuse la saisie.</span></li>
+    <li><b>Pour sortir d'un exposant, la flèche <span class="key">▶</span>.</b><span class="co">Après <span class="key">^</span>, tout ce que tu tapes reste <b>en haut</b>. Si tu enchaînes sans appuyer sur la flèche droite, <span class="f">10<sup>−3</sup> ÷ 10<sup>−1</sup></span> devient <span class="f">10<sup>−3 ÷ 10<sup>−1</sup></sup></span> — un résultat absurde, et rien ne te le signale.</span></li>
+    <li><b>Pour une valeur décimale, <span class="key dark">ctrl</span> <span class="key dark">enter</span>.</b><span class="co">Le modèle CAS répond en <b>fraction exacte</b> : il affiche <span class="f">−1/10</span> là où la copie attend <span class="f">−0,10 V</span>. <span class="key dark">ctrl</span> <span class="key dark">enter</span> force la valeur décimale.</span></li>
+  </ol>
+
+  <div class="ex"><span class="k">La séquence complète, sur le calcul de l'exercice 13</span>
+    <p class="en">Le terme de concentration de <span class="f"><span class="ox">MnO<sub>4</sub><sup>−</sup></span>/<span class="rd">Mn<sup>2+</sup></span></span> : <span class="f">0,012 × <span class="op">log</span>(10<sup>−3</sup> ÷ 10<sup>−1</sup>)</span>.</p>
+    <div class="keys" style="margin:10px 0 0">
+      <span class="key">0</span><span class="key">.</span><span class="key">0</span><span class="key">1</span><span class="key">2</span>
+      <span class="key">×</span>
+      <span class="key dark">ctrl</span><span class="key">10ˣ</span>
+      <span class="key">1</span><span class="key">0</span><span class="key">^</span><span class="key">(−)</span><span class="key">3</span>
+      <span class="key">▶</span>
+      <span class="key">÷</span>
+      <span class="key">1</span><span class="key">0</span><span class="key">^</span><span class="key">(−)</span><span class="key">1</span>
+      <span class="key">▶</span>
+      <span class="key">)</span>
+      <span class="key dark">ctrl</span><span class="key dark">enter</span>
+    </div>
+    <div class="cmp">résultat : <b>−0,024</b> &nbsp;·&nbsp; contrôle de tête : <span class="f"><span class="op">log</span>(10<sup>−2</sup>) = −2</span>, et <span class="f">0,012 × (−2) = −0,024</span> &nbsp;<span class="good">✓</span></div>
+    <p style="font-size:14px;color:var(--mut);margin-top:11px">Les deux <span class="key">▶</span> sont les touches qu'on oublie. Et le contrôle de tête est possible <b>ici même</b> : les deux concentrations étant des puissances de 10, tu n'avais même pas besoin de la machine.</p>
+  </div>
+
+  <div class="piege"><span class="k">Deux réglages qui varient d'une machine à l'autre</span>
+    <p>Le <b>séparateur décimal</b> est le point ou la virgule selon la langue configurée : essaie <span class="key">.</span>, et si la machine refuse, utilise <span class="key">,</span>. Et le <b>mode angulaire</b> n'a aucune importance ici — rien dans ce module n'utilise de trigonométrie.</p></div>
+
+  <h2>7 · Où chaque outil sert, exactement</h2>
+  <p>Aucun de ces outils n'est là pour lui-même. Chacun débloque un maillon précis du parcours.</p>
+
+  <div class="tw"><table class="tab">
+    <tr><th>L'outil</th><th>L'endroit où il sert</th></tr>
+    <tr><td>les puissances de 10</td><td class="sm">toutes les concentrations des étapes 12 et 14</td></tr>
+    <tr><td><span class="f"><span class="op">log</span>(10<sup>n</sup>) = n</span></td><td class="sm">étape 12, maillon 2 — et le contrôle de tête de chaque calcul</td></tr>
+    <tr><td><span class="f"><span class="op">log</span>(1) = 0</span></td><td class="sm">étape 12, maillon 4 — quand les deux concentrations sont égales, le terme disparaît</td></tr>
+    <tr><td><span class="f"><span class="op">log</span>(a × b) = <span class="op">log</span> a + <span class="op">log</span> b</span></td><td class="sm">étape 12, maillon 3 · étape 14, maillon 4 — casser le log en deux</td></tr>
+    <tr><td><span class="f"><span class="op">log</span>[H<sup>+</sup>] = − pH</span></td><td class="sm">étape 12, maillon 3 — c'est de là que vient le signe moins du terme en pH</td></tr>
+    <tr><td><span class="f">pH + pOH = 14</span></td><td class="sm">étape 14 — les deux frontières verticales, à pH 2 et pH 7,45</td></tr>
+    <tr><td>diviser des puissances de 10</td><td class="sm">étape 14 — le produit de solubilité, puis sa racine cubique</td></tr>
+    <tr><td><span class="f">y = a·x + b</span></td><td class="sm">étape 12, maillon 5 · étape 14, le tracé entier</td></tr>
+    <tr><td class="sm"><span class="key dark">ctrl</span> <span class="key">10ˣ</span> et <span class="key dark">ctrl</span> <span class="key dark">enter</span></td><td class="sm">partout où il y a un log, c'est-à-dire à partir de l'étape 12</td></tr>
+  </table></div>
+
+  <div class="def"><span class="k">Si tu ne devais retenir que deux lignes</span>
+    <p><span class="f"><span class="op">log</span>[H<sup>+</sup>] = − pH</span> — c'est elle qui fait apparaître le pH dans la loi de Nernst.</p>
+    <p><span class="f">E = b − a · pH</span> <b>est une droite</b> — c'est elle qui fait du calcul de l'étape 12 une frontière de l'étape 14.</p></div>
 </article>
 
 <!-- ════════════════ ÉTAPE 1 ════════════════ -->
@@ -1312,12 +1603,72 @@ table.tab{border-collapse:collapse;margin:0;font-size:14.5px;width:100%;min-widt
     <button class="go" disabled>Entraîneur — point 5 de l'ordre des travaux</button>
   </div>
 
-  <div class="chantier"><span class="k">Chantier — point 2 de l'ordre des travaux</span>
-    <ul>
-      <li>D'où vient le <span class="f">0,06</span> : la forme générale <span class="f"><span class="fr"><span class="n">R · T</span><span class="d">n · F</span></span></span> et son passage en log décimal, sans démonstration.</li>
-      <li>La deuxième chaîne complète, sur <span class="f"><span class="ox">MnO<sub>4</sub><sup>−</sup></span>/<span class="rd">Mn<sup>2+</sup></span></span> — le cas où les concentrations ne sont <b>pas</b> égales.</li>
-      <li>Le cas du gaz, et le cas où le réducteur est un solide.</li>
-    </ul></div>
+  <h2>D'où vient le <span class="f">0,06</span></h2>
+  <p>Le cours donne la loi sous sa forme générale avant de la simplifier. Elle n'est pas à démontrer — mais savoir d'où sort le nombre évite de le confondre avec autre chose.</p>
+
+  <div class="formula">
+    <span class="k">Forme générale, à toute température</span>
+    <span class="e f">E = E° + <span class="fr"><span class="n">R · T</span><span class="d">n · F</span></span> · <span class="op">Ln</span> <span class="fr"><span class="n">activité de Ox<sup>x</sup> · activité de A<sup>a</sup></span><span class="d">activité de Red<sup>y</sup> · activité de B<sup>b</sup></span></span></span>
+    <p class="note"><span class="f">R = 8,31 J·K⁻¹·mol⁻¹</span> — la constante des gaz parfaits · <span class="f">F = 96 500 C</span> — le faraday · <span class="f">T</span> en kelvins · <span class="f">n</span> le nombre d'électrons échangés.</p>
+  </div>
+
+  <div class="ex"><span class="k">Le passage au logarithme décimal</span>
+    <p class="en">Deux substitutions, et le bloc <span class="f"><span class="fr"><span class="n">R · T</span><span class="d">F</span></span></span> devient un simple nombre.</p>
+    <ol class="pas" style="margin-top:0">
+      <li><b>Passer du logarithme népérien au décimal.</b><span class="co"><span class="f"><span class="op">log</span> X = <span class="fr"><span class="n"><span class="op">Ln</span> X</span><span class="d"><span class="op">Ln</span> 10</span></span> = <span class="fr"><span class="n"><span class="op">Ln</span> X</span><span class="d">2,30</span></span></span> &nbsp;⟹&nbsp; <span class="f"><span class="op">Ln</span> X = 2,30 × <span class="op">log</span> X</span></span></li>
+      <li><b>Fixer la température à 25 °C, soit 298 K.</b><span class="co"><span class="f"><span class="fr"><span class="n">8,31 × 298 × 2,30</span><span class="d">96 500</span></span> = 0,059</span>, arrondi à <b>0,06</b> dans tout le module.</span></li>
+    </ol>
+    <div class="cmp">à 25 °C : <b>E = E° + <span style="font-family:var(--serif)"><span class="fr"><span class="n">0,06</span><span class="d">n</span></span></span> · log(…)</b> &nbsp;·&nbsp; <span class="good">le n du dénominateur est celui de la demi-équation, rien d'autre</span></div>
+  </div>
+
+  <div class="piege"><span class="k">Le seul cas où la valeur change</span>
+    <p><span class="f">0,06</span> vaut pour <b>25 °C et rien d'autre</b>. À une autre température il faudrait refaire le calcul de l'étape 2 ci-dessus. Tous les sujets du dossier travaillent à 25 °C et donnent la valeur dans l'énoncé — mais si un énoncé donne <span class="f">0,059</span>, c'est le même nombre, plus précis.</p></div>
+
+  <h2>Les deux exercices du cours</h2>
+
+  <div class="ex"><span class="k">Exercice 12 — le cas sans <span class="f">pH</span></span>
+    <p class="en">Calculer à 25 °C le potentiel d'une lame de fer plongeant dans une solution de sulfate de fer(II), pour <span class="f">[Fe(II)] = 10<sup>−2</sup> mol·L⁻¹</span>, puis pour <span class="f">5 × 10<sup>−3</sup> mol·L⁻¹</span>.<br>Donnée : <span class="f">E°(Fe<sup>2+</sup>/Fe) = − 0,440 V</span>.</p>
+    <div class="eqs" style="margin-top:0">
+      <div class="row"><span class="e f"><span class="ox">Fe<sup>2+</sup></span> + <span class="el">2 e<sup>−</sup></span> = <span class="rd">Fe</span><span class="st">(s)</span></span><span class="lab">n = 2 · <b>aucun H⁺</b><br>donc aucun terme en pH</span></div>
+      <div class="row"><span class="e f">E = E° + <span class="fr"><span class="n">0,06</span><span class="d">2</span></span> · <span class="op">log</span> <span class="fr"><span class="n">[<span class="ox">Fe<sup>2+</sup></span>]</span><span class="d">1</span></span></span><span class="lab">le fer est <b>solide</b> :<br>son activité vaut 1</span></div>
+      <div class="row"><span class="e f">E = − 0,440 + 0,03 × (− 2) = − 0,50 V</span><span class="lab">première question<br><span class="f"><span class="op">log</span>(10<sup>−2</sup>) = −2</span></span></div>
+      <div class="row bilan"><span class="e f">E = − 0,440 + 0,03 × (− 2,30) = − 0,51 V</span><span class="lab">seconde question<br><span class="f"><span class="op">log</span>(5×10<sup>−3</sup>) = <span class="op">log</span>5 − 3 = − 2,30</span></span></div>
+    </div>
+    <p style="font-size:14px;color:var(--mut);margin-top:10px">Diviser la concentration par deux n'a déplacé le potentiel que de <b>9 millivolts</b>. Le logarithme écrase les écarts : c'est ce qui rend ces calculs peu sensibles aux erreurs de concentration, et très sensibles aux erreurs de <i>n</i>. La première valeur, <span class="f">−0,50 V</span>, est la frontière horizontale du diagramme de l'étape 14.</p>
+  </div>
+
+  <div class="ex"><span class="k">Exercice 13 — le cas avec <span class="f">pH</span>, dans les deux sens</span>
+    <p class="en">Calculer à 25 °C et <span class="f">pH = 2</span> le potentiel du couple <span class="f"><span class="ox">MnO<sub>4</sub><sup>−</sup></span>/<span class="rd">Mn<sup>2+</sup></span></span> pour <span class="f">[MnO<sub>4</sub><sup>−</sup>] = 10<sup>−3</sup></span> et <span class="f">[Mn<sup>2+</sup>] = 10<sup>−1</sup> mol·L⁻¹</span>. Puis <b>retrouver la même valeur</b> en exprimant d'abord <span class="f">E = f(pH)</span>.<br>Donnée : <span class="f">E°(MnO<sub>4</sub><sup>−</sup>/Mn<sup>2+</sup>) = 1,51 V</span>.</p>
+
+    <div class="eqs" style="margin-top:0">
+      <div class="row"><span class="e f"><span class="ox">MnO<sub>4</sub><sup>−</sup></span> + 8 H<sup>+</sup> + <span class="el">5 e<sup>−</sup></span> = <span class="rd">Mn<sup>2+</sup></span> + 4 H<sub>2</sub>O</span><span class="lab">n = 5 · 8 protons<br>c'est l'étape 4</span></div>
+    </div>
+
+    <p style="margin-top:14px"><b>Première manière — tout remplacer d'un coup.</b></p>
+    <div class="eqs">
+      <div class="row"><span class="e f">E = 1,51 + <span class="fr"><span class="n">0,06</span><span class="d">5</span></span> · <span class="op">log</span> <span class="fr"><span class="n">10<sup>−3</sup> × (10<sup>−2</sup>)<sup>8</sup></span><span class="d">10<sup>−1</sup></span></span></span><span class="lab">à pH 2, <span class="f">[H<sup>+</sup>] = 10<sup>−2</sup></span></span></div>
+      <div class="row"><span class="e f"><span class="op">log</span>(10<sup>−3−16+1</sup>) = <span class="op">log</span>(10<sup>−18</sup>) = − 18</span><span class="lab">on additionne les exposants,<br>le log les relit</span></div>
+      <div class="row bilan"><span class="e f">E = 1,51 + 0,012 × (− 18) = 1,29 V</span><span class="lab">0,06 / 5 = 0,012</span></div>
+    </div>
+
+    <p style="margin-top:14px"><b>Seconde manière — laisser le pH en lettre.</b> C'est le passage obligé vers l'étape 14.</p>
+    <div class="eqs">
+      <div class="row"><span class="e f">E = 1,51 + 0,012 · <span class="op">log</span> <span class="fr"><span class="n">[<span class="ox">MnO<sub>4</sub><sup>−</sup></span>]</span><span class="d">[<span class="rd">Mn<sup>2+</sup></span>]</span></span> + 0,012 × 8 × <span class="op">log</span>[H<sup>+</sup>]</span><span class="lab">le log cassé en deux</span></div>
+      <div class="row"><span class="e f">E = 1,51 + 0,012 × (− 2) − 0,096 · pH</span><span class="lab"><span class="f">0,012 × 8 = 0,096</span><br><span class="f"><span class="op">log</span>[H<sup>+</sup>] = − pH</span></span></div>
+      <div class="row bilan"><span class="e f">E = 1,486 − 0,096 · pH</span><span class="lab">une <b>droite</b><br>pente −0,096, ordonnée 1,486</span></div>
+    </div>
+
+    <div class="cmp" style="margin-top:12px">à pH = 2 : <b>1,486 − 0,192 = 1,294 V</b> &nbsp;·&nbsp; <span class="good">les deux manières donnent le même nombre ✓</span></div>
+    <p style="font-size:14px;color:var(--mut);margin-top:11px">C'est <b>exactement la droite tracée à l'étape 0</b>, dans la section sur la fonction affine. Le cours ne le dit nulle part, et c'est pourtant le seul lien entre le calcul de cette étape et le tracé de l'étape 14.</p>
+  </div>
+
+  <h2>Deux cas particuliers à reconnaître</h2>
+  <div class="tw"><table class="tab">
+    <tr><th>Ce que tu vois dans le couple</th><th>Ce que tu écris dans le log</th></tr>
+    <tr><td>un <b>solide</b> — <span class="f">Cu</span>, <span class="f">Fe</span>, <span class="f">Fe(OH)<sub>3</sub></span>, <span class="f">PbSO<sub>4</sub></span></td><td class="sm">rien : son activité vaut <b>1</b>. Écris le 1 avant de le faire disparaître, c'est ce qui évite d'oublier un terme.</td></tr>
+    <tr><td>un <b>gaz</b> — <span class="f">H<sub>2</sub></span>, <span class="f">O<sub>2</sub></span>, <span class="f">Cl<sub>2</sub></span></td><td class="sm">sa <b>pression</b>, en bars. Dans les conditions standard elle vaut 1, donc là aussi le terme disparaît.</td></tr>
+    <tr><td>l'<b>eau</b> — <span class="f">H<sub>2</sub>O</span></td><td class="sm">rien : c'est le solvant, son activité vaut <b>1</b>. Les <span class="f">H<sub>2</sub>O</span> d'une demi-équation ne figurent jamais dans la loi de Nernst.</td></tr>
+  </table></div>
 </article>
 
 <!-- ════════════════ ÉTAPE 13 ════════════════ -->

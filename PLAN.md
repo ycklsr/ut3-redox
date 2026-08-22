@@ -346,7 +346,13 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
    (étape 7), l'échelle des 25 potentiels (étape 11), la règle du γ (étape 13),
    et le diagramme E-pH du fer (étape 14), repris avec les droites de l'eau
    à l'étape 15.
-3. **L'étape 0** — la boîte à outils maths, écrite en supposant zéro acquis.
+3. ~~**L'étape 0**~~ — **fait.** Sept sections, écrites en supposant zéro
+   acquis : puissances de 10, le logarithme comme lecture d'exposant, la règle
+   `log(a×b)`, `log[H+] = −pH`, la fonction affine, la TI-Nspire, et un tableau
+   final qui renvoie chaque outil au maillon exact qu'il débloque. Deux figures
+   de plus : l'échelle des puissances de 10 face à leurs logarithmes, et la
+   droite `E = 1,486 − 0,096·pH` avec son ordonnée à l'origine et son triangle
+   de pente.
 4. **Les quatre outils de la paillasse** — dont le traceur E-pH (le morceau de
    bravoure) et le vérificateur TI-Nspire.
 5. **Les 5 gestes et leurs entraîneurs** — tirage aléatoire et correction.
@@ -386,7 +392,7 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 
 ## 11. Pour reprendre
 
-> Lis `PLAN.md`, ouvre `redox.html`, et prends le **point 3** de l'ordre des
-> travaux : l'étape 0, la boîte à outils maths. Les composants existent tous —
-> `.def`, `.formula`, `.piege`, `.chain`, `.eqs`, `.pas`, `.tw`, `.fig`, `.ex` —
-> il n'y a rien à réinventer, seulement à écrire. Puis les points 4 à 7.
+> Lis `PLAN.md`, ouvre `redox.html`, et prends le **point 4** de l'ordre des
+> travaux : les quatre outils de la paillasse. Les trois onglets vides portent
+> chacun leur cahier des charges, et l'onglet « vérifier mon calcul » montre à
+> quoi doit ressembler un panneau fini. Puis les points 5 à 7.
