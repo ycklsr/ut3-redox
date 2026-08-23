@@ -53,6 +53,7 @@
    COQUE — rail fixe, deux colonnes qui défilent, paillasse ancrée
    ═══════════════════════════════════════════════════════════════════ */
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html{height:100%}
 body{
   margin:0; height:100vh; height:100dvh;
@@ -371,6 +372,65 @@ table.tab{border-collapse:collapse;margin:0;font-size:14.5px;width:100%;min-widt
 .warn code{font-family:var(--mono);font-size:.88em}
 .cmp{font-family:var(--mono);font-size:12.5px;background:var(--soft);border-radius:6px;padding:9px 12px;margin-top:9px}
 .cmp .good{color:var(--ok);font-weight:600}
+
+/* ── la paillasse : les quatre outils ──────────────────────────────── */
+.panel{max-height:min(58vh,540px)}
+.tool{display:grid;grid-template-columns:266px minmax(0,1fr);gap:22px;align-items:start}
+.tool-in{display:flex;flex-direction:column;gap:11px}
+.tool-out{min-width:0}
+.fld{display:flex;flex-direction:column;gap:4px}
+.fld>.k{color:var(--mut)}
+.fld .hint2{font-size:11px;color:var(--mut);line-height:1.35}
+select,input[type=number],input[type=text]{
+  font:inherit;font-size:13px;font-family:var(--sans);color:var(--ink);background:var(--paper);
+  border:1px solid var(--line);border-radius:6px;padding:5px 7px;min-width:0;width:100%}
+select{font-family:var(--sans);font-size:12.5px}
+input[type=number]{font-family:var(--mono);text-align:right}
+select:focus-visible,input:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.sci{display:grid;grid-template-columns:3.6em auto 3.2em;gap:6px;align-items:center}
+.sci .x{font-family:var(--mono);font-size:11.5px;color:var(--mut);white-space:nowrap;text-align:center}
+.phrow{display:grid;grid-template-columns:1fr 4.2em;gap:9px;align-items:center}
+input[type=range]{width:100%;accent-color:var(--acc);margin:0}
+.seg2{display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.seg2 button{flex:1;padding:5px 4px;font-family:var(--sans);font-size:11.5px;color:var(--mut)}
+.seg2 button[aria-pressed="true"]{background:var(--acc);color:var(--on-acc);font-weight:600}
+.chk{display:flex;align-items:center;gap:7px;font-family:var(--sans);font-size:12px;color:var(--mut)}
+.chk input{accent-color:var(--acc);margin:0}
+
+/* la sortie d'un outil : des maillons, comme dans le cours */
+.ml{border-top:1px solid var(--line);padding:7px 0;display:grid;grid-template-columns:20px minmax(0,1fr);gap:0 11px}
+.ml:first-child{border-top:none;padding-top:0}
+.ml .no2{font-family:var(--mono);font-size:9.5px;color:var(--mut);padding-top:5px}
+.ml .t2{font-family:var(--sans);font-size:11px;color:var(--mut);margin-bottom:2px}
+.ml .e2{font-size:15.5px;line-height:2.3;overflow-x:auto;overflow-y:hidden}
+.ml .v2b{font-family:var(--mono);font-size:11.5px;color:var(--mut);margin-top:1px}
+.ml .v2b b{color:var(--acc)}
+.out-res{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap;margin-top:9px;
+         border-top:1.5px solid var(--ink);padding-top:9px}
+.out-res .v3{font-family:var(--mono);font-size:16px;font-weight:600;color:var(--acc)}
+.out-res .c3{font-family:var(--sans);font-size:11.5px;color:var(--mut);max-width:32em;line-height:1.45}
+.verdict{font-family:var(--sans);font-size:13px;line-height:1.5;margin-top:10px}
+.verdict .oui{color:var(--ok);font-weight:600}
+.verdict .non{color:var(--mark);font-weight:600}
+.tool-note{font-family:var(--sans);font-size:11.5px;color:var(--mut);line-height:1.45;margin-top:9px;
+           border-left:2px solid var(--amb);padding-left:10px}
+.tool-note b{color:var(--amb)}
+.toolfig{max-width:560px}
+.toolfig svg{display:block;width:100%;height:auto}
+.toolfig text{paint-order:stroke;stroke:var(--paper);stroke-width:3px;stroke-linejoin:round}
+
+/* diagnostic d'erreur */
+.diag{border:1px solid var(--mark);border-radius:8px;padding:10px 13px 11px;margin-top:10px;
+      font-family:var(--sans);font-size:12.5px;line-height:1.5}
+.diag .k{color:var(--mark);margin-bottom:5px}
+.diag b{color:var(--ink)}
+.diag.ok2{border-color:var(--ok)}
+.diag.ok2 .k{color:var(--ok)}
+
+@media (max-width:900px){
+  .tool{grid-template-columns:minmax(0,1fr);gap:14px}
+  .panel{max-height:min(64vh,560px)}
+}
 
 /* ── responsive ─────────────────────────────────────────────────── */
 @media (max-width:1000px){
@@ -701,7 +761,7 @@ table.tab{border-collapse:collapse;margin:0;font-size:14.5px;width:100%;min-widt
   <p>Quatre habitudes suffisent. Les trois premières évitent des résultats faux ; la quatrième évite une saisie fausse, ce qui est pire, parce qu'elle passe inaperçue.</p>
 
   <ol class="pas">
-    <li><b>Le logarithme décimal, c'est <span class="key dark">ctrl</span> <span class="key">10ˣ</span>.</b><span class="co">La touche <span class="key">ln</span> est le logarithme <b>népérien</b>, en base e : ce n'est pas le même. Sur le calcul de l'étape 12 elle donnerait −0,23 au lieu de −0,10, sans le moindre message d'erreur.</span></li>
+    <li><b>Le logarithme décimal, c'est <span class="key dark">ctrl</span> <span class="key">10ˣ</span>.</b><span class="co">La touche <span class="key">ln</span> est le logarithme <b>népérien</b>, en base e : ce n'est pas le même. Sur le calcul de l'étape 12 elle donnerait <b>−0,45</b> au lieu de −0,10, sans le moindre message d'erreur : le logarithme népérien vaut 2,30 fois le décimal.</span></li>
     <li><b>Pour un nombre négatif, la touche <span class="key">(−)</span>.</b><span class="co">En bas à gauche du clavier. Ce n'est pas le <span class="key">−</span> de la soustraction, qui est dans la colonne des opérations à droite. Les deux se ressemblent ; la machine, elle, ne les confond pas et refuse la saisie.</span></li>
     <li><b>Pour sortir d'un exposant, la flèche <span class="key">▶</span>.</b><span class="co">Après <span class="key">^</span>, tout ce que tu tapes reste <b>en haut</b>. Si tu enchaînes sans appuyer sur la flèche droite, <span class="f">10<sup>−3</sup> ÷ 10<sup>−1</sup></span> devient <span class="f">10<sup>−3 ÷ 10<sup>−1</sup></sup></span> — un résultat absurde, et rien ne te le signale.</span></li>
     <li><b>Pour une valeur décimale, <span class="key dark">ctrl</span> <span class="key dark">enter</span>.</b><span class="co">Le modèle CAS répond en <b>fraction exacte</b> : il affiche <span class="f">−1/10</span> là où la copie attend <span class="f">−0,10 V</span>. <span class="key dark">ctrl</span> <span class="key dark">enter</span> force la valeur décimale.</span></li>
@@ -914,7 +974,7 @@ table.tab{border-collapse:collapse;margin:0;font-size:14.5px;width:100%;min-widt
 </article>
 
 <!-- ════════════════ ÉTAPE 4 ════════════════ -->
-<article class="step" id="e4" data-t="Demi-équations" hidden>
+<article class="step" id="e4" data-couple="MnO4-/Mn2+" data-t="Demi-équations" hidden>
   <div class="crumb">Chapitre 1 — diapositives 15 à 17</div>
   <h1><span class="num"></span><span class="t">Équilibrer une demi-équation</span><span class="cnt"></span></h1>
   <div class="obj"><span class="k">En sortant de cette étape, tu sais</span>
@@ -1199,7 +1259,7 @@ table.tab{border-collapse:collapse;margin:0;font-size:14.5px;width:100%;min-widt
 </article>
 
 <!-- ════════════════ ÉTAPE 7 ════════════════ -->
-<article class="step" id="e7" data-t="Cellule électrochimique" data-grp="Ch. 2 — Les piles" hidden>
+<article class="step" id="e7" data-couple="Cu2+/Cu" data-couple2="Zn2+/Zn" data-t="Cellule électrochimique" data-grp="Ch. 2 — Les piles" hidden>
   <div class="crumb">Chapitre 2 — diapositives 22 à 30</div>
   <h1><span class="num"></span><span class="t">La cellule électrochimique</span><span class="cnt"></span></h1>
   <div class="obj"><span class="k">En sortant de cette étape, tu sais</span>
@@ -1312,7 +1372,7 @@ table.tab{border-collapse:collapse;margin:0;font-size:14.5px;width:100%;min-widt
 </article>
 
 <!-- ════════════════ ÉTAPE 8 ════════════════ -->
-<article class="step" id="e8" data-t="Le pont salin" hidden>
+<article class="step" id="e8" data-couple="Cu2+/Cu" data-couple2="Zn2+/Zn" data-t="Le pont salin" hidden>
   <div class="crumb">Chapitre 2 — diapositives 31 à 37</div>
   <h1><span class="num"></span><span class="t">Le rôle du pont salin</span><span class="cnt"></span></h1>
   <div class="obj"><span class="k">En sortant de cette étape, tu sais</span>
@@ -1350,7 +1410,7 @@ table.tab{border-collapse:collapse;margin:0;font-size:14.5px;width:100%;min-widt
 </article>
 
 <!-- ════════════════ ÉTAPE 9 ════════════════ -->
-<article class="step" id="e9" data-t="Force électromotrice" hidden>
+<article class="step" id="e9" data-couple="Cu2+/Cu" data-couple2="Zn2+/Zn" data-t="Force électromotrice" hidden>
   <div class="crumb">Chapitre 2 — diapositives 38 à 39</div>
   <h1><span class="num"></span><span class="t">La force électromotrice</span><span class="cnt"></span></h1>
   <div class="obj"><span class="k">En sortant de cette étape, tu sais</span>
@@ -1383,7 +1443,7 @@ table.tab{border-collapse:collapse;margin:0;font-size:14.5px;width:100%;min-widt
 </article>
 
 <!-- ════════════════ ÉTAPE 10 ════════════════ -->
-<article class="step" id="e10" data-t="Pile Daniell, électrolyse" hidden>
+<article class="step" id="e10" data-couple="Cu2+/Cu" data-couple2="Zn2+/Zn" data-t="Pile Daniell, électrolyse" hidden>
   <div class="crumb">Chapitre 2 — diapositives 29 à 30, 40 à 41</div>
   <h1><span class="num"></span><span class="t">La pile Daniell, et l'électrolyse</span><span class="cnt"></span></h1>
   <div class="obj"><span class="k">En sortant de cette étape, tu sais</span>
@@ -1408,7 +1468,7 @@ table.tab{border-collapse:collapse;margin:0;font-size:14.5px;width:100%;min-widt
 </article>
 
 <!-- ════════════════ ÉTAPE 11 ════════════════ -->
-<article class="step" id="e11" data-t="Potentiel E et E°" data-grp="Ch. 3 — Potentiels" hidden>
+<article class="step" id="e11" data-couple="Fe3+/Fe2+" data-couple2="Fe2+/Fe" data-t="Potentiel E et E°" data-grp="Ch. 3 — Potentiels" hidden>
   <div class="crumb">Chapitre 3 — diapositives 43 à 46</div>
   <h1><span class="num"></span><span class="t">Le potentiel d'électrode <span class="f">E</span> et <span class="f">E°</span></span><span class="cnt"></span></h1>
   <div class="obj"><span class="k">En sortant de cette étape, tu sais</span>
@@ -1485,7 +1545,7 @@ table.tab{border-collapse:collapse;margin:0;font-size:14.5px;width:100%;min-widt
 </article>
 
 <!-- ════════════════ ÉTAPE 12 — implémentation de référence ════════════════ -->
-<article class="step" id="e12" data-t="Loi de Nernst" hidden>
+<article class="step" id="e12" data-couple="MnO4-/Mn2+" data-t="Loi de Nernst" hidden>
   <div class="crumb">Chapitre 3 — diapositives 53 à 57</div>
   <h1><span class="num"></span><span class="t">La loi de Nernst</span><span class="cnt"></span></h1>
   <div class="obj"><span class="k">En sortant de cette étape, tu sais</span>
@@ -1672,7 +1732,7 @@ table.tab{border-collapse:collapse;margin:0;font-size:14.5px;width:100%;min-widt
 </article>
 
 <!-- ════════════════ ÉTAPE 13 ════════════════ -->
-<article class="step" id="e13" data-t="Sens spontané, règle du γ" hidden>
+<article class="step" id="e13" data-couple="MnO4-/Mn2+" data-couple2="Fe3+/Fe2+" data-t="Sens spontané, règle du γ" hidden>
   <div class="crumb">Chapitre 3 — diapositives 47 à 52</div>
   <h1><span class="num"></span><span class="t">Le sens spontané et la règle du γ</span><span class="cnt"></span></h1>
   <div class="obj"><span class="k">En sortant de cette étape, tu sais</span>
@@ -1763,7 +1823,7 @@ table.tab{border-collapse:collapse;margin:0;font-size:14.5px;width:100%;min-widt
 </article>
 
 <!-- ════════════════ ÉTAPE 14 ════════════════ -->
-<article class="step" id="e14" data-t="Diagramme E-pH" hidden>
+<article class="step" id="e14" data-couple="Fe3+/Fe2+" data-couple2="Fe2+/Fe" data-t="Diagramme E-pH" hidden>
   <div class="crumb">Chapitre 3 — diapositives 58 à 59</div>
   <h1><span class="num"></span><span class="t">Le diagramme potentiel-pH</span><span class="cnt"></span></h1>
   <div class="obj"><span class="k">En sortant de cette étape, tu sais</span>
@@ -1989,7 +2049,7 @@ table.tab{border-collapse:collapse;margin:0;font-size:14.5px;width:100%;min-widt
 </article>
 
 <!-- ════════════════ ÉTAPE 15 ════════════════ -->
-<article class="step" id="e15" data-t="Corrosion, passivation" hidden>
+<article class="step" id="e15" data-couple="Fe2+/Fe" data-couple2="H+/H2" data-t="Corrosion, passivation" hidden>
   <div class="crumb">Cours bonus — diapositives 60 à 67</div>
   <h1><span class="num"></span><span class="t">Corrosion, immunité, passivation</span><span class="cnt"></span></h1>
   <div class="obj"><span class="k">En sortant de cette étape, tu sais</span>
@@ -2144,44 +2204,110 @@ table.tab{border-collapse:collapse;margin:0;font-size:14.5px;width:100%;min-widt
   </div>
 
   <div class="panel" id="panel" hidden>
+
+    <!-- ── outil 1 · l'échelle des potentiels et la règle du γ ── -->
     <div data-pane="ech" hidden>
-      <span class="k">Échelle des 21 potentiels standards</span>
-      <div class="chantier" style="margin:8px 0 0"><b>Point 4 de l'ordre des travaux.</b> L'échelle verticale des 21 couples, du fluor à −0,76 V, avec le couple de l'étape en cours mis en évidence et le tracé du γ entre deux couples choisis.</div>
+      <div class="tool">
+        <div class="tool-in">
+          <span class="k">Deux couples, et le γ se trace</span>
+          <div class="fld"><span class="k">Premier couple</span>
+            <select id="ech-a" aria-label="Premier couple"></select></div>
+          <div class="fld"><span class="k">Second couple</span>
+            <select id="ech-b" aria-label="Second couple"></select></div>
+          <p class="hint2">Les deux couples sont pris dans les <b>conditions standard</b>. Hors de ces conditions, c'est le calculateur de Nernst qui donne les potentiels à comparer.</p>
+        </div>
+        <div class="tool-out">
+          <div class="toolfig" id="ech-fig"></div>
+          <div class="verdict" id="ech-verdict"></div>
+        </div>
+      </div>
     </div>
+
+    <!-- ── outil 2 · le calculateur de Nernst ── -->
     <div data-pane="ner" hidden>
-      <span class="k">Calculateur de Nernst</span>
-      <div class="chantier" style="margin:8px 0 0"><b>Point 4 de l'ordre des travaux.</b> Couple, <i>n</i>, coefficient de <span class="f">H<sup>+</sup></span>, concentrations et pH en entrée ; l'expression posée, puis la valeur — chaque maillon affiché, jamais le seul résultat.</div>
+      <div class="tool">
+        <div class="tool-in">
+          <div class="fld"><span class="k">Couple</span>
+            <select id="ner-c" aria-label="Couple"></select></div>
+
+          <div id="ner-custom" hidden>
+            <div class="fld"><span class="k">E° en volts</span>
+              <input type="number" id="ner-e0" step="0.01" value="0.17" aria-label="Potentiel standard"></div>
+            <div class="fld" style="margin-top:9px"><span class="k">n — électrons échangés</span>
+              <input type="number" id="ner-n" step="1" min="1" value="2" aria-label="Nombre d'électrons"></div>
+            <div class="fld" style="margin-top:9px"><span class="k">nombre de protons</span>
+              <input type="number" id="ner-h" step="1" min="0" value="3" aria-label="Nombre de protons"></div>
+          </div>
+
+          <div class="fld" id="ner-ox-fld"><span class="k">Concentration de l'oxydant</span>
+            <div class="sci">
+              <input type="number" id="ner-oxm" step="0.1" min="0" value="1" aria-label="Mantisse de la concentration de l'oxydant">
+              <span class="x">× 10 ^</span>
+              <input type="number" id="ner-oxe" step="1" value="-3" aria-label="Exposant de la concentration de l'oxydant">
+            </div></div>
+
+          <div class="fld" id="ner-rd-fld"><span class="k">Concentration du réducteur</span>
+            <div class="sci">
+              <input type="number" id="ner-rdm" step="0.1" min="0" value="1" aria-label="Mantisse de la concentration du réducteur">
+              <span class="x">× 10 ^</span>
+              <input type="number" id="ner-rde" step="1" value="-1" aria-label="Exposant de la concentration du réducteur">
+            </div></div>
+
+          <div class="fld" id="ner-ph-fld"><span class="k"><span class="f">pH</span></span>
+            <div class="phrow">
+              <input type="range" id="ner-phr" min="0" max="14" step="0.1" value="2" aria-label="pH, curseur">
+              <input type="number" id="ner-phn" min="0" max="14" step="0.1" value="2" aria-label="pH">
+            </div>
+            <p class="hint2">Déplace le curseur : le potentiel suit une <b>droite</b>. C'est ce que l'étape 14 trace.</p></div>
+        </div>
+        <div class="tool-out" id="ner-out"></div>
+      </div>
     </div>
+
+    <!-- ── outil 3 · le traceur de diagramme E-pH ── -->
     <div data-pane="eph" hidden>
-      <span class="k">Traceur de diagramme <span class="f">E-pH</span></span>
-      <div class="chantier" style="margin:8px 0 0"><b>Point 4 de l'ordre des travaux — le morceau de bravoure.</b> Une frontière saisie sous la forme <span class="f">E = b − a · pH</span> se trace, se compare au diagramme du fer, et se lit aux deux bouts (pH 0 et pH 14).</div>
+      <div class="tool">
+        <div class="tool-in">
+          <div class="fld"><span class="k">D'où vient la pente</span>
+            <div class="seg2" role="group" aria-label="Origine de la pente">
+              <button id="eph-m1" aria-pressed="true">d'une demi-équation</button>
+              <button id="eph-m2" aria-pressed="false">à la main</button>
+            </div></div>
+
+          <div id="eph-auto">
+            <div class="fld"><span class="k">n — électrons échangés</span>
+              <input type="number" id="eph-n" step="1" min="1" value="1" aria-label="Nombre d'électrons"></div>
+            <div class="fld" style="margin-top:9px"><span class="k">nombre de protons</span>
+              <input type="number" id="eph-h" step="1" min="0" value="3" aria-label="Nombre de protons"></div>
+          </div>
+
+          <div class="fld" id="eph-man" hidden><span class="k">pente</span>
+            <input type="number" id="eph-a" step="0.001" value="-0.18" aria-label="Pente"></div>
+
+          <div class="fld"><span class="k">ordonnée à l'origine, en volts</span>
+            <input type="number" id="eph-b" step="0.001" value="1.13" aria-label="Ordonnée à l'origine"></div>
+
+          <label class="chk"><input type="checkbox" id="eph-fer" checked> le diagramme du fer, en fond</label>
+          <label class="chk"><input type="checkbox" id="eph-eau"> les deux droites de l'eau</label>
+        </div>
+        <div class="tool-out">
+          <div class="toolfig" id="eph-fig"></div>
+          <div id="eph-read"></div>
+        </div>
+      </div>
     </div>
+
+    <!-- ── outil 4 · vérifier mon calcul ── -->
     <div data-pane="ti" hidden>
-      <div class="cols">
-        <div>
-          <span class="k">TI-Nspire CX CAS II — la séquence complète du calcul de l'étape 12</span>
-          <div class="keys">
-            <span class="key">0</span><span class="key">.</span><span class="key">1</span><span class="key">7</span>
-            <span class="key">+</span>
-            <span class="key">0</span><span class="key">.</span><span class="key">0</span><span class="key">3</span>
-            <span class="key">×</span>
-            <span class="key dark">ctrl</span><span class="key">10ˣ</span>
-            <span class="key">1</span><span class="key">)</span>
-            <span class="key">−</span>
-            <span class="key">0</span><span class="key">.</span><span class="key">0</span><span class="key">9</span>
-            <span class="key">×</span><span class="key">3</span>
-            <span class="key dark">enter</span>
-          </div>
-          <div class="cmp">affichage : <b>−1/10</b> &nbsp;→&nbsp; <span class="good">ctrl + enter</span> donne <b>−0,1</b> &nbsp;·&nbsp; ta réponse : <span class="good">−0,10 V ✓</span></div>
+      <div class="tool">
+        <div class="tool-in">
+          <span class="k">Compare ta réponse au calcul en cours</span>
+          <p class="hint2">Le calcul repris est celui de l'onglet <b>Calculateur Nernst</b>, avec ses valeurs actuelles.</p>
+          <div class="fld"><span class="k">ta réponse, en volts</span>
+            <input type="number" id="ti-rep" step="0.001" placeholder="par exemple −0,10" aria-label="Ta réponse en volts"></div>
+          <p class="hint2">Si l'écart n'est pas nul, l'outil cherche <b>laquelle des six erreurs classiques</b> donne exactement ton nombre.</p>
         </div>
-        <div>
-          <span class="k">Les trois pièges de ta calculatrice</span>
-          <div class="warn">
-            <b>ctrl + 10ˣ</b> donne <code>log</code>, en base 10. La touche <b><code>ln</code></b> est le logarithme népérien : elle donnerait −0,23 au lieu de −0,10.<br><br>
-            <b>La touche (−)</b>, en bas à gauche, sert à écrire un nombre négatif — ce n'est pas le <b>−</b> de la soustraction.<br><br>
-            <b>Le CAS répond en fraction exacte.</b> <code>ctrl + enter</code> force la valeur décimale, la seule attendue sur une copie.
-          </div>
-        </div>
+        <div class="tool-out" id="ti-out"></div>
       </div>
     </div>
   </div>
@@ -2211,12 +2337,13 @@ var segs=$('#segs'), pos=$('#pos'), themeBtn=$('#theme'), navlist=$('#navlist'),
 
 /* ── état persisté ────────────────────────────────────────────────── */
 var LS='redox.v1';
-var S={theme:'auto', step:0, mode:'fil', tool:null, cp:{}};
+var S={theme:'auto', step:0, mode:'fil', tool:null, cp:{}, tools:{}};
 try{
   var raw=localStorage.getItem(LS);
   if(raw){ var o=JSON.parse(raw); for(var k in S){ if(o[k]!=null) S[k]=o[k]; } }
 }catch(e){}
 if(typeof S.cp!=='object'||!S.cp) S.cp={};
+if(typeof S.tools!=='object'||!S.tools) S.tools={};
 function save(){ try{ localStorage.setItem(LS,JSON.stringify(S)); }catch(e){} }
 
 /* ── thème : auto → clair → sombre ────────────────────────────────── */
@@ -2402,6 +2529,7 @@ function show(i){
   document.title=STEPS[S.step].dataset.t+' — étape '+S.step+' · Rédox';
   closeDrawer();
   repaint();
+  if(window.__toolsReady) toolsPrefill(STEPS[S.step]);
 }
 window.addEventListener('hashchange',function(){
   var i=indexOfHash(); if(i>=0) show(i);
@@ -2434,8 +2562,465 @@ burger.addEventListener('click',function(){
 scrim.addEventListener('click',closeDrawer);
 document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeDrawer(); });
 
+/* ═══════════════════════════════════════════════════════════════════
+   LA PAILLASSE — les quatre outils
+   Une seule table de couples les alimente tous les quatre.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* clé · oxydant · réducteur · E° · n · protons · puissance de [Ox] · puissance
+   de [Red] · demi-équation en milieu acide · remarque éventuelle.
+   Une puissance nulle signale une espèce d'activité 1 : solide, gaz pris à
+   1 bar, ou solvant. */
+var COUPLES = [
+ ['F2/F-','F<sub>2</sub>','F<sup>−</sup>',2.87,2,0,0,2,
+  'F<sub>2</sub><span class="st">(g)</span> + 2 e<sup>−</sup> = 2 F<sup>−</sup>',
+  'le difluor est un gaz : sa pression, prise à 1 bar, compte pour 1'],
+ ['H2O2/H2O','H<sub>2</sub>O<sub>2</sub>','H<sub>2</sub>O',1.77,2,2,1,0,
+  'H<sub>2</sub>O<sub>2</sub> + 2 H<sup>+</sup> + 2 e<sup>−</sup> = 2 H<sub>2</sub>O',
+  "l'eau est le solvant : son activité vaut 1"],
+ ['PbO2/PbSO4','PbO<sub>2</sub>','PbSO<sub>4</sub>',1.70,2,4,0,0,
+  'PbO<sub>2</sub><span class="st">(s)</span> + SO<sub>4</sub><sup>2−</sup> + 4 H<sup>+</sup> + 2 e<sup>−</sup> = PbSO<sub>4</sub><span class="st">(s)</span> + 2 H<sub>2</sub>O',
+  "les deux espèces du couple sont solides ; l'ion sulfate est ici pris à 1 mol·L⁻¹"],
+ ['MnO4-/Mn2+','MnO<sub>4</sub><sup>−</sup>','Mn<sup>2+</sup>',1.51,5,8,1,1,
+  'MnO<sub>4</sub><sup>−</sup> + 8 H<sup>+</sup> + 5 e<sup>−</sup> = Mn<sup>2+</sup> + 4 H<sub>2</sub>O',''],
+ ['Cl2/Cl-','Cl<sub>2</sub>','Cl<sup>−</sup>',1.36,2,0,0,2,
+  'Cl<sub>2</sub><span class="st">(g)</span> + 2 e<sup>−</sup> = 2 Cl<sup>−</sup>',
+  'le dichlore est un gaz : sa pression, prise à 1 bar, compte pour 1'],
+ ['Cr2O7/Cr3+','Cr<sub>2</sub>O<sub>7</sub><sup>2−</sup>','Cr<sup>3+</sup>',1.33,6,14,1,2,
+  'Cr<sub>2</sub>O<sub>7</sub><sup>2−</sup> + 14 H<sup>+</sup> + 6 e<sup>−</sup> = 2 Cr<sup>3+</sup> + 7 H<sub>2</sub>O',
+  'le coefficient 2 du chrome(III) devient une puissance 2 au dénominateur'],
+ ['O2/H2O','O<sub>2</sub>','H<sub>2</sub>O',1.23,4,4,0,0,
+  'O<sub>2</sub><span class="st">(g)</span> + 4 H<sup>+</sup> + 4 e<sup>−</sup> = 2 H<sub>2</sub>O',
+  "gaz à 1 bar d'un côté, solvant de l'autre : il ne reste que le terme en pH"],
+ ['Br2/Br-','Br<sub>2</sub>','Br<sup>−</sup>',1.06,2,0,0,2,
+  'Br<sub>2</sub><span class="st">(l)</span> + 2 e<sup>−</sup> = 2 Br<sup>−</sup>',
+  'le dibrome est un liquide pur : son activité vaut 1'],
+ ['NO3-/NO','NO<sub>3</sub><sup>−</sup>','NO',0.96,3,4,1,0,
+  'NO<sub>3</sub><sup>−</sup> + 4 H<sup>+</sup> + 3 e<sup>−</sup> = NO<span class="st">(g)</span> + 2 H<sub>2</sub>O',
+  'le monoxyde d\'azote est un gaz, pris à 1 bar'],
+ ['Ag+/Ag','Ag<sup>+</sup>','Ag',0.80,1,0,1,0,
+  'Ag<sup>+</sup> + e<sup>−</sup> = Ag<span class="st">(s)</span>','l\'argent métallique est solide'],
+ ['Fe3+/Fe2+','Fe<sup>3+</sup>','Fe<sup>2+</sup>',0.77,1,0,1,1,
+  'Fe<sup>3+</sup> + e<sup>−</sup> = Fe<sup>2+</sup>',''],
+ ['O2/H2O2','O<sub>2</sub>','H<sub>2</sub>O<sub>2</sub>',0.68,2,2,0,1,
+  'O<sub>2</sub><span class="st">(g)</span> + 2 H<sup>+</sup> + 2 e<sup>−</sup> = H<sub>2</sub>O<sub>2</sub>',
+  'ne pas confondre avec O₂/H₂O, qui vaut 1,23 V'],
+ ['I2/I-','I<sub>2</sub>','I<sup>−</sup>',0.62,2,0,0,2,
+  'I<sub>2</sub><span class="st">(s)</span> + 2 e<sup>−</sup> = 2 I<sup>−</sup>','le diiode est solide'],
+ ['Cu2+/Cu','Cu<sup>2+</sup>','Cu',0.34,2,0,1,0,
+  'Cu<sup>2+</sup> + 2 e<sup>−</sup> = Cu<span class="st">(s)</span>','le cuivre métallique est solide'],
+ ['Sn4+/Sn2+','Sn<sup>4+</sup>','Sn<sup>2+</sup>',0.13,2,0,1,1,
+  'Sn<sup>4+</sup> + 2 e<sup>−</sup> = Sn<sup>2+</sup>',''],
+ ['H+/H2','H<sup>+</sup>','H<sub>2</sub>',0,2,2,0,0,
+  '2 H<sup>+</sup> + 2 e<sup>−</sup> = H<sub>2</sub><span class="st">(g)</span>',
+  "l'oxydant est le proton lui-même : il est déjà compté dans le terme en pH"],
+ ['Pb2+/Pb','Pb<sup>2+</sup>','Pb',-0.13,2,0,1,0,
+  'Pb<sup>2+</sup> + 2 e<sup>−</sup> = Pb<span class="st">(s)</span>','le plomb métallique est solide'],
+ ['Sn2+/Sn','Sn<sup>2+</sup>','Sn',-0.14,2,0,1,0,
+  'Sn<sup>2+</sup> + 2 e<sup>−</sup> = Sn<span class="st">(s)</span>',"l'étain métallique est solide"],
+ ['PbSO4/Pb','PbSO<sub>4</sub>','Pb',-0.31,2,0,0,0,
+  'PbSO<sub>4</sub><span class="st">(s)</span> + 2 e<sup>−</sup> = Pb<span class="st">(s)</span> + SO<sub>4</sub><sup>2−</sup>',
+  "les deux espèces sont solides ; l'ion sulfate est ici pris à 1 mol·L⁻¹"],
+ ['Fe2+/Fe','Fe<sup>2+</sup>','Fe',-0.44,2,0,1,0,
+  'Fe<sup>2+</sup> + 2 e<sup>−</sup> = Fe<span class="st">(s)</span>','le fer métallique est solide'],
+ ['Zn2+/Zn','Zn<sup>2+</sup>','Zn',-0.76,2,0,1,0,
+  'Zn<sup>2+</sup> + 2 e<sup>−</sup> = Zn<span class="st">(s)</span>','le zinc métallique est solide'],
+ ['Mg2+/Mg','Mg<sup>2+</sup>','Mg',-2.37,2,0,1,0,
+  'Mg<sup>2+</sup> + 2 e<sup>−</sup> = Mg<span class="st">(s)</span>','le magnésium métallique est solide'],
+ ['Na+/Na','Na<sup>+</sup>','Na',-2.70,1,0,1,0,
+  'Na<sup>+</sup> + e<sup>−</sup> = Na<span class="st">(s)</span>','le sodium métallique est solide'],
+ ['K+/K','K<sup>+</sup>','K',-2.92,1,0,1,0,
+  'K<sup>+</sup> + e<sup>−</sup> = K<span class="st">(s)</span>','le potassium métallique est solide'],
+ ['Li+/Li','Li<sup>+</sup>','Li',-3.05,1,0,1,0,
+  'Li<sup>+</sup> + e<sup>−</sup> = Li<span class="st">(s)</span>','le lithium métallique est solide']
+].map(function(r){
+  return {key:r[0],ox:r[1],rd:r[2],e0:r[3],n:r[4],h:r[5],oxP:r[6],rdP:r[7],half:r[8],note:r[9]};
+});
+var BYKEY = {}; COUPLES.forEach(function(c){ BYKEY[c.key]=c; });
+
+/* ── mise en forme ────────────────────────────────────────────────── */
+function fr(x,d){
+  if(!isFinite(x)) return '—';
+  var t = Math.abs(x).toFixed(d==null?3:d);
+  if(t.indexOf('.')>=0) t = t.replace(/0+$/,'').replace(/\.$/,'');
+  return (x<0?'−':'') + t.replace('.',',');
+}
+/* un potentiel garde au moins deux décimales : « −0,50 V », jamais « −0,5 V » */
+function fv(x){
+  if(!isFinite(x)) return '—';
+  var t = Math.abs(x).toFixed(3).replace(/0+$/,'').replace(/\.$/,'');
+  var d = t.indexOf('.');
+  if(d<0) t += '.00'; else if(t.length-d-1<2) t += '0';
+  return (x<0?'−':'') + t.replace('.',',');
+}
+function pw(m,e){
+  var mm = (Math.abs(m-1)<1e-12) ? '' : fr(m,3)+' × ';
+  return mm + '10<sup>' + (e<0?'−':'') + Math.abs(e) + '</sup>';
+}
+function frac(a,b){ return '<span class="fr"><span class="n">'+a+'</span><span class="d">'+b+'</span></span>'; }
+
+/* ── le cœur : la loi de Nernst ───────────────────────────────────── */
+function nernst(c,ox,rd,ph){
+  var k = 0.06/c.n, t = 0;
+  if(c.oxP) t += c.oxP*Math.log10(ox);
+  if(c.rdP) t -= c.rdP*Math.log10(rd);
+  var b = c.e0 + k*t, a = -0.06*c.h/c.n;
+  return {k:k, t:t, a:a, b:b, E:b + a*ph};
+}
+
+/* ═══ outil 1 · l'échelle des E° et la règle du γ ═══════════════════ */
+var echA=$('#ech-a'), echB=$('#ech-b'), echFig=$('#ech-fig'), echVer=$('#ech-verdict');
+/* une option ne peut pas porter de balises : les indices et exposants passent
+   en Unicode, sinon « MnO4 » se lit « Mn04 » dans une police à chasse fixe */
+var SUB={'0':'₀','1':'₁','2':'₂','3':'₃','4':'₄','5':'₅','6':'₆','7':'₇','8':'₈','9':'₉'};
+var SUP={'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','+':'⁺','−':'⁻','-':'⁻'};
+function plainF(html){
+  return html
+    .replace(/<sub>(.*?)<\/sub>/g,function(m,d){ return d.replace(/./g,function(ch){return SUB[ch]||ch}); })
+    .replace(/<sup>(.*?)<\/sup>/g,function(m,d){ return d.replace(/./g,function(ch){return SUP[ch]||ch}); })
+    .replace(/<[^>]+>/g,'');
+}
+function fillCouples(sel){
+  COUPLES.forEach(function(c){
+    var o=document.createElement('option');
+    o.value=c.key;
+    o.textContent=plainF(c.ox)+' / '+plainF(c.rd)+'  ·  '+fr(c.e0,2)+' V';
+    sel.appendChild(o);
+  });
+}
+fillCouples(echA); fillCouples(echB);
+
+function drawGamma(){
+  var A=BYKEY[echA.value], B=BYKEY[echB.value];
+  if(!A||!B) return;
+  var haut = A.e0>=B.e0 ? A : B, bas = A.e0>=B.e0 ? B : A;
+  var yH=76, yB=176;
+  var same = Math.abs(A.e0-B.e0) < 1e-9;
+  echFig.innerHTML =
+   '<svg viewBox="0 0 520 226" role="img" aria-label="Deux couples sur l\'axe des potentiels, reliés par le gamma.">'
+   +'<line class="ax" x1="88" y1="34" x2="88" y2="200" style="stroke:var(--mut)"/>'
+   +'<text class="mt" x="98" y="28" style="fill:var(--mut);font-size:10px">E° croissant</text>'
+   +'<line x1="104" y1="'+yH+'" x2="404" y2="'+yH+'" style="stroke:var(--line)"/>'
+   +'<line x1="104" y1="'+yB+'" x2="404" y2="'+yB+'" style="stroke:var(--line)"/>'
+   +'<line x1="82" y1="'+yH+'" x2="94" y2="'+yH+'" style="stroke:var(--mut)"/>'
+   +'<line x1="82" y1="'+yB+'" x2="94" y2="'+yB+'" style="stroke:var(--mut)"/>'
+   +'<text class="mt" x="76" y="'+(yH+4)+'" text-anchor="end" style="fill:var(--mut);font-size:10px">'+fr(haut.e0,2)+' V</text>'
+   +'<text class="mt" x="76" y="'+(yB+4)+'" text-anchor="end" style="fill:var(--mut);font-size:10px">'+fr(bas.e0,2)+' V</text>'
+   +'<text class="sp" x="112" y="'+(yH+5)+'" style="fill:var(--ox);font-size:13px">'+plainF(haut.ox)+'</text>'
+   +'<text class="sp" x="412" y="'+(yH+5)+'" style="fill:var(--rd);font-size:13px">'+plainF(haut.rd)+'</text>'
+   +'<text class="sp" x="112" y="'+(yB+5)+'" style="fill:var(--ox);font-size:13px">'+plainF(bas.ox)+'</text>'
+   +'<text class="sp" x="412" y="'+(yB+5)+'" style="fill:var(--rd);font-size:13px">'+plainF(bas.rd)+'</text>'
+   + (same ? '' :
+      '<path d="M186 '+yH+' L236 '+yH+' L236 '+yB+' L396 '+yB+'" marker-end="url(#gm)"'
+      +' style="stroke:var(--acc);stroke-width:2;fill:none"/>'
+      +'<text x="246" y="'+((yH+yB)/2+5)+'" style="fill:var(--acc);font-weight:600;font-size:15px;'
+      +'font-family:-apple-system,sans-serif">γ</text>')
+   +'<defs><marker id="gm" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">'
+   +'<path d="M0 0 L8 4 L0 8 z" style="fill:var(--acc)"/></marker></defs>'
+   +'</svg>';
+
+  var d = haut.e0 - bas.e0;
+  if(same){
+    echVer.innerHTML = 'Les deux couples sont <b>au même potentiel</b> : aucun des deux n\'impose son sens. '
+      + 'Choisis deux couples différents.';
+    return;
+  }
+  echVer.innerHTML =
+    '<p style="margin:0 0 7px"><span class="oui">La réaction se fait</span> — entre l\'oxydant du couple du haut, '
+    + '<span class="f ox">'+haut.ox+'</span>, et le réducteur du couple du bas, <span class="f rd">'+bas.rd+'</span>.</p>'
+    + '<p style="margin:0 0 7px;font-family:var(--mono);font-size:12.5px">Δ E° = '+fr(haut.e0,2)+' − '+(bas.e0<0?'(':'')+fr(bas.e0,2)+(bas.e0<0?')':'')+' = <b style="color:var(--acc)">'+fr(d,2)+' V</b></p>'
+    + '<div class="eqs" style="margin:9px 0 0;max-width:none">'
+    +   '<div class="row"><span class="e f">'+haut.half+'</span><span class="lab">réduction</span></div>'
+    +   '<div class="row"><span class="e f">'+inverse(bas.half)+'</span><span class="lab">oxydation</span></div>'
+    + '</div>'
+    + '<p class="tool-note"><b>Et dans l\'autre sens ?</b> <span class="f ox">'+bas.ox+'</span> et '
+    + '<span class="f rd">'+haut.rd+'</span> ne réagissent pas : le γ serait à l\'envers.</p>';
+}
+function inverse(half){
+  var p = half.split(' = ');
+  return p.length===2 ? p[1]+' = '+p[0] : half;
+}
+echA.addEventListener('change',function(){ S.tools.echA=echA.value; save(); drawGamma(); });
+echB.addEventListener('change',function(){ S.tools.echB=echB.value; save(); drawGamma(); });
+
+/* ═══ outil 2 · le calculateur de Nernst ═══════════════════════════ */
+var nerC=$('#ner-c'), nerCu=$('#ner-custom'), nerOut=$('#ner-out'),
+    nerE0=$('#ner-e0'), nerN=$('#ner-n'), nerH=$('#ner-h'),
+    nerOxM=$('#ner-oxm'), nerOxE=$('#ner-oxe'), nerRdM=$('#ner-rdm'), nerRdE=$('#ner-rde'),
+    nerPhR=$('#ner-phr'), nerPhN=$('#ner-phn'),
+    nerOxF=$('#ner-ox-fld'), nerRdF=$('#ner-rd-fld'), nerPhF=$('#ner-ph-fld');
+fillCouples(nerC);
+(function(){ var o=document.createElement('option'); o.value='*';
+  o.textContent='autre couple — saisir E°, n et les H⁺'; nerC.appendChild(o); })();
+
+function curCouple(){
+  if(nerC.value==='*') return {
+    key:'*', ox:'Ox', rd:'Red',
+    e0:+nerE0.value||0, n:Math.max(1,+nerN.value||1), h:Math.max(0,+nerH.value||0),
+    oxP:1, rdP:1, half:'<span class="ox">Ox</span> + '+(+nerH.value||0)+' H<sup>+</sup> + '
+      +(+nerN.value||1)+' e<sup>−</sup> = <span class="rd">Red</span> + …', note:''};
+  return BYKEY[nerC.value] || COUPLES[3];
+}
+function nerVals(){
+  var c=curCouple();
+  return { c:c,
+    oxm:+nerOxM.value, oxe:+nerOxE.value, rdm:+nerRdM.value, rde:+nerRdE.value,
+    ox:(+nerOxM.value)*Math.pow(10,+nerOxE.value),
+    rd:(+nerRdM.value)*Math.pow(10,+nerRdE.value),
+    ph:+nerPhN.value };
+}
+function nernstHTML(c,vals){
+  var num=[], den=[];
+  if(c.oxP) num.push('['+'<span class="ox">'+c.ox+'</span>]'+(c.oxP>1?'<sup>'+c.oxP+'</sup>':''));
+  if(c.h)   num.push('[H<sup>+</sup>]'+(c.h>1?'<sup>'+c.h+'</sup>':''));
+  if(c.rdP) den.push('['+'<span class="rd">'+c.rd+'</span>]'+(c.rdP>1?'<sup>'+c.rdP+'</sup>':''));
+  if(vals){
+    num=[]; den=[];
+    if(c.oxP) num.push(pw(vals.oxm,vals.oxe)+(c.oxP>1?'<sup>'+c.oxP+'</sup>':''));
+    if(c.h)   num.push('(10<sup>−'+fr(vals.ph,1)+'</sup>)'+(c.h>1?'<sup>'+c.h+'</sup>':''));
+    if(c.rdP) den.push(pw(vals.rdm,vals.rde)+(c.rdP>1?'<sup>'+c.rdP+'</sup>':''));
+  }
+  if(!num.length && !den.length) return null;
+  return frac(num.length?num.join(' · '):'1', den.length?den.join(' · '):'1');
+}
+function nerDraw(){
+  var v=nerVals(), c=v.c, r=nernst(c,v.ox,v.rd,v.ph);
+  nerCu.hidden = (nerC.value!=='*');
+  nerOxF.hidden = !c.oxP; nerRdF.hidden = !c.rdP; nerPhF.hidden = !c.h;
+  var ml=[], i=0;
+  function link(t,e,val){ ml.push('<div class="ml"><div class="no2">'+(++i<10?'0':'')+i+'</div><div>'
+    +'<div class="t2">'+t+'</div><div class="e2 f">'+e+'</div>'
+    +(val?'<div class="v2b">'+val+'</div>':'')+'</div></div>'); }
+
+  link('La demi-équation donne <i>n</i> et le nombre de protons', c.half,
+       'n = <b>'+c.n+'</b> &nbsp;·&nbsp; H⁺ = <b>'+c.h+'</b> &nbsp;·&nbsp; 0,06 / '+c.n+' = <b>'+fr(r.k,4)+'</b>');
+
+  var ex = nernstHTML(c,null);
+  link('Poser Nernst — oxydant en haut, réducteur en bas',
+       'E = E° + '+frac('0,06',String(c.n))+' · <span class="op">log</span> '+(ex||'1'),
+       c.note ? c.note : (ex?'':'aucune concentration ne figure dans le log'));
+
+  if(c.h){
+    link('Casser le log : les concentrations d\'un côté, le pH de l\'autre',
+      'E = E° + '+fr(r.k,4)+' · <span class="op">log</span> '
+      + (c.oxP||c.rdP ? nernstHTML({ox:c.ox,rd:c.rd,oxP:c.oxP,rdP:c.rdP,h:0},null) : '1')
+      + ' − '+fr(0.06*c.h/c.n,4)+' · pH',
+      fr(r.k,4)+' × '+c.h+' = <b>'+fr(0.06*c.h/c.n,4)+'</b> &nbsp; et &nbsp; log[H⁺] = <b>− pH</b>');
+  }
+
+  var ex2 = nernstHTML(c,v);
+  link('Remplacer par les valeurs',
+       'E = '+fr(c.e0,3)+(ex2 ? ' + '+fr(r.k,4)+' · <span class="op">log</span> '+ex2 : ''),
+       (c.oxP||c.rdP) ? 'log du rapport = <b>'+fr(r.t,3)+'</b> &nbsp;⟹&nbsp; terme de concentration = <b>'+fv(r.k*r.t)+' V</b>'
+                      : 'aucun terme de concentration');
+
+  if(c.h) link('Et en laissant le pH en lettre : c\'est une droite',
+       'E = '+fr(r.b,4)+' − '+fr(-r.a,4)+' · pH',
+       'forme <b>y = a·x + b</b> &nbsp;·&nbsp; pente <b>'+fr(r.a,4)+'</b> &nbsp;·&nbsp; ordonnée <b>'+fr(r.b,4)+'</b>');
+
+  nerOut.innerHTML = ml.join('')
+    + '<div class="out-res"><span class="v3">E = '+fv(r.E)+' V</span>'
+    + '<span class="c3">' + (c.h ? 'à pH = '+fr(v.ph,1)+'. Déplace le curseur : seul ce nombre change, la pente reste '+fr(r.a,4)+'.'
+                                 : 'ce couple ne fait pas intervenir de protons : son potentiel ne dépend pas du pH.')
+    + '</span></div>';
+  S.tools.ner = {c:nerC.value, e0:nerE0.value, n:nerN.value, h:nerH.value,
+                 oxm:nerOxM.value, oxe:nerOxE.value, rdm:nerRdM.value, rde:nerRdE.value, ph:nerPhN.value};
+  save();
+  if(S.tool==='ti') tiDraw();
+}
+[nerC,nerE0,nerN,nerH,nerOxM,nerOxE,nerRdM,nerRdE].forEach(function(el){
+  el.addEventListener('input',nerDraw); el.addEventListener('change',nerDraw); });
+nerPhR.addEventListener('input',function(){ nerPhN.value=nerPhR.value; nerDraw(); });
+nerPhN.addEventListener('input',function(){ nerPhR.value=nerPhN.value; nerDraw(); });
+
+/* ═══ outil 3 · le traceur de diagramme E-pH ═══════════════════════ */
+var ephFig=$('#eph-fig'), ephRead=$('#eph-read'), ephN=$('#eph-n'), ephH=$('#eph-h'),
+    ephA=$('#eph-a'), ephB=$('#eph-b'), ephFer=$('#eph-fer'), ephEau=$('#eph-eau'),
+    ephM1=$('#eph-m1'), ephM2=$('#eph-m2'), ephAuto=$('#eph-auto'), ephMan=$('#eph-man');
+var ephMode='auto';
+function ephPente(){
+  return ephMode==='auto'
+    ? -0.06*Math.max(0,+ephH.value||0)/Math.max(1,+ephN.value||1)
+    : (+ephA.value||0);
+}
+function ephDraw(){
+  var a=ephPente(), b=+ephB.value||0;
+  var L=52,R=596,T=16,B=250, EM=1.6, Em=-1.2;
+  function X(p){ return L+p*(R-L)/14; }
+  function Y(e){ return T+(EM-e)*(B-T)/(EM-Em); }
+  function clip(e){ return Math.max(Em,Math.min(EM,e)); }
+  var g=[];
+  for(var p=0;p<=14;p+=2) g.push('<line x1="'+X(p).toFixed(1)+'" y1="'+T+'" x2="'+X(p).toFixed(1)+'" y2="'+B+'" style="stroke:var(--line);stroke-width:.6"/>');
+  [-1,-0.5,0,0.5,1,1.5].forEach(function(e){ g.push('<line x1="'+L+'" y1="'+Y(e).toFixed(1)+'" x2="'+R+'" y2="'+Y(e).toFixed(1)+'" style="stroke:var(--line);stroke-width:.6"/>'); });
+  g.push('<line class="ax" x1="'+L+'" y1="'+T+'" x2="'+L+'" y2="'+B+'" style="stroke:var(--mut)"/>');
+  g.push('<line class="ax" x1="'+L+'" y1="'+Y(0).toFixed(1)+'" x2="'+R+'" y2="'+Y(0).toFixed(1)+'" style="stroke:var(--mut)"/>');
+  for(var p2=0;p2<=14;p2+=2) g.push('<text class="mt" x="'+X(p2).toFixed(1)+'" y="'+(B+14)+'" text-anchor="middle" style="fill:var(--mut);font-size:11px">'+p2+'</text>');
+  [-1,0,1].forEach(function(e){ g.push('<text class="mt" x="'+(L-6)+'" y="'+(Y(e)+3.5).toFixed(1)+'" text-anchor="end" style="fill:var(--mut);font-size:11px">'+fr(e,0)+'</text>'); });
+
+  if(ephFer.checked){
+    var F=[[0,0.77,2,0.77],[2,0.77,2,1.6],[2,0.77,7.45,-0.211],[7.45,-0.211,7.45,-0.5],
+           [7.45,-0.211,14,-0.604],[0,-0.5,7.45,-0.5],[7.45,-0.5,14,-0.893]];
+    F.forEach(function(f){ g.push('<path d="M'+X(f[0]).toFixed(1)+' '+Y(clip(f[1])).toFixed(1)
+      +' L'+X(f[2]).toFixed(1)+' '+Y(clip(f[3])).toFixed(1)+'" style="stroke:var(--mut);stroke-width:1.2;fill:none;opacity:.42"/>'); });
+    g.push('<text class="mt" x="'+X(11).toFixed(1)+'" y="'+(Y(1.35)).toFixed(1)+'" text-anchor="middle" style="fill:var(--mut);opacity:.7;font-size:11px">diagramme du fer</text>');
+  }
+  if(ephEau.checked){
+    g.push('<path d="M'+X(0).toFixed(1)+' '+Y(0).toFixed(1)+' L'+X(14).toFixed(1)+' '+Y(-0.84).toFixed(1)+'" style="stroke:var(--rd);stroke-width:1.3;fill:none;stroke-dasharray:5 3"/>');
+    g.push('<path d="M'+X(0).toFixed(1)+' '+Y(1.23).toFixed(1)+' L'+X(14).toFixed(1)+' '+Y(0.39).toFixed(1)+'" style="stroke:var(--rd);stroke-width:1.3;fill:none;stroke-dasharray:5 3"/>');
+  }
+  var e0v=b, e14=b+14*a;
+  g.push('<path d="M'+X(0).toFixed(1)+' '+Y(clip(e0v)).toFixed(1)+' L'+X(14).toFixed(1)+' '+Y(clip(e14)).toFixed(1)+'" style="stroke:var(--acc);stroke-width:2;fill:none"/>');
+  g.push('<circle cx="'+X(0).toFixed(1)+'" cy="'+Y(clip(e0v)).toFixed(1)+'" r="3.2" style="fill:var(--acc)"/>');
+  g.push('<circle cx="'+X(14).toFixed(1)+'" cy="'+Y(clip(e14)).toFixed(1)+'" r="3.2" style="fill:var(--acc)"/>');
+  g.push('<text class="lbs" x="'+((L+R)/2)+'" y="'+(B+31)+'" text-anchor="middle" style="fill:var(--mut);font-size:12px">pH</text>');
+  ephFig.innerHTML='<svg viewBox="0 0 610 288" role="img" aria-label="Tracé de la frontière saisie, sur le plan potentiel-pH.">'+g.join('')+'</svg>';
+
+  var hors = (e0v>EM||e0v<Em||e14>EM||e14<Em);
+  ephRead.innerHTML =
+    '<div class="out-res" style="border-top-color:var(--line)"><span class="v3">E = '+fr(b,4)+(a<0?' − ':' + ')+fr(Math.abs(a),4)+' · pH</span></div>'
+    + '<div class="tw" style="margin:9px 0 0"><table class="tab" style="font-size:13px">'
+    + '<tr><th><span class="f">pH</span></th><th>0</th><th>7</th><th>14</th></tr>'
+    + '<tr><td class="sm">E en volts</td><td class="num">'+fv(e0v)+'</td><td class="num">'+fv(b+7*a)+'</td><td class="num">'+fv(e14)+'</td></tr>'
+    + '</table></div>'
+    + (ephMode==='auto'
+       ? '<p class="tool-note"><b>La pente n\'a pas été calculée</b>, elle a été lue : − 0,06 × '+Math.max(0,+ephH.value||0)
+         +' ÷ '+Math.max(1,+ephN.value||1)+' = '+fr(a,4)+'. Deux nombres sur la demi-équation, rien d\'autre. '+'Sur le diagramme, une vraie frontière <b>s\'arrête aux bornes de son domaine</b> : ici le trait va d\'un bout à l\'autre pour que tu puisses le lire.</p>'
+       : '')
+    + (hors ? '<p class="tool-note"><b>La droite sort du cadre.</b> Les deux points lus restent justes ; c\'est le tracé qui est coupé.</p>' : '');
+  S.tools.eph={mode:ephMode,n:ephN.value,h:ephH.value,a:ephA.value,b:ephB.value,fer:ephFer.checked,eau:ephEau.checked};
+  save();
+}
+function ephSetMode(m){
+  ephMode=m;
+  ephM1.setAttribute('aria-pressed', m==='auto'?'true':'false');
+  ephM2.setAttribute('aria-pressed', m==='auto'?'false':'true');
+  ephAuto.hidden = (m!=='auto'); ephMan.hidden = (m==='auto');
+  if(m==='man') ephA.value = fr(-0.06*Math.max(0,+ephH.value||0)/Math.max(1,+ephN.value||1),4).replace('−','-').replace(',','.');
+  ephDraw();
+}
+ephM1.addEventListener('click',function(){ ephSetMode('auto'); });
+ephM2.addEventListener('click',function(){ ephSetMode('man'); });
+[ephN,ephH,ephA,ephB].forEach(function(el){ el.addEventListener('input',ephDraw); });
+[ephFer,ephEau].forEach(function(el){ el.addEventListener('change',ephDraw); });
+
+/* ═══ outil 4 · vérifier mon calcul ════════════════════════════════ */
+var tiRep=$('#ti-rep'), tiOut=$('#ti-out');
+function K(l,d){ return '<span class="key'+(d?' dark':'')+'">'+l+'</span>'; }
+function numK(x){
+  var s=String(Math.round(x*1e6)/1e6), out='';
+  if(s.charAt(0)==='-'){ out+=K('(−)'); s=s.slice(1); }
+  for(var i=0;i<s.length;i++) out+=K(s.charAt(i));
+  return out;
+}
+function powK(m,e){
+  var out='';
+  if(Math.abs(m-1)>1e-12) out += numK(m)+K('×');
+  out += K('1')+K('0')+K('^');
+  if(e<0) out += K('(−)');
+  out += numK(Math.abs(e))+K('▶');
+  return out;
+}
+var ERREURS = [
+  ['la touche ln au lieu de log',
+   "Tu as pris le logarithme <b>népérien</b>. C'est la touche <b>ln</b> ; le décimal est <b>ctrl + 10ˣ</b>. Le rapport entre les deux vaut 2,30 : ton terme logarithmique est 2,30 fois trop grand.",
+   function(c,r,ph){ return c.e0 + 2.302585*(r.k*r.t - r.k*c.h*ph); }],
+  ['le terme en pH oublié',
+   "Tu as calculé le terme de concentration et tu t'es arrêté là. Les <b>H⁺</b> sont <i>dans</i> le log : ils en sortent avec le coefficient de la demi-équation.",
+   function(c,r,ph){ return c.e0 + r.k*r.t; }],
+  ['le signe du terme en pH inversé',
+   "Le terme en pH se <b>retranche</b>. Il vient de <span class='f'>log[H⁺] = − pH</span> : le signe moins est dans la définition du pH, pas ailleurs.",
+   function(c,r,ph){ return c.e0 + r.k*r.t + r.k*c.h*ph; }],
+  ['oubli de diviser par n',
+   "Tu as utilisé <b>0,06</b> et non <b>0,06 / n</b>. Le <i>n</i> est le nombre d'électrons de la demi-équation — ici "+'',
+   function(c,r,ph){ return c.e0 + 0.06*(r.t - c.h*ph); }],
+  ['oxydant et réducteur intervertis',
+   "Tu as mis le <b>réducteur en haut</b> et l'oxydant en bas. La convention est l'inverse, et elle vient de l'écriture du couple <span class='f'>Ox / Red</span>.",
+   function(c,r,ph){ return c.e0 + r.k*(-r.t) - r.k*c.h*ph; }],
+  ['E° oublié',
+   "Tu n'as calculé que la <b>correction</b>. Le potentiel standard est le point de départ : la loi de Nernst dit de combien on s'en écarte, pas quelle est la valeur absolue.",
+   function(c,r,ph){ return r.k*r.t - r.k*c.h*ph; }]
+];
+function tiDraw(){
+  var v=nerVals(), c=v.c, r=nernst(c,v.ox,v.rd,v.ph);
+  var seq='', has = (c.oxP||c.rdP);
+  seq += numK(c.e0);
+  if(has){
+    seq += K('+')+numK(Math.round(r.k*1e6)/1e6)+K('×')+K('ctrl',1)+K('10ˣ');
+    if(c.oxP) seq += powK(v.oxm,v.oxe);
+    if(c.oxP && c.rdP) seq += K('÷');
+    if(!c.oxP && c.rdP) seq += K('1')+K('÷');
+    if(c.rdP) seq += powK(v.rdm,v.rde);
+    seq += K(')');
+  }
+  if(c.h) seq += K('−')+numK(Math.round(0.06*c.h/c.n*1e6)/1e6)+K('×')+numK(v.ph);
+  seq += K('ctrl',1)+K('enter',1);
+
+  var rep = tiRep.value==='' ? null : +tiRep.value;
+  var bloc='';
+  if(rep===null){
+    bloc = '<div class="diag ok2"><span class="k">En attente de ta réponse</span>'
+      + 'Fais le calcul de ton côté, puis écris ta valeur à gauche. '
+      + 'La réponse attendue est <b>'+fv(r.E)+' V</b> — mais ne la lis qu\'après.</div>';
+  } else if(Math.abs(rep-r.E)<0.005){
+    bloc = '<div class="diag ok2"><span class="k">C\'est juste</span>'
+      + 'Ta réponse <b>'+fv(rep)+' V</b> correspond au calcul. '
+      + (c.h ? 'Contrôle de cohérence : E s\'écarte de E° de <b>'+fv(Math.abs(r.E-c.e0))+' V</b>, ce qui est l\'ordre de grandeur attendu hors des conditions standard.'
+             : 'Ce couple ne dépend pas du pH : seul le terme de concentration a joué.')+'</div>';
+  } else {
+    var trouve=null;
+    for(var i=0;i<ERREURS.length;i++){
+      var val=ERREURS[i][2](c,r,v.ph);
+      if(isFinite(val) && Math.abs(rep-val)<0.005){ trouve=ERREURS[i]; break; }
+    }
+    bloc = '<div class="diag"><span class="k">Écart de '+fv(rep-r.E)+' V</span>'
+      + (trouve
+         ? '<b>'+trouve[0]+'</b> — ton nombre est exactement celui que donne cette erreur.<br>'+trouve[1]
+         : 'Ton nombre ne correspond à aucune des six erreurs classiques. Reprends les maillons un par un dans l\'onglet <b>Calculateur Nernst</b> : c\'est là que l\'écart se verra.')
+      + '</div>';
+  }
+
+  tiOut.innerHTML =
+    '<span class="k">TI-Nspire CX CAS II — la séquence pour ce calcul</span>'
+    + '<div class="keys" style="margin:8px 0 0">'+seq+'</div>'
+    + '<div class="cmp">le CAS répond en fraction exacte &nbsp;→&nbsp; <span class="good">ctrl + enter</span> donne '
+    + '<b>'+fv(r.E)+'</b> &nbsp;·&nbsp; les deux <b>▶</b> sortent des exposants</div>'
+    + bloc;
+}
+tiRep.addEventListener('input',tiDraw);
+
+/* ── pré-remplissage depuis l'étape lue, et restitution ───────────── */
+function toolsPrefill(step){
+  var a=step.dataset.couple, b=step.dataset.couple2;
+  if(a && BYKEY[a]){ echA.value=a; nerC.value=a; }
+  if(b && BYKEY[b]) echB.value=b;
+  if(a||b){ drawGamma(); nerDraw(); }
+}
+function toolsRestore(){
+  var t=S.tools||{};
+  if(t.echA && BYKEY[t.echA]) echA.value=t.echA;
+  if(t.echB && BYKEY[t.echB]) echB.value=t.echB;
+  if(!echA.value) echA.value='MnO4-/Mn2+';
+  if(!echB.value) echB.value='Fe3+/Fe2+';
+  if(t.ner){ var n=t.ner;
+    if(n.c) nerC.value=n.c;
+    ['e0','n','h'].forEach(function(k){ if(n[k]!=null) $('#ner-'+k).value=n[k]; });
+    ['oxm','oxe','rdm','rde'].forEach(function(k){ if(n[k]!=null) $('#ner-'+k).value=n[k]; });
+    if(n.ph!=null){ nerPhN.value=n.ph; nerPhR.value=n.ph; }
+  } else { nerC.value='MnO4-/Mn2+'; }
+  if(t.eph){ var e=t.eph;
+    if(e.n!=null) ephN.value=e.n; if(e.h!=null) ephH.value=e.h;
+    if(e.a!=null) ephA.value=e.a; if(e.b!=null) ephB.value=e.b;
+    ephFer.checked=!!e.fer; ephEau.checked=!!e.eau;
+    ephMode = e.mode==='man' ? 'man' : 'auto';
+  }
+  ephSetMode(ephMode);
+  drawGamma(); nerDraw(); tiDraw();
+}
+
 /* ── démarrage ────────────────────────────────────────────────────── */
 setMode(S.mode==='gestes'?'gestes':'fil');
+toolsRestore();
+window.__toolsReady=1;
 paintDock();
 var start=indexOfHash();
 show(start>=0 ? start : (S.step|0));

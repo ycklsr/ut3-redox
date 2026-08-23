@@ -353,8 +353,18 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
    de plus : l'échelle des puissances de 10 face à leurs logarithmes, et la
    droite `E = 1,486 − 0,096·pH` avec son ordonnée à l'origine et son triangle
    de pente.
-4. **Les quatre outils de la paillasse** — dont le traceur E-pH (le morceau de
-   bravoure) et le vérificateur TI-Nspire.
+4. ~~**Les quatre outils de la paillasse**~~ — **fait.** Une seule table de
+   25 couples les alimente tous — `E°`, `n`, nombre de protons, puissances de
+   `[Ox]` et `[Red]`, demi-équation, remarque sur les activités égales à 1.
+   L'**échelle** trace le γ entre deux couples et sort les deux demi-équations
+   dans le bon sens ; le **calculateur de Nernst** déroule les cinq maillons du
+   cours et accepte un couple hors table ; le **traceur** lit la pente sur `n`
+   et le nombre de protons et superpose le diagramme du fer et les droites de
+   l'eau ; le **vérificateur** compare la réponse saisie et, si elle est fausse,
+   cherche **laquelle des six erreurs classiques** donne exactement ce nombre,
+   puis produit la séquence de touches TI pour le calcul en cours.
+   Chaque étape déclare `data-couple`, si bien que la paillasse arrive
+   pré-remplie avec le couple qu'on lit.
 5. **Les 5 gestes et leurs entraîneurs** — tirage aléatoire et correction.
 6. **Les 4 annales retranscrites** — sujets et corrigés, chronométrables.
 7. **Les points de contrôle** et les tests de non-régression.
@@ -373,11 +383,23 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 - **Contrôle visuel** : `npm run captures` rend neuf vues clés en clair et en
   sombre dans un dossier temporaire. À relire à l'œil après toute modification
   de mise en page — les tests vérifient la mécanique, pas l'allure.
-- Trois gardes automatiques valent la peine d'être connues avant d'écrire :
+- ⚠️ **SVG ne connaît ni `<sub>` ni `<sup>`.** Ces balises font *sortir*
+  l'analyseur du mode SVG : le dessin est tronqué et le texte s'échappe sous la
+  figure. Dans une figure, les indices et exposants passent en **Unicode** —
+  `plainF()` fait la conversion depuis le HTML des couples. Un test le garde.
+- Quatre gardes automatiques valent la peine d'être connues avant d'écrire :
   aucune capitalisation forcée sur une formule ni sur « pH » (elle a déjà
   attrapé un `E-pH` rendu `E-PH`), aucun débordement horizontal de 375 à
   1280 px, et un contraste d'au moins 4,5:1 sur fond accent dans les deux
-  thèmes.
+  thèmes, et rien ne s'échappe d'un conteneur de figure.
+- **Valeurs de contrôle** des outils, toutes recalculées à la main :
+  `MnO4-/Mn2+` à `[Ox]=10⁻³`, `[Red]=10⁻¹`, pH 2 → **1,294 V**, et sous forme
+  affine **E = 1,486 − 0,096·pH** · un couple hors table `E°=0,17, n=2, h=3`
+  aux mêmes concentrations à pH 3 → **−0,10 V** · `Fe2+/Fe` à `10⁻²` →
+  **−0,50 V** · γ entre `MnO4-/Mn2+` et `Fe3+/Fe2+` → **ΔE° = 0,74 V**.
+- ⚠️ **Corrigé** : la touche `ln` au lieu de `log` donne **−0,45 V** sur le
+  calcul de l'étape 12, pas −0,23 comme l'annonçait la maquette. Le rapport
+  entre les deux logarithmes vaut 2,30.
 - **Une formule ne se coupe pas.** `.f` est en `nowrap` ; quand une expression
   dépasse, c'est `.formula .e` ou `.link .expr` qui défile, jamais la page.
   Toute nouvelle expression longue doit être dans un de ces deux conteneurs.
@@ -392,7 +414,9 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 
 ## 11. Pour reprendre
 
-> Lis `PLAN.md`, ouvre `redox.html`, et prends le **point 4** de l'ordre des
-> travaux : les quatre outils de la paillasse. Les trois onglets vides portent
-> chacun leur cahier des charges, et l'onglet « vérifier mon calcul » montre à
-> quoi doit ressembler un panneau fini. Puis les points 5 à 7.
+> Lis `PLAN.md`, ouvre `redox.html`, et prends le **point 5** de l'ordre des
+> travaux : les cinq gestes et leurs entraîneurs. Les dix blocs `.geste.pending`
+> attendent chacun leur recette numérotée, leur piège et leur entraîneur ; la
+> table `COUPLES` et les fonctions `nernst()`, `plainF()` et `fv()` de la
+> paillasse fournissent déjà de quoi tirer des questions au hasard et corriger.
+> Puis les points 6 et 7.
