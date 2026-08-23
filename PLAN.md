@@ -51,19 +51,29 @@ Le texte des deux cours est déjà extrait dans `design/cours-extrait.txt` et
 `design/cours-bonus-extrait.txt` (`pdftotext -layout`). **Les corrigés sont des
 scans manuscrits** : ils devront être retranscrits en texte (décision validée).
 
-### Constat majeur : le contrôle est le même depuis quatre ans
+### Constat : un noyau dur, et une périphérie variable
 
-Ce n'est pas « le même genre de sujet » — c'est le **même squelette**, exercice
-par exercice, avec d'autres espèces chimiques :
+Le relevé exact, fait sujet par sujet au point 6 :
 
-1. **Définitions** — oxydation, réduction, dismutation, écritures conventionnelles
-2. **n.o. + équilibrage** — n.o. de 4 espèces ; couple dans le sens conventionnel ;
-   équilibrer **en milieu acide puis basique** ; qui s'est réduit ; dismutation de
-   H₂O₂ ; « ces deux espèces peuvent-elles réagir ? »
-3. **Pile** — ions en solution ; réactions anode/cathode ; schéma annoté (signes,
-   sens des e⁻, sens du courant) ; écriture symbolique ; rôle du pont ; fem
-4. **Loi de Nernst** — écrire Nernst pour un couple, calculer E à un pH imposé
-5. **Diagramme E-pH** — placer les espèces, justifier, exploiter des coordonnées
+| Ce qui est demandé | 2022 | 2023 | 2024 | 2025 |
+|---|:--:|:--:|:--:|:--:|
+| définitions, écritures conventionnelles | — | — | ✓ | ✓ |
+| nombres d'oxydation | ✓ | ✓ | ✓ | ✓ |
+| équilibrage, acide **et** basique | ✓ | ✓ | ✓ | ✓ |
+| dismutation de H₂O₂ | — | — | ✓ | ✓ |
+| « ces espèces peuvent-elles réagir ? » | ✓ | ✓ | ✓ | ✓ |
+| schéma de pile annoté | ✓ | ✓ | — | ✓ |
+| fem et écriture symbolique | ✓ | ✓ | — | ✓ |
+| loi de Nernst | ✓ | ✓ | ✓ | ✓ |
+| diagramme E-pH | ✓ | ✓ | ✓ | — |
+
+**Quatre choses tombent les quatre années** : n.o., équilibrage acide et basique,
+« peuvent-elles réagir », loi de Nernst. Le reste varie — 2025 n'a **pas** de
+diagramme E-pH et ne compte que 4 exercices ; 2024 n'a ni schéma de pile ni fem.
+
+⚠️ Un relevé antérieur annonçait « le même squelette, exercice par exercice ».
+C'est vrai du noyau dur, faux du reste. Les libellés d'années des dix blocs
+gestes suivent maintenant ce tableau.
 
 C'est ce constat qui justifie l'architecture ci-dessous.
 
@@ -308,13 +318,18 @@ frontière du diagramme :          E = 1,486 − 0,096·pH
                                   pH 0 → 1,49  ·  pH 14 → 0,14
 ```
 
-**HSO₄⁻/SO₂** — sujet 2024, E° = 0,17 V, `HSO4- + 3H+ + 2e- = SO2 + 2H2O`
+**HSO₄⁻/SO₂** — sujet 2024, **E° = 0,16 V**, `HSO4- + 3H+ + 2e- = SO2 + 2H2O`
 
 ```
 E = E° + 0,03·log([HSO4-]/[SO2]) − 0,09·pH
 [HSO4-]=[SO2]=1e-2 → log(1) = 0, le terme disparaît
-pH = 3  →  E = 0,17 − 0,27 = −0,10 V
+pH = 3  →  E = 0,16 − 0,27 = −0,11 V
 ```
+
+⚠️ **Corrigé au point 6.** La maquette, puis l'étape 12, ont longtemps porté
+`E° = 0,17` et `E = −0,10 V`. Le tableau du sujet 2024 donne **0,16**, et son
+corrigé officiel conclut à **−0,11 V**. Un test interdit désormais « 0,17 »
+ailleurs que dans l'avertissement qui le mentionne.
 
 Ce second cas est pédagogiquement précieux : concentrations égales ⟹ `log(1) = 0`.
 
@@ -372,7 +387,11 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
    paillasse, plus trois bancs propres à l'entraînement : `EQUIL`
    (12 demi-équations), `NOX` (20 nombres d'oxydation) et `DISM` (4 espèces à
    cheval sur deux couples).
-6. **Les 4 annales retranscrites** — sujets et corrigés, chronométrables.
+6. ~~**Les 4 annales retranscrites**~~ — **fait.** Les quatre sujets et leurs
+   quatre corrigés manuscrits sont transcrits dans l'étape 16, exercice par
+   exercice, corrections repliées par défaut, avec un chronomètre d'une heure
+   visible depuis n'importe quelle étape. Un tableau ouvre l'étape : ce qui
+   tombe, année par année.
 7. **Les points de contrôle** et les tests de non-régression.
 
 ---
@@ -389,6 +408,12 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 - **Contrôle visuel** : `npm run captures` rend neuf vues clés en clair et en
   sombre dans un dossier temporaire. À relire à l'œil après toute modification
   de mise en page — les tests vérifient la mécanique, pas l'allure.
+- ⚠️ **La pente d'une frontière n'est pas toujours négative.** Elle vaut
+  `−0,06·h/n` quand les H⁺ sont du côté de l'**oxydant**, ce qui est le cas
+  courant — mais `+0,06·h/n` quand ils sont du côté du **réducteur**. Le sujet
+  2022 en donne un cas : `2 Cu2+ + H2O + 2e- = Cu2O(s) + 2H+`, coefficient
+  directeur **+0,06**. Le traceur de la paillasse a un sélecteur de côté ;
+  l'étape 0 et l'étape 14 le disent toutes les deux.
 - ⚠️ **Deux espèces se comptent deux fois si on n'y prend pas garde.** Quand
   l'oxydant *est* le proton (`H+/H2`), il ne faut pas l'écrire en plus des
   `h` protons ; quand le réducteur *est* l'eau (`O2/H2O`, `H2O2/H2O`), le `w`
@@ -427,12 +452,12 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 
 ## 11. Pour reprendre
 
-> Lis `PLAN.md`, ouvre `redox.html`, et prends le **point 6** de l'ordre des
-> travaux : les quatre annales, sujets et corrigés retranscrits. Les corrigés
-> sont des **scans manuscrits** : il faudra les lire page par page avec l'outil
-> de lecture d'images, pas `pdftotext`. L'étape 16 porte la note de chantier qui
-> reste, et elle demande aussi de contrôler sujet par sujet les mentions
-> « tombé chaque année depuis 2022 » des dix blocs gestes. Puis le point 7.
+> Lis `PLAN.md`, ouvre `redox.html`, et prends le **point 7**, le dernier :
+> les points de contrôle. Le mécanisme existe depuis le point 1 et trois
+> questions modèles vivent dans l'étape 12 ; il reste à en écrire pour les seize
+> autres étapes, et à **écrire le test automatique** exigé par la convention 6 —
+> celui qui refuse toute question dont la bonne réponse est la seule des options
+> à figurer dans le paragraphe qui la précède.
 >
 > **La prise de test** `window.__redox` expose les tables et les fonctions pures
 > (`COUPLES`, `EQUIL`, `NOX`, `GEN`, `nernst`, `demiEq`, `fr`, `fv`, `plainF`) :

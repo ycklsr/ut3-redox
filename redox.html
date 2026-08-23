@@ -318,6 +318,57 @@ table.tab{border-collapse:collapse;margin:0;font-size:14.5px;width:100%;min-widt
 .geste.pending{background:none;border-left-style:dashed}
 .geste.pending .att{font-size:12.5px;color:var(--mut);line-height:1.5}
 
+/* ── les annales ───────────────────────────────────────────────────── */
+.ann-nav{display:flex;gap:0;border:1px solid var(--line);border-radius:8px;overflow:hidden;
+         margin:18px 0 4px;max-width:34em;font-family:var(--sans)}
+.ann-nav button{flex:1;padding:7px 4px 8px;font-size:12.5px;color:var(--mut)}
+.ann-nav button[aria-pressed="true"]{background:var(--acc);color:var(--on-acc);font-weight:600}
+.ann[hidden]{display:none}
+.ann-hd{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:18px 0 4px;
+        border-bottom:1px solid var(--line);padding-bottom:9px}
+.ann-hd .k{color:var(--acc)}
+.ann-hd .dur{font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;color:var(--mut);margin-left:auto}
+.exo{border-top:1px solid var(--line);padding:15px 0 6px;max-width:52em}
+.exo:first-of-type{border-top:none}
+.exo h3{font-family:var(--serif);font-size:1.02rem;font-weight:600;margin:0 0 9px;letter-spacing:-.008em}
+.exo h3 .n4{font-family:var(--mono);font-size:.66em;color:var(--acc);letter-spacing:.06em;margin-right:.5em}
+.exo ol,.exo ul{margin:0 0 10px;padding-left:1.35rem}
+.exo li{margin-bottom:5px;line-height:1.55}
+.exo li::marker{color:var(--mut);font-size:.9em}
+.exo p{max-width:none;font-size:15.5px}
+.exo .cadre{border-left:2px solid var(--line);padding-left:13px;margin:10px 0;font-size:14.5px;
+            color:var(--mut);line-height:1.5}
+.exo .cadre b{color:var(--ink)}
+.corr-btn{font-family:var(--mono);font-size:9px;letter-spacing:.09em;text-transform:uppercase;font-weight:600;
+  color:var(--mut);border:1px solid var(--line);border-radius:99px;padding:3px 11px 4px;margin-top:4px}
+.corr-btn:hover{color:var(--ok);border-color:var(--ok)}
+.corr-btn[aria-expanded="true"]{color:var(--ok);border-color:var(--ok)}
+.corr-box{border-left:2px solid var(--ok);padding:2px 0 2px 14px;margin:11px 0 4px;max-width:50em}
+.corr-box[hidden]{display:none}
+.corr-box>.k{color:var(--ok);margin-bottom:6px}
+.corr-box p{max-width:none;font-size:15px;margin:0 0 8px}
+.corr-box .eqs{max-width:none;margin:10px 0}
+.corr-box ol,.corr-box ul{margin:6px 0 8px;padding-left:1.3rem}
+.corr-box li{margin-bottom:4px;line-height:1.5}
+.corr-box .tw{max-width:none}
+.scan{border-left:2px solid var(--amb);padding-left:12px;margin:10px 0;font-family:var(--sans);
+      font-size:12.5px;line-height:1.5;color:var(--amb-ink)}
+.scan b{color:var(--amb)}
+.exo .don{font-family:var(--mono);font-size:12.5px;line-height:1.9}
+
+/* le chronomètre */
+.chrono{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:16px 0 4px}
+.chrono .t4{font-family:var(--mono);font-size:26px;font-weight:600;letter-spacing:.02em;
+            font-variant-numeric:tabular-nums}
+.chrono .t4.fini{color:var(--mark)}
+.chrono button{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;
+  border:1px solid var(--line);border-radius:99px;padding:4px 12px 5px;color:var(--mut)}
+.chrono button:hover{color:var(--acc);border-color:var(--acc)}
+.chrono .lbl2{font-family:var(--sans);font-size:12px;color:var(--mut)}
+.rail .chr{font-family:var(--mono);font-size:10px;color:var(--acc);font-weight:600;margin-left:12px;
+           font-variant-numeric:tabular-nums;white-space:nowrap}
+.rail .chr[hidden]{display:none}
+
 /* ── l'entraîneur d'un geste ───────────────────────────────────────── */
 .geste .go[data-entr]{cursor:pointer;border:0}
 .geste .go[data-entr]:hover{filter:brightness(1.12)}
@@ -516,6 +567,7 @@ input[type=range]{width:100%;accent-color:var(--acc);margin:0}
   <button class="burger" id="burger" aria-expanded="false" aria-controls="nav">Plan</button>
   <span class="lbl">Parcours</span>
   <div class="segs" id="segs" role="group" aria-label="Les 17 étapes"></div>
+  <span class="chr" id="chr-rail" hidden aria-live="off"></span>
   <span class="pos" id="pos"></span>
   <button class="tbtn" id="theme" title="Thème : auto, clair ou sombre">Auto</button>
 </header>
@@ -715,7 +767,8 @@ input[type=range]{width:100%;accent-color:var(--acc);margin:0}
   </div>
 
   <div class="def"><span class="k">Ce que le signe de la pente veut dire</span>
-    <p>Une pente <b>positive</b> fait monter la droite de gauche à droite. Une pente <b>négative</b> la fait descendre. Toutes les frontières du diagramme E-pH ont une pente <b>négative ou nulle</b> : elles descendent ou restent plates, jamais elles ne montent.</p></div>
+    <p>Une pente <b>positive</b> fait monter la droite de gauche à droite. Une pente <b>négative</b> la fait descendre. Une pente <b>nulle</b> donne une horizontale.</p>
+    <p>Sur un diagramme E-pH les frontières <b>descendent presque toujours</b> — mais pas toujours : le sujet 2022, à l'étape 16, en contient une qui <b>monte</b>. Tu verras à l'étape 14 d'où vient ce signe.</p></div>
 
   <h3 style="font-family:var(--serif);font-size:1rem;font-weight:600;margin:22px 0 8px">La traduction, terme à terme</h3>
 
@@ -795,10 +848,10 @@ input[type=range]{width:100%;accent-color:var(--acc);margin:0}
   <p>Quatre habitudes suffisent. Les trois premières évitent des résultats faux ; la quatrième évite une saisie fausse, ce qui est pire, parce qu'elle passe inaperçue.</p>
 
   <ol class="pas">
-    <li><b>Le logarithme décimal, c'est <span class="key dark">ctrl</span> <span class="key">10ˣ</span>.</b><span class="co">La touche <span class="key">ln</span> est le logarithme <b>népérien</b>, en base e : ce n'est pas le même. Sur le calcul de l'étape 12 elle donnerait <b>−0,45</b> au lieu de −0,10, sans le moindre message d'erreur : le logarithme népérien vaut 2,30 fois le décimal.</span></li>
+    <li><b>Le logarithme décimal, c'est <span class="key dark">ctrl</span> <span class="key">10ˣ</span>.</b><span class="co">La touche <span class="key">ln</span> est le logarithme <b>népérien</b>, en base e : ce n'est pas le même. Sur le calcul de l'étape 12 elle donnerait <b>−0,46</b> au lieu de −0,11, sans le moindre message d'erreur : le logarithme népérien vaut 2,30 fois le décimal.</span></li>
     <li><b>Pour un nombre négatif, la touche <span class="key">(−)</span>.</b><span class="co">En bas à gauche du clavier. Ce n'est pas le <span class="key">−</span> de la soustraction, qui est dans la colonne des opérations à droite. Les deux se ressemblent ; la machine, elle, ne les confond pas et refuse la saisie.</span></li>
     <li><b>Pour sortir d'un exposant, la flèche <span class="key">▶</span>.</b><span class="co">Après <span class="key">^</span>, tout ce que tu tapes reste <b>en haut</b>. Si tu enchaînes sans appuyer sur la flèche droite, <span class="f">10<sup>−3</sup> ÷ 10<sup>−1</sup></span> devient <span class="f">10<sup>−3 ÷ 10<sup>−1</sup></sup></span> — un résultat absurde, et rien ne te le signale.</span></li>
-    <li><b>Pour une valeur décimale, <span class="key dark">ctrl</span> <span class="key dark">enter</span>.</b><span class="co">Le modèle CAS répond en <b>fraction exacte</b> : il affiche <span class="f">−1/10</span> là où la copie attend <span class="f">−0,10 V</span>. <span class="key dark">ctrl</span> <span class="key dark">enter</span> force la valeur décimale.</span></li>
+    <li><b>Pour une valeur décimale, <span class="key dark">ctrl</span> <span class="key dark">enter</span>.</b><span class="co">Le modèle CAS répond en <b>fraction exacte</b> : il affiche <span class="f">−11/100</span> là où la copie attend <span class="f">−0,11 V</span>. <span class="key dark">ctrl</span> <span class="key dark">enter</span> force la valeur décimale.</span></li>
   </ol>
 
   <div class="ex"><span class="k">La séquence complète, sur le calcul de l'exercice 13</span>
@@ -936,8 +989,8 @@ input[type=range]{width:100%;accent-color:var(--acc);margin:0}
     <p><b>C'est le dichlore qui s'est réduit</b> : il a capté les deux électrons cédés par le zinc. Il joue donc le rôle d'oxydant.</p>
   </div>
 
-  <div class="geste" data-geste="1" data-gt="Lire un couple et écrire sa demi-équation" data-yr="tombé chaque année depuis 2022">
-    <span class="k">Geste 1 sur 5 — posé ici, dès que le cours l'a rendu exécutable <span class="y">tombé chaque année depuis 2022</span></span>
+  <div class="geste" data-geste="1" data-gt="Lire un couple et écrire sa demi-équation" data-yr="tombé en 2024 et 2025">
+    <span class="k">Geste 1 sur 5 — posé ici, dès que le cours l'a rendu exécutable <span class="y">tombé en 2024 et 2025</span></span>
     <h3>Lire un couple et écrire sa demi-équation</h3>
     <ol>
       <li><b>Repère qui a le nombre d'oxydation le plus élevé</b> : c'est l'oxydant.</li>
@@ -1008,8 +1061,8 @@ input[type=range]{width:100%;accent-color:var(--acc);margin:0}
   <div class="piege"><span class="k">Les deux cas qui font perdre des points</span>
     <p>L'oxygène vaut <b>−II</b> partout, <em>sauf</em> dans les peroxydes comme <span class="f">H<sub>2</sub>O<sub>2</sub></span> où il vaut <b>−I</b>. Et un halogène vaut <b>−I</b> seulement s'il n'y a <b>pas d'oxygène</b> dans le composé : dans <span class="f">ClO<sub>4</sub><sup>−</sup></span> le chlore vaut +VII, pas −I.</p></div>
 
-  <div class="geste" data-geste="2a" data-gt="Poser les nombres d'oxydation" data-yr="tombé chaque année depuis 2022">
-    <span class="k">Geste 2a — posé ici, dès que le cours l'a rendu exécutable <span class="y">tombé chaque année depuis 2022</span></span>
+  <div class="geste" data-geste="2a" data-gt="Poser les nombres d'oxydation" data-yr="tombé les quatre années">
+    <span class="k">Geste 2a — posé ici, dès que le cours l'a rendu exécutable <span class="y">tombé les quatre années</span></span>
     <h3>Poser les nombres d'oxydation</h3>
     <ol>
       <li><b>Applique les quatre règles dans l'ordre</b> : corps simple, oxygène, hydrogène, halogène.</li>
@@ -1124,8 +1177,8 @@ input[type=range]{width:100%;accent-color:var(--acc);margin:0}
   <div class="piege"><span class="k">Le piège de l'ordre</span>
     <p>Les cinq temps ne sont pas interchangeables. Si tu places les électrons <b>avant</b> les <span class="f">H<sup>+</sup></span>, le bilan des charges est faux et tu trouveras un <i>n</i> qui ne correspondra à aucune différence de n.o. Les électrons se posent <b>en dernier</b>, toujours.</p></div>
 
-  <div class="geste" data-geste="2b" data-gt="Équilibrer une demi-équation en milieu acide" data-yr="tombé chaque année depuis 2022">
-    <span class="k">Geste 2b — posé ici, dès que le cours l'a rendu exécutable <span class="y">tombé chaque année depuis 2022</span></span>
+  <div class="geste" data-geste="2b" data-gt="Équilibrer une demi-équation en milieu acide" data-yr="tombé les quatre années">
+    <span class="k">Geste 2b — posé ici, dès que le cours l'a rendu exécutable <span class="y">tombé les quatre années</span></span>
     <h3>Équilibrer une demi-équation en milieu acide</h3>
     <ol>
       <li><b>Écris dans le sens conventionnel</b> : <span class="f">Ox + n e<sup>−</sup> = Red</span>.</li>
@@ -1250,8 +1303,8 @@ input[type=range]{width:100%;accent-color:var(--acc);margin:0}
     <p style="font-size:14px;color:var(--mut)">Contrôle : charges <span class="f">−2 + 5 = +3</span> à gauche, <span class="f">+6 − 3 = +3</span> à droite. Oxygènes : <span class="f">7 + 6 = 13</span> et <span class="f">1 + 12 = 13</span>. Hydrogènes : <span class="f">5</span> et <span class="f">2 + 3 = 5</span>.</p>
   </div>
 
-  <div class="geste" data-geste="2c" data-gt="Passer une équation en milieu basique" data-yr="tombé chaque année depuis 2022">
-    <span class="k">Geste 2c — posé ici, dès que le cours l'a rendu exécutable <span class="y">tombé chaque année depuis 2022</span></span>
+  <div class="geste" data-geste="2c" data-gt="Passer une équation en milieu basique" data-yr="tombé les quatre années">
+    <span class="k">Geste 2c — posé ici, dès que le cours l'a rendu exécutable <span class="y">tombé les quatre années</span></span>
     <h3>Passer une équation en milieu basique</h3>
     <ol>
       <li><b>Équilibre d'abord en milieu acide</b>, entièrement. Le milieu basique est une opération de fin.</li>
@@ -1319,8 +1372,8 @@ input[type=range]{width:100%;accent-color:var(--acc);margin:0}
   <div class="def"><span class="k">La réaction inverse porte un nom</span>
     <p>Quand deux espèces d'un même élément, l'une plus oxydée et l'autre plus réduite, se rencontrent pour donner une espèce intermédiaire, on parle de <b>médiamutation</b>. C'est la dismutation lue à l'envers.</p></div>
 
-  <div class="geste" data-geste="1b" data-gt="Reconnaître et écrire une dismutation" data-yr="tombé chaque année depuis 2022">
-    <span class="k">Geste 1 — cas particulier, posé ici <span class="y">tombé chaque année depuis 2022</span></span>
+  <div class="geste" data-geste="1b" data-gt="Reconnaître et écrire une dismutation" data-yr="tombé en 2024 et 2025">
+    <span class="k">Geste 1 — cas particulier, posé ici <span class="y">tombé en 2024 et 2025</span></span>
     <h3>Reconnaître et écrire une dismutation</h3>
     <ol>
       <li><b>Repère l'espèce qui apparaît dans deux couples</b>, une fois comme oxydant, une fois comme réducteur.</li>
@@ -1440,8 +1493,8 @@ input[type=range]{width:100%;accent-color:var(--acc);margin:0}
     <p class="note">La <b>barre simple</b> marque une frontière entre deux phases — le métal et sa solution. La <b>double barre</b> marque la jonction assurée par le pont salin.</p>
   </div>
 
-  <div class="geste" data-geste="3a" data-gt="Annoter un schéma de pile" data-yr="tombé chaque année depuis 2022">
-    <span class="k">Geste 3a — posé ici, dès que le cours l'a rendu exécutable <span class="y">tombé chaque année depuis 2022</span></span>
+  <div class="geste" data-geste="3a" data-gt="Annoter un schéma de pile" data-yr="tombé en 2022, 2023 et 2025">
+    <span class="k">Geste 3a — posé ici, dès que le cours l'a rendu exécutable <span class="y">tombé en 2022, 2023 et 2025</span></span>
     <h3>Annoter un schéma de pile</h3>
     <ol>
       <li><b>Le couple au E° le plus bas donne l'anode</b> : c'est le meilleur réducteur, il cède ses électrons.</li>
@@ -1520,8 +1573,8 @@ input[type=range]{width:100%;accent-color:var(--acc);margin:0}
     <p class="note">C'est exactement la valeur affichée par le voltmètre du schéma de l'étape 7, dans les conditions standard. Le calcul et la mesure se rejoignent.</p>
   </div>
 
-  <div class="geste" data-geste="3b" data-gt="Calculer la fem et écrire la pile" data-yr="tombé chaque année depuis 2022">
-    <span class="k">Geste 3b — posé ici, dès que le cours l'a rendu exécutable <span class="y">tombé chaque année depuis 2022</span></span>
+  <div class="geste" data-geste="3b" data-gt="Calculer la fem et écrire la pile" data-yr="tombé en 2022, 2023 et 2025">
+    <span class="k">Geste 3b — posé ici, dès que le cours l'a rendu exécutable <span class="y">tombé en 2022, 2023 et 2025</span></span>
     <h3>Calculer la fem et écrire la pile symboliquement</h3>
     <ol>
       <li><b>Repère la cathode</b> : c'est le couple au <span class="f">E°</span> le plus élevé.</li>
@@ -1674,7 +1727,7 @@ input[type=range]{width:100%;accent-color:var(--acc);margin:0}
 
   <!-- ③ la chaîne du calcul -->
   <div class="chain">
-    <div class="hd">Faisons-le en entier<br><span class="yr">Sujet 2024, exercice 3 — couple <span class="f"><span class="ox">HSO<sub>4</sub><sup>−</sup></span>/<span class="rd">SO<sub>2</sub></span></span>, les deux à 10<sup>−2</sup> mol·L⁻¹, <span class="f">pH = 3</span>, <span class="f">E° = 0,17 V</span></span></div>
+    <div class="hd">Faisons-le en entier<br><span class="yr">Sujet 2024, exercice 3 — couple <span class="f"><span class="ox">HSO<sub>4</sub><sup>−</sup></span>/<span class="rd">SO<sub>2</sub></span></span>, les deux à 10<sup>−2</sup> mol·L⁻¹, <span class="f">pH = 3</span>, <span class="f">E° = 0,16 V</span></span></div>
 
     <div class="link">
       <div class="no">01</div>
@@ -1710,7 +1763,7 @@ input[type=range]{width:100%;accent-color:var(--acc);margin:0}
       <div class="no">04</div>
       <div>
         <div class="t">Remplacer — ici les deux concentrations sont égales</div>
-        <div class="expr"><span class="f">E = 0,17 + 0,03 × <span class="op">log</span> <span class="fr"><span class="n">10<sup>−2</sup></span><span class="d">10<sup>−2</sup></span></span> − 0,09 × 3</span></div>
+        <div class="expr"><span class="f">E = 0,16 + 0,03 × <span class="op">log</span> <span class="fr"><span class="n">10<sup>−2</sup></span><span class="d">10<sup>−2</sup></span></span> − 0,09 × 3</span></div>
         <div class="val">log(1) = <span class="v">0</span> : le terme de concentration <b>disparaît</b></div>
       </div>
       <div class="aide"><span class="lvl">À repérer dans l'énoncé</span>Quand l'énoncé donne <b>la même concentration</b> aux deux espèces, ce terme s'annule toujours. Il ne reste que <span class="f">E°</span> et le pH.</div>
@@ -1720,14 +1773,14 @@ input[type=range]{width:100%;accent-color:var(--acc);margin:0}
       <div class="no">05</div>
       <div>
         <div class="t">Et si l'énoncé ne donnait pas le pH ? Ce serait une droite</div>
-        <div class="expr"><span class="f">E = 0,17 − 0,09 · pH</span></div>
-        <div class="val">forme <span class="v">y = a·x + b</span> &nbsp;·&nbsp; pente <span class="v">−0,09</span> &nbsp;·&nbsp; ordonnée <span class="v">0,17</span></div>
+        <div class="expr"><span class="f">E = 0,16 − 0,09 · pH</span></div>
+        <div class="val">forme <span class="v">y = a·x + b</span> &nbsp;·&nbsp; pente <span class="v">−0,09</span> &nbsp;·&nbsp; ordonnée <span class="v">0,16</span></div>
       </div>
       <div class="aide"><span class="lvl">Passerelle vers l'étape 14</span><b>C'est déjà une frontière du diagramme E-pH.</b> Deux points suffisent pour la tracer. Rien de nouveau à apprendre à l'étape 14 : c'est ce calcul, laissé en fonction du pH.</div>
     </div>
 
     <div class="res">
-      <span class="v">E = − 0,10 V</span>
+      <span class="v">E = − 0,11 V</span>
       <span class="c">Contrôle : à pH = 3 on est loin des conditions standard, <span class="f">E</span> s'écarte de <span class="f">E°</span> de 0,27 V — cohérent.</span>
       <button class="cp" type="button" data-cp="12-3" aria-expanded="false" aria-controls="q12-3">vérifier</button>
     </div>
@@ -1735,16 +1788,16 @@ input[type=range]{width:100%;accent-color:var(--acc);margin:0}
   <div class="q" id="q12-3" hidden>
     <span class="k qk">Point de contrôle</span>
     <p class="qq">Même couple, même énoncé, mais à <span class="f">pH = 1</span> au lieu de 3. Sans recalculer, que devient <span class="f">E</span> ?</p>
-    <button class="opt" data-ok="1" data-fb="La pente est <b>négative</b> : quand le pH baisse, E monte. Ici <span class='f'>E = 0,17 − 0,09 × 1 = 0,08 V</span>, contre −0,10 V à pH 3.">Plus grand — E remonte</button>
-    <button class="opt" data-ok="0" data-fb="C'est le réflexe inverse. Dans <span class='f'>E = 0,17 − 0,09 · pH</span>, le terme en pH est <b>soustrait</b> : moins de pH, moins de soustraction, donc E plus grand.">Plus petit — E descend encore</button>
+    <button class="opt" data-ok="1" data-fb="La pente est <b>négative</b> : quand le pH baisse, E monte. Ici <span class='f'>E = 0,16 − 0,09 × 1 = 0,07 V</span>, contre −0,11 V à pH 3.">Plus grand — E remonte</button>
+    <button class="opt" data-ok="0" data-fb="C'est le réflexe inverse. Dans <span class='f'>E = 0,16 − 0,09 · pH</span>, le terme en pH est <b>soustrait</b> : moins de pH, moins de soustraction, donc E plus grand.">Plus petit — E descend encore</button>
     <button class="opt" data-ok="0" data-fb="Non : le pH est la seule variable qui reste dans l'expression. S'il change, E change.">Inchangé — les concentrations n'ont pas bougé</button>
-    <button class="opt" data-ok="0" data-fb="Si : le maillon 5 a mis le calcul sous la forme <span class='f'>E = 0,17 − 0,09 · pH</span>. Il suffit d'y remplacer le pH.">On ne peut pas le dire sans refaire le calcul</button>
+    <button class="opt" data-ok="0" data-fb="Si : le maillon 5 a mis le calcul sous la forme <span class='f'>E = 0,16 − 0,09 · pH</span>. Il suffit d'y remplacer le pH.">On ne peut pas le dire sans refaire le calcul</button>
     <div class="fb" hidden></div>
   </div>
 
   <!-- ④ le bloc geste, posé dans le fil -->
-  <div class="geste" data-geste="4" data-gt="Appliquer la loi de Nernst" data-yr="tombé chaque année depuis 2022">
-    <span class="k">Geste 4 sur 5 — tu viens d'apprendre ce qu'il faut <span class="y">tombé chaque année depuis 2022</span></span>
+  <div class="geste" data-geste="4" data-gt="Appliquer la loi de Nernst" data-yr="tombé les quatre années">
+    <span class="k">Geste 4 sur 5 — tu viens d'apprendre ce qu'il faut <span class="y">tombé les quatre années</span></span>
     <h3>Appliquer la loi de Nernst</h3>
     <ol>
       <li><b>Équilibre la demi-équation</b> en milieu acide — elle donne <i>n</i> et les <span class="f">H<sup>+</sup></span>.</li>
@@ -1909,8 +1962,8 @@ input[type=range]{width:100%;accent-color:var(--acc);margin:0}
     </ol>
   </div>
 
-  <div class="geste" data-geste="2d" data-gt="Prévoir si une réaction se fait" data-yr="tombé chaque année depuis 2022">
-    <span class="k">Geste 2d — posé ici, dès que le cours l'a rendu exécutable <span class="y">tombé chaque année depuis 2022</span></span>
+  <div class="geste" data-geste="2d" data-gt="Prévoir si une réaction se fait" data-yr="tombé les quatre années">
+    <span class="k">Geste 2d — posé ici, dès que le cours l'a rendu exécutable <span class="y">tombé les quatre années</span></span>
     <h3>Prévoir si une réaction se fait, et dans quel sens</h3>
     <ol>
       <li><b>Identifie le couple de chaque espèce</b> donnée par l'énoncé.</li>
@@ -1954,9 +2007,13 @@ input[type=range]{width:100%;accent-color:var(--acc);margin:0}
 
   <div class="formula">
     <span class="k">La pente se lit sans calculer</span>
-    <span class="e f">pente = − <span class="fr"><span class="n">0,06 × nombre de H<sup>+</sup></span><span class="d">nombre de e<sup>−</sup></span></span></span>
-    <p class="note">Elle vient directement du terme <span class="f"><span class="fr"><span class="n">0,06</span><span class="d">n</span></span> · log [H<sup>+</sup>]<sup>x</sup></span> de la loi de Nernst. Compter deux nombres sur la demi-équation suffit : c'est la seule chose à faire pour connaître l'inclinaison d'une frontière.</p>
+    <span class="e f">pente = ± <span class="fr"><span class="n">0,06 × nombre de H<sup>+</sup></span><span class="d">nombre de e<sup>−</sup></span></span></span>
+    <p class="note">Elle vient directement du terme <span class="f"><span class="fr"><span class="n">0,06</span><span class="d">n</span></span> · log [H<sup>+</sup>]<sup>x</sup></span> de la loi de Nernst. Compter deux nombres sur la demi-équation suffit pour connaître l'inclinaison d'une frontière.</p>
   </div>
+
+  <div class="piege"><span class="k">Le signe suit le côté des protons</span>
+    <p>Les <span class="f">H<sup>+</sup></span> sont <b>presque toujours du côté de l'oxydant</b> — à gauche de la demi-équation écrite dans le sens conventionnel. La pente est alors <b>négative</b> et la frontière descend.</p>
+    <p>S'ils se trouvent du côté du <b>réducteur</b>, ils passent au dénominateur du log et la pente devient <b>positive</b>. C'est rare, mais ça tombe : le sujet 2022 demande le coefficient directeur de la frontière <span class="f"><span class="ox">Cu<sup>2+</sup></span>/Cu<sub>2</sub>O<span class="st">(s)</span></span>, dont la demi-équation s'écrit <span class="f">2 <span class="ox">Cu<sup>2+</sup></span> + H<sub>2</sub>O + 2 e<sup>−</sup> = Cu<sub>2</sub>O<span class="st">(s)</span> + 2 H<sup>+</sup></span> — et la réponse est <b>+ 0,06</b>.</p></div>
 
   <h2>Le diagramme du fer</h2>
   <p>C'est celui du dossier, tracé pour <span class="f">[Fe<sup>2+</sup>] = [Fe<sup>3+</sup>] = 10<sup>−2</sup> mol·L⁻¹</span> à 25 °C. <b>Cinq domaines</b> et <b>sept frontières</b>.</p>
@@ -2144,12 +2201,12 @@ input[type=range]{width:100%;accent-color:var(--acc);margin:0}
   <div class="piege"><span class="k">L'erreur qui fait rater le tracé entier</span>
     <p>Les frontières <b>ne se prolongent pas</b> au-delà de leur domaine. La frontière 1 s'arrête à <span class="f">pH = 2</span> : au-delà, le fer(III) n'existe plus en solution, il a précipité. Une droite tracée sur toute la largeur du graphique est une droite fausse sur les trois quarts de sa longueur.</p></div>
 
-  <div class="geste" data-geste="5" data-gt="Tracer et lire un diagramme E-pH" data-yr="tombé chaque année depuis 2022">
-    <span class="k">Geste 5 sur 5 — posé ici, dès que le cours l'a rendu exécutable <span class="y">tombé chaque année depuis 2022</span></span>
+  <div class="geste" data-geste="5" data-gt="Tracer et lire un diagramme E-pH" data-yr="tombé en 2022, 2023 et 2024">
+    <span class="k">Geste 5 sur 5 — posé ici, dès que le cours l'a rendu exécutable <span class="y">tombé en 2022, 2023 et 2024</span></span>
     <h3>Tracer et lire un diagramme E-pH</h3>
     <ol>
       <li><b>Écris la demi-équation</b> : elle donne <i>n</i> et le nombre de <span class="f">H<sup>+</sup></span>.</li>
-      <li><b>La pente vaut</b> <span class="f">− 0,06 × H<sup>+</sup> ÷ n</span>. Elle se lit, elle ne se calcule pas.</li>
+      <li><b>La pente vaut</b> <span class="f">0,06 × H<sup>+</sup> ÷ n</span>, <b>négative</b> si les protons sont du côté de l'oxydant — le cas courant — et <b>positive</b> s'ils sont du côté du réducteur.</li>
       <li><b>L'ordonnée à l'origine</b> est <span class="f">E</span> à <span class="f">pH = 0</span> : c'est Nernst sans le terme en pH.</li>
       <li><b>Place deux points</b>, à <span class="f">pH 0</span> et <span class="f">pH 14</span>, et trace le trait entre eux.</li>
       <li><b>Arrête-le aux bornes du domaine</b> de l'espèce.</li>
@@ -2292,14 +2349,681 @@ input[type=range]{width:100%;accent-color:var(--acc);margin:0}
   <h1><span class="num"></span><span class="t">Les quatre annales</span><span class="cnt"></span></h1>
   <div class="obj"><span class="k">En sortant de cette étape, tu sais</span>
     <p>Refaire les quatre sujets <b>en temps limité</b>, et te corriger seul.</p></div>
-  <p>Les quatre sujets ont le <b>même squelette</b>, exercice par exercice, avec d'autres espèces chimiques : définitions, n.o. et équilibrage, pile, Nernst, diagramme E-pH. C'est ce constat qui a décidé de tout le parcours.</p>
-  <div class="chantier"><span class="k">Chantier — point 6 de l'ordre des travaux</span>
-    <ul>
-      <li>Les <b>4 sujets retranscrits</b> en texte, chronométrables.</li>
-      <li>Les <b>4 corrigés retranscrits</b> — ce sont des scans manuscrits, ils passeront en texte.</li>
-      <li>Le tableau de correspondance <b>exercice → étape du parcours</b>, dans les deux sens.</li>
-      <li><b>À contrôler à ce moment-là</b> : les mentions « tombé chaque année depuis 2022 » portées par les dix blocs gestes, sujet par sujet.</li>
-    </ul></div>
+
+  <p>Les quatre sujets et leurs corrigés sont retranscrits ici. Les corrigés étaient des <b>scans manuscrits</b> : ce qui suit est leur transcription fidèle, avec les rares erreurs du corrigé signalées là où elles se trouvent.</p>
+
+  <h2>Ce qui tombe vraiment, année par année</h2>
+  <p>Le squelette se répète, mais il n'est pas identique. Deux choses valent la peine d'être vues avant de commencer.</p>
+
+  <div class="tw"><table class="tab">
+    <tr><th>Ce qui est demandé</th><th>2022</th><th>2023</th><th>2024</th><th>2025</th></tr>
+    <tr><td>définitions et écritures conventionnelles</td><td class="num">—</td><td class="num">—</td><td class="num">✓</td><td class="num">✓</td></tr>
+    <tr><td>nombres d'oxydation</td><td class="num">✓</td><td class="num">✓</td><td class="num">✓</td><td class="num">✓</td></tr>
+    <tr><td>équilibrage, acide <b>et</b> basique</td><td class="num">✓</td><td class="num">✓</td><td class="num">✓</td><td class="num">✓</td></tr>
+    <tr><td>dismutation de <span class="f">H<sub>2</sub>O<sub>2</sub></span></td><td class="num">—</td><td class="num">—</td><td class="num">✓</td><td class="num">✓</td></tr>
+    <tr><td>« ces espèces peuvent-elles réagir ? »</td><td class="num">✓</td><td class="num">✓</td><td class="num">✓</td><td class="num">✓</td></tr>
+    <tr><td>schéma de pile annoté</td><td class="num">✓</td><td class="num">✓</td><td class="num">—</td><td class="num">✓</td></tr>
+    <tr><td>fem et écriture symbolique</td><td class="num">✓</td><td class="num">✓</td><td class="num">—</td><td class="num">✓</td></tr>
+    <tr><td>loi de Nernst</td><td class="num">✓</td><td class="num">✓</td><td class="num">✓</td><td class="num">✓</td></tr>
+    <tr><td>diagramme E-pH</td><td class="num">✓</td><td class="num">✓</td><td class="num">✓</td><td class="num">—</td></tr>
+  </table></div>
+
+  <div class="piege"><span class="k">Deux constats à ne pas manquer</span>
+    <p>Le sujet <b>2025 n'a pas de diagramme E-pH</b> — il s'arrête à la loi de Nernst, et ne compte que quatre exercices. C'est le seul des quatre dans ce cas. Ne conclus pas pour autant qu'il ne tombera plus : il est tombé <b>les trois années précédentes</b>, et c'est l'exercice le plus long.</p>
+    <p>Quatre choses tombent <b>les quatre années sans exception</b> : les nombres d'oxydation, l'équilibrage en milieu acide <b>et</b> basique, la question « ces espèces peuvent-elles réagir », et la loi de Nernst. Ce sont les quatre à savoir faire les yeux fermés.</p></div>
+
+  <h2>Le chronomètre</h2>
+  <p>Les quatre sujets durent <b>une heure</b>. Le compte à rebours reste visible dans la barre du haut même si tu changes d'étape — pour aller chercher un outil de la paillasse, par exemple.</p>
+
+  <div class="chrono">
+    <span class="t4" id="chr-t">60:00</span>
+    <button id="chr-go" type="button">démarrer</button>
+    <button id="chr-rz" type="button">remettre à zéro</button>
+    <span class="lbl2" id="chr-lb">une heure, comme le jour du contrôle</span>
+  </div>
+
+  <h2>Les quatre sujets</h2>
+  <div class="ann-nav" role="group" aria-label="Choix de l'annale">
+    <button data-ann="2025" aria-pressed="true">2025</button>
+    <button data-ann="2024" aria-pressed="false">2024</button>
+    <button data-ann="2023" aria-pressed="false">2023</button>
+    <button data-ann="2022" aria-pressed="false">2022</button>
+  </div>
+
+  <!-- ════════ 2025 ════════ -->
+  <div class="ann" data-ann="2025">
+    <div class="ann-hd"><span class="k">Contrôle du mercredi 22 octobre 2025</span>
+      <span class="dur">4 exercices · 1 heure</span></div>
+    <p class="cadre">L'attention des étudiants est attirée sur l'importance d'une rédaction claire et d'une bonne présentation de leur copie. <b>Toute réponse non ou mal justifiée ne sera pas prise en compte.</b></p>
+
+    <div class="exo">
+      <h3><span class="n4">Exercice 1</span>Définitions et notations conventionnelles</h3>
+      <ol>
+        <li>Définir une réaction d'oxydation.</li>
+        <li>Définir une réaction de réduction.</li>
+        <li>Donner la notation conventionnelle d'un couple rédox.</li>
+        <li>Donner l'écriture conventionnelle d'une demi-réaction rédox.</li>
+        <li>Définir une réaction de dismutation.</li>
+      </ol>
+      <button class="corr-btn" type="button" aria-expanded="false" aria-controls="c25-1">voir la correction</button>
+      <div class="corr-box" id="c25-1" hidden><span class="k">Le corrigé, transcrit</span>
+        <ol>
+          <li>Une réaction d'oxydation est une réaction dans laquelle il y a <b>production</b> d'électrons : <span class="f"><span class="rd">Red</span> ⟶ <span class="ox">Ox</span> + <span class="el">n e<sup>−</sup></span></span></li>
+          <li>Une réaction de réduction est une réaction dans laquelle il y a <b>consommation</b> d'électrons : <span class="f"><span class="ox">Ox</span> + <span class="el">n e<sup>−</sup></span> ⟶ <span class="rd">Red</span></span></li>
+          <li><span class="f">Oxydant / Réducteur</span></li>
+          <li><span class="f"><span class="ox">Ox</span> + <span class="el">n e<sup>−</sup></span> ⟶ <span class="rd">Red</span></span></li>
+          <li>Une réaction de dismutation est une réaction rédox dans laquelle un même composé subit <b>à la fois</b> une oxydation et une réduction.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="exo">
+      <h3><span class="n4">Exercice 2</span>Nombres d'oxydation et équations chimiques</h3>
+      <ol>
+        <li>Donner le nombre d'oxydation des éléments dans : <span class="f">O<sub>2</sub></span> ; <span class="f">Mn<sup>3+</sup></span> ; <span class="f">MnO<sub>2</sub></span> ; <span class="f">CH<sub>4</sub></span> ; <span class="f">ClO<sub>2</sub><sup>−</sup></span> ; <span class="f">HCl</span></li>
+        <li>Écrire dans le sens conventionnel le couple rédox faisant intervenir <span class="f">Mn<sup>3+</sup></span> et <span class="f">MnO<sub>2</sub></span>. Justifier.</li>
+        <li>Ajuster les coefficients stœchiométriques des réactions suivantes ; pour cela écrire les demi-équations rédox et si nécessaire ajouter des espèces chimiques.
+          <div class="eqs" style="margin:8px 0">
+            <div class="row"><span class="e f">Cu<sup>2+</sup> + Fe<span class="st">(s)</span> ⟶ Cu<span class="st">(s)</span> + Fe<sup>3+</sup></span><span class="lab">en milieu acide</span></div>
+            <div class="row"><span class="e f">MnO<sub>4</sub><sup>−</sup> + I<sup>−</sup> ⟶ Mn<sup>2+</sup> + IO<sub>3</sub><sup>−</sup></span><span class="lab">en milieu acide</span></div>
+            <div class="row"><span class="e f">MnO<sub>4</sub><sup>−</sup> + I<sup>−</sup> ⟶ Mn<sup>2+</sup> + IO<sub>3</sub><sup>−</sup></span><span class="lab">en milieu basique</span></div>
+          </div></li>
+        <li>Dans <span class="f">Cu<sup>2+</sup> + Fe<span class="st">(s)</span> ⟶ Cu<span class="st">(s)</span> + Fe<sup>3+</sup></span>, quelle est l'espèce qui s'est réduite ?</li>
+        <li>Écrire la réaction de dismutation de l'eau oxygénée en eau et dioxygène (détailler les demi-équations).</li>
+        <li>Indiquer, en justifiant, si ces espèces peuvent réagir entre elles dans les conditions standard : <span class="f">Hg<sup>2+</sup></span> et <span class="f">I<sup>−</sup></span> ; <span class="f">K<sup>+</sup></span> et <span class="f">I<sub>2</sub></span>.</li>
+      </ol>
+      <button class="corr-btn" type="button" aria-expanded="false" aria-controls="c25-2">voir la correction</button>
+      <div class="corr-box" id="c25-2" hidden><span class="k">Le corrigé, transcrit</span>
+        <p><b>1.</b> <span class="f">O<sub>2</sub></span> : n.o.(O) = 0 · <span class="f">Mn<sup>3+</sup></span> : n.o.(Mn) = +III · <span class="f">MnO<sub>2</sub></span> : n.o.(O) = −II et n.o.(Mn) = +IV · <span class="f">CH<sub>4</sub></span> : n.o.(H) = +I et n.o.(C) = −IV · <span class="f">ClO<sub>2</sub><sup>−</sup></span> : n.o.(O) = −II et n.o.(Cl) = +III · <span class="f">HCl</span> : n.o.(Cl) = −I et n.o.(H) = +I</p>
+        <div class="scan"><b>Le corrigé saute la question 2.</b> La réponse : le manganèse est à <b>+IV</b> dans <span class="f">MnO<sub>2</sub></span> et à <b>+III</b> dans <span class="f">Mn<sup>3+</sup></span> ; le n.o. le plus élevé désigne l'oxydant, donc le couple s'écrit <span class="f"><span class="ox">MnO<sub>2</sub></span>/<span class="rd">Mn<sup>3+</sup></span></span>.</div>
+        <p><b>3.</b> Premier cas :</p>
+        <div class="eqs">
+          <div class="row"><span class="e f"><span class="ox">Cu<sup>2+</sup></span> + <span class="el">2 e<sup>−</sup></span> ⟶ <span class="rd">Cu</span><span class="st">(s)</span></span><span class="lab">× 3</span></div>
+          <div class="row"><span class="e f"><span class="rd">Fe</span><span class="st">(s)</span> ⟶ <span class="ox">Fe<sup>3+</sup></span> + <span class="el">3 e<sup>−</sup></span></span><span class="lab">× 2</span></div>
+          <div class="row bilan"><span class="e f">3 <span class="ox">Cu<sup>2+</sup></span> + 2 <span class="rd">Fe</span><span class="st">(s)</span> ⟶ 3 <span class="rd">Cu</span><span class="st">(s)</span> + 2 <span class="ox">Fe<sup>3+</sup></span></span><span class="lab">6 est le multiple commun</span></div>
+        </div>
+        <p>Deuxième cas, en milieu acide :</p>
+        <div class="eqs">
+          <div class="row"><span class="e f"><span class="ox">MnO<sub>4</sub><sup>−</sup></span> + 8 H<sup>+</sup> + <span class="el">5 e<sup>−</sup></span> ⟶ <span class="rd">Mn<sup>2+</sup></span> + 4 H<sub>2</sub>O</span><span class="lab">× 6</span></div>
+          <div class="row"><span class="e f"><span class="rd">I<sup>−</sup></span> + 3 H<sub>2</sub>O ⟶ <span class="ox">IO<sub>3</sub><sup>−</sup></span> + 6 H<sup>+</sup> + <span class="el">6 e<sup>−</sup></span></span><span class="lab">× 5</span></div>
+          <div class="row"><span class="e f">6 <span class="ox">MnO<sub>4</sub><sup>−</sup></span> + 48 H<sup>+</sup> + 5 <span class="rd">I<sup>−</sup></span> + 15 H<sub>2</sub>O ⟶ 6 <span class="rd">Mn<sup>2+</sup></span> + 24 H<sub>2</sub>O + 5 <span class="ox">IO<sub>3</sub><sup>−</sup></span> + 30 H<sup>+</sup></span><span class="lab">avant simplification</span></div>
+          <div class="row bilan"><span class="e f">6 <span class="ox">MnO<sub>4</sub><sup>−</sup></span> + 18 H<sup>+</sup> + 5 <span class="rd">I<sup>−</sup></span> ⟶ 6 <span class="rd">Mn<sup>2+</sup></span> + 9 H<sub>2</sub>O + 5 <span class="ox">IO<sub>3</sub><sup>−</sup></span></span><span class="lab">48 − 30 = 18 H⁺<br>24 − 15 = 9 H₂O</span></div>
+        </div>
+        <p>Troisième cas, en milieu basique — on ajoute 18 <span class="f">OH<sup>−</sup></span> des deux côtés :</p>
+        <div class="eqs">
+          <div class="row bilan"><span class="e f">6 <span class="ox">MnO<sub>4</sub><sup>−</sup></span> + 9 H<sub>2</sub>O + 5 <span class="rd">I<sup>−</sup></span> ⟶ 6 <span class="rd">Mn<sup>2+</sup></span> + 5 <span class="ox">IO<sub>3</sub><sup>−</sup></span> + 18 OH<sup>−</sup></span><span class="lab">18 H₂O − 9 H₂O = 9 H₂O</span></div>
+        </div>
+        <p><b>4.</b> <span class="f"><span class="ox">Cu<sup>2+</sup></span></span> s'est réduit — il a capté les électrons ; <span class="f"><span class="rd">Fe</span><span class="st">(s)</span></span> s'est oxydé.</p>
+        <p><b>5.</b> Dismutation de l'eau oxygénée :</p>
+        <div class="eqs">
+          <div class="row"><span class="e f"><span class="ox">H<sub>2</sub>O<sub>2</sub></span> + 2 H<sup>+</sup> + <span class="el">2 e<sup>−</sup></span> ⟶ 2 <span class="rd">H<sub>2</sub>O</span></span><span class="lab">réduction</span></div>
+          <div class="row"><span class="e f"><span class="rd">H<sub>2</sub>O<sub>2</sub></span> ⟶ <span class="ox">O<sub>2</sub></span> + 2 H<sup>+</sup> + <span class="el">2 e<sup>−</sup></span></span><span class="lab">oxydation</span></div>
+          <div class="row bilan"><span class="e f">2 H<sub>2</sub>O<sub>2</sub> ⟶ 2 H<sub>2</sub>O + O<sub>2</sub></span><span class="lab"></span></div>
+        </div>
+        <p><b>6.</b> Sur l'échelle : <span class="f">Hg<sup>2+</sup>/Hg<span class="st">(s)</span></span> à 0,85 V · <span class="f">I<sub>2</sub>/I<sup>−</sup></span> à 0,62 V · <span class="f">K<sup>+</sup>/K<span class="st">(s)</span></span> à −2,92 V.</p>
+        <ul>
+          <li><span class="f">Hg<sup>2+</sup></span> et <span class="f">I<sup>−</sup></span> <b>peuvent réagir</b> car <span class="f">Hg<sup>2+</sup></span> est un oxydant fort et <span class="f">I<sup>−</sup></span> un réducteur fort.</li>
+          <li><span class="f">K<sup>+</sup></span> et <span class="f">I<sub>2</sub></span> <b>ne peuvent pas réagir</b> car ce sont deux oxydants.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exo">
+      <h3><span class="n4">Exercice 3</span>Pile</h3>
+      <p>Une pile est constituée de deux compartiments A et B reliés par un pont électrolytique imprégné d'une solution de <span class="f">KNO<sub>3</sub></span>.</p>
+      <ul>
+        <li><b>Compartiment A</b> : une lame de plomb <span class="f">Pb<span class="st">(s)</span></span> plongée dans une solution aqueuse de sulfate de plomb <span class="f">PbSO<sub>4</sub></span> à 10<sup>−1</sup> mol·L⁻¹.</li>
+        <li><b>Compartiment B</b> : une lame de manganèse <span class="f">Mn<span class="st">(s)</span></span> plongée dans une solution aqueuse de chlorure de manganèse <span class="f">MnCl<sub>2</sub></span> à 10<sup>−1</sup> mol·L⁻¹.</li>
+      </ul>
+      <ol>
+        <li>Quels ions obtient-on en solution lorsqu'on dissout le sulfate de plomb et le chlorure de manganèse dans l'eau ?</li>
+        <li>Écrire la réaction lorsque la pile débite du courant, ainsi que les réactions à l'anode et à la cathode.</li>
+        <li>Faire un schéma annoté de cette pile en indiquant le signe des électrodes, l'anode, la cathode, le sens de circulation des électrons et le sens de circulation du courant.</li>
+        <li>À quelle électrode y a-t-il le phénomène d'oxydation ?</li>
+        <li>Donner l'écriture symbolique de la pile.</li>
+        <li>Quel est le rôle du pont électrolytique ? Quels sont les phénomènes qui y ont lieu ?</li>
+        <li>Calculer la force électromotrice de la pile à <span class="f">pH = 0</span>.</li>
+        <li>Comment faudrait-il modifier le schéma pour donner celui d'une cellule d'électrolyse ?</li>
+      </ol>
+      <button class="corr-btn" type="button" aria-expanded="false" aria-controls="c25-3">voir la correction</button>
+      <div class="corr-box" id="c25-3" hidden><span class="k">Le corrigé, transcrit</span>
+        <div class="eqs" style="margin-top:0">
+          <div class="row"><span class="e f">PbSO<sub>4</sub><span class="st">(s)</span> ⟶ <span class="ox">Pb<sup>2+</sup></span> + SO<sub>4</sub><sup>2−</sup></span><span class="lab">1 · dissolution</span></div>
+          <div class="row"><span class="e f">MnCl<sub>2</sub><span class="st">(s)</span> ⟶ <span class="ox">Mn<sup>2+</sup></span> + 2 Cl<sup>−</sup></span><span class="lab">1 · dissolution</span></div>
+        </div>
+        <p><b>2.</b> Sur l'échelle : <span class="f">Pb<sup>2+</sup>/Pb</span> à −0,13 V, <span class="f">Mn<sup>2+</sup>/Mn</span> à −1,18 V. C'est donc <span class="f">Pb<sup>2+</sup></span> l'oxydant et <span class="f">Mn<span class="st">(s)</span></span> le réducteur.</p>
+        <div class="eqs">
+          <div class="row"><span class="e f"><span class="rd">Mn</span><span class="st">(s)</span> ⟶ <span class="ox">Mn<sup>2+</sup></span> + <span class="el">2 e<sup>−</sup></span></span><span class="lab">à l'anode · oxydation</span></div>
+          <div class="row"><span class="e f"><span class="ox">Pb<sup>2+</sup></span> + <span class="el">2 e<sup>−</sup></span> ⟶ <span class="rd">Pb</span><span class="st">(s)</span></span><span class="lab">à la cathode · réduction</span></div>
+          <div class="row bilan"><span class="e f"><span class="ox">Pb<sup>2+</sup></span> + <span class="rd">Mn</span><span class="st">(s)</span> ⟶ <span class="ox">Mn<sup>2+</sup></span> + <span class="rd">Pb</span><span class="st">(s)</span></span><span class="lab">pile qui débite</span></div>
+        </div>
+        <p><b>3.</b> Le schéma porte : l'ampoule dans le circuit, la flèche des <b>électrons de gauche à droite</b> — de l'anode vers la cathode — et celle du <b>courant en sens inverse</b> ; à gauche l'électrode de <span class="f">Mn<span class="st">(s)</span></span>, <b>anode</b>, pôle <b>⊖</b>, dans une solution de <span class="f">Mn<sup>2+</sup></span> et <span class="f">Cl<sup>−</sup></span> ; à droite l'électrode de <span class="f">Pb<span class="st">(s)</span></span>, <b>cathode</b>, pôle <b>⊕</b>, dans une solution de <span class="f">Pb<sup>2+</sup></span> et <span class="f">SO<sub>4</sub><sup>2−</sup></span>. C'est exactement le schéma de l'étape 7.</p>
+        <p><b>4.</b> Il y a oxydation à l'anode, c'est-à-dire à l'électrode de <span class="f">Mn<span class="st">(s)</span></span>.</p>
+        <p><b>5.</b> <span class="f"><span style="color:var(--mut)">⊖</span> Mn<sup>2+</sup>/Mn<span class="st">(s)</span> ‖ Pb<span class="st">(s)</span>/Pb<sup>2+</sup> <span style="color:var(--acc)">⊕</span></span></p>
+        <p><b>6.</b> Deux <span class="f">K<sup>+</sup></span> vont vers la cathode pour chaque <span class="f">Pb<sup>2+</sup></span> consommé ; deux <span class="f">NO<sub>3</sub><sup>−</sup></span> vont vers l'anode pour chaque <span class="f">Mn<sup>2+</sup></span> produit.</p>
+        <div class="eqs">
+          <div class="row bilan"><span class="e f">fem = E°<sub>cathode</sub> − E°<sub>anode</sub> = − 0,13 − (− 1,18) = 1,05 V</span><span class="lab">7 · toujours positive</span></div>
+        </div>
+        <p><b>8.</b> Il faudrait remplacer l'ampoule par un <b>générateur de courant</b>.</p>
+      </div>
+    </div>
+
+    <div class="exo">
+      <h3><span class="n4">Exercice 4</span>Loi de Nernst</h3>
+      <p>Écrire la loi de Nernst pour le couple <span class="f"><span class="ox">IO<sub>3</sub><sup>−</sup></span>/<span class="rd">I<sup>−</sup></span></span> et calculer le potentiel d'électrode lorsque les concentrations des espèces dissoutes de l'élément iode sont de 10<sup>−2</sup> mol·L⁻¹ et le <span class="f">pH = 3</span>.</p>
+      <button class="corr-btn" type="button" aria-expanded="false" aria-controls="c25-4">voir la correction</button>
+      <div class="corr-box" id="c25-4" hidden><span class="k">Le corrigé, transcrit</span>
+        <div class="eqs" style="margin-top:0">
+          <div class="row"><span class="e f">6 H<sup>+</sup> + <span class="ox">IO<sub>3</sub><sup>−</sup></span> + <span class="el">6 e<sup>−</sup></span> ⟶ <span class="rd">I<sup>−</sup></span> + 3 H<sub>2</sub>O</span><span class="lab">n = 6 · 6 protons<br>l'iode passe de +V à −I</span></div>
+          <div class="row"><span class="e f">E = E° + <span class="fr"><span class="n">0,06</span><span class="d">6</span></span> · <span class="op">log</span> <span class="fr"><span class="n">[H<sup>+</sup>]<sup>6</sup> · [<span class="ox">IO<sub>3</sub><sup>−</sup></span>]</span><span class="d">[<span class="rd">I<sup>−</sup></span>] · a<sub>H<sub>2</sub>O</sub></span></span></span><span class="lab">l'eau est le solvant : a = 1</span></div>
+          <div class="row"><span class="e f">E = E° + <span class="fr"><span class="n">0,06</span><span class="d">6</span></span> · <span class="op">log</span> [H<sup>+</sup>]<sup>6</sup> = E° + 0,06 · <span class="op">log</span> [H<sup>+</sup>]</span><span class="lab">les deux concentrations sont<br>égales : leur log vaut 0</span></div>
+          <div class="row bilan"><span class="e f">E = E° − 0,06 · pH = 1,52 − 0,06 × 3 = 1,34 V</span><span class="lab">à pH = 3</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exo">
+      <h3><span class="n4">Données</span>du sujet 2025</h3>
+      <div class="tw"><table class="tab">
+        <tr><th>Couple</th><td><span class="f">K<sup>+</sup>/K<span class="st">(s)</span></span></td><td><span class="f">Mn<sup>2+</sup>/Mn<span class="st">(s)</span></span></td><td><span class="f">Pb<sup>2+</sup>/Pb<span class="st">(s)</span></span></td><td><span class="f">I<sub>2</sub>/I<sup>−</sup></span></td><td><span class="f">Hg<sup>2+</sup>/Hg<span class="st">(s)</span></span></td><td><span class="f">IO<sub>3</sub><sup>−</sup>/I<sup>−</sup></span></td></tr>
+        <tr><th>E° en volts</th><td class="num">−2,92</td><td class="num">−1,18</td><td class="num">−0,13</td><td class="num">0,62</td><td class="num">0,85</td><td class="num">1,52</td></tr>
+      </table></div>
+      <p class="don">à T = 298 K : <span class="f"><span class="fr"><span class="n">R·T</span><span class="d">F</span></span> <span class="op">Ln</span> x = 0,06 <span class="op">log</span> x</span></p>
+    </div>
+  </div>
+
+  <!-- ════════ 2024 ════════ -->
+  <div class="ann" data-ann="2024" hidden>
+    <div class="ann-hd"><span class="k">Contrôle du mercredi 16 octobre 2024</span>
+      <span class="dur">5 exercices · 1 heure</span></div>
+    <p class="cadre">C'est le sujet dont le calcul de Nernst sert d'exemple à l'<b>étape 12</b>. Son exercice 4, la pile, est le plus court des quatre années : ni schéma, ni fem.</p>
+
+    <div class="exo">
+      <h3><span class="n4">Exercice 1</span>Définitions et notations conventionnelles</h3>
+      <ol type="a">
+        <li>Définir une réaction d'oxydation.</li>
+        <li>Donner l'écriture conventionnelle d'une demi-réaction rédox.</li>
+        <li>Définir une réaction de dismutation.</li>
+      </ol>
+      <button class="corr-btn" type="button" aria-expanded="false" aria-controls="c24-1">voir la correction</button>
+      <div class="corr-box" id="c24-1" hidden><span class="k">Le corrigé, transcrit</span>
+        <ol type="a">
+          <li>Une réaction d'oxydation est une réaction qui <b>produit</b> un ou plusieurs électrons.</li>
+          <li><span class="f"><span class="ox">oxydant</span> + <span class="el">n e<sup>−</sup></span> ⟶ <span class="rd">réducteur</span></span></li>
+          <li>Une réaction de dismutation est une réaction rédox dans laquelle un même composé subit à la fois une oxydation et une réduction.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="exo">
+      <h3><span class="n4">Exercice 2</span>Nombres d'oxydation et équations chimiques</h3>
+      <ol type="a">
+        <li>Donner le nombre d'oxydation des éléments dans : <span class="f">F<sub>2</sub></span> ; <span class="f">Ti<sub>2</sub>O<sub>3</sub></span> ; <span class="f">SO<sub>4</sub><sup>2−</sup></span> ; <span class="f">H<sub>2</sub>S</span></li>
+        <li>Écrire dans le sens conventionnel le couple rédox faisant intervenir <span class="f">SO<sub>4</sub><sup>2−</sup></span> et <span class="f">H<sub>2</sub>S</span>. Justifier.</li>
+        <li>Ajuster les coefficients stœchiométriques de <span class="f">BrO<sub>3</sub><sup>−</sup> + Ce ⟶ Ce<sup>4+</sup> + HBrO</span>, en milieu <b>acide</b> puis en milieu <b>basique</b>.</li>
+        <li>Dans cette réaction, quelle est l'espèce qui s'est réduite ?</li>
+        <li>Écrire la réaction de dismutation de l'eau oxygénée en eau et dioxygène.</li>
+        <li>Indiquer si ces espèces peuvent réagir ; si oui, écrire la réaction et dire quelle espèce est l'oxydant : <span class="f">H<sub>3</sub>PO<sub>4</sub></span> et <span class="f">P<span class="st">(s)</span></span> ; <span class="f">H<sub>3</sub>PO<sub>4</sub></span> et <span class="f">H<sub>2</sub>O<sub>2</sub></span>.</li>
+      </ol>
+      <button class="corr-btn" type="button" aria-expanded="false" aria-controls="c24-2">voir la correction</button>
+      <div class="corr-box" id="c24-2" hidden><span class="k">Le corrigé, transcrit</span>
+        <p><b>a.</b> <span class="f">F<sub>2</sub></span> : n.o.(F) = 0 · <span class="f">Ti<sub>2</sub>O<sub>3</sub></span> : n.o.(O) = −II et n.o.(Ti) = +III · <span class="f">SO<sub>4</sub><sup>2−</sup></span> : n.o.(O) = −II et n.o.(S) = +VI · <span class="f">H<sub>2</sub>S</span> : n.o.(H) = +I et n.o.(S) = −II</p>
+        <p><b>b.</b> <span class="f"><span class="ox">SO<sub>4</sub><sup>2−</sup></span>/<span class="rd">H<sub>2</sub>S</span></span> — on écrit d'abord l'oxydant, le composé pour lequel n.o.(S) est le plus grand (+VI), puis le réducteur, celui où il est le plus petit (−II).</p>
+        <div class="eqs">
+          <div class="row"><span class="e f"><span class="ox">BrO<sub>3</sub><sup>−</sup></span> + 5 H<sup>+</sup> + <span class="el">4 e<sup>−</sup></span> ⟶ <span class="rd">HBrO</span> + 2 H<sub>2</sub>O</span><span class="lab">c · réduction</span></div>
+          <div class="row"><span class="e f"><span class="rd">Ce</span> ⟶ <span class="ox">Ce<sup>4+</sup></span> + <span class="el">4 e<sup>−</sup></span></span><span class="lab">oxydation</span></div>
+          <div class="row bilan"><span class="e f"><span class="ox">BrO<sub>3</sub><sup>−</sup></span> + 5 H<sup>+</sup> + <span class="rd">Ce</span> ⟶ <span class="rd">HBrO</span> + 2 H<sub>2</sub>O + <span class="ox">Ce<sup>4+</sup></span></span><span class="lab">milieu acide</span></div>
+          <div class="row"><span class="e f"><span class="ox">BrO<sub>3</sub><sup>−</sup></span> + 5 H<sup>+</sup> + 5 OH<sup>−</sup> + <span class="rd">Ce</span> ⟶ <span class="rd">HBrO</span> + 2 H<sub>2</sub>O + <span class="ox">Ce<sup>4+</sup></span> + 5 OH<sup>−</sup></span><span class="lab">on ajoute 5 OH⁻<br>des deux côtés</span></div>
+          <div class="row bilan"><span class="e f"><span class="ox">BrO<sub>3</sub><sup>−</sup></span> + 3 H<sub>2</sub>O + <span class="rd">Ce</span> ⟶ <span class="rd">HBrO</span> + <span class="ox">Ce<sup>4+</sup></span> + 5 OH<sup>−</sup></span><span class="lab">milieu basique<br>5 H₂O − 2 H₂O = 3 H₂O</span></div>
+        </div>
+        <p><b>d.</b> <span class="f"><span class="ox">BrO<sub>3</sub><sup>−</sup></span></span> est l'espèce qui s'est réduite en <span class="f">HBrO</span>, puisqu'elle a capté des électrons — 4 e⁻.</p>
+        <p><b>e.</b> Sur l'échelle, <span class="f">H<sub>2</sub>O<sub>2</sub>/H<sub>2</sub>O</span> à 1,76 V est <b>au-dessus</b> de <span class="f">O<sub>2</sub>/H<sub>2</sub>O<sub>2</sub></span> à 0,68 V : le γ se trace sur l'eau oxygénée elle-même, donc elle se dismute.</p>
+        <div class="eqs">
+          <div class="row"><span class="e f"><span class="ox">H<sub>2</sub>O<sub>2</sub></span> + 2 H<sup>+</sup> + <span class="el">2 e<sup>−</sup></span> ⟶ 2 <span class="rd">H<sub>2</sub>O</span></span><span class="lab">réduction</span></div>
+          <div class="row"><span class="e f"><span class="ox">O<sub>2</sub></span> + 2 H<sup>+</sup> + <span class="el">2 e<sup>−</sup></span> ⟶ <span class="rd">H<sub>2</sub>O<sub>2</sub></span></span><span class="lab">l'autre couple, dans le sens conventionnel</span></div>
+          <div class="row bilan"><span class="e f">2 H<sub>2</sub>O<sub>2</sub> ⟶ 2 H<sub>2</sub>O + O<sub>2</sub></span><span class="lab"></span></div>
+        </div>
+        <p><b>f.</b> Sur l'échelle : <span class="f">H<sub>3</sub>PO<sub>4</sub>/H<sub>3</sub>PO<sub>3</sub></span> à −0,28 V, <span class="f">H<sub>3</sub>PO<sub>3</sub>/P<span class="st">(s)</span></span> à −0,45 V.</p>
+        <p><span class="f">H<sub>3</sub>PO<sub>4</sub></span> et <span class="f">P<span class="st">(s)</span></span> <b>peuvent réagir</b> car <span class="f">H<sub>3</sub>PO<sub>4</sub></span> est un oxydant plus fort que <span class="f">H<sub>3</sub>PO<sub>3</sub></span>, et <span class="f">P<span class="st">(s)</span></span> un réducteur plus fort que <span class="f">H<sub>3</sub>PO<sub>3</sub></span>.</p>
+        <div class="eqs">
+          <div class="row"><span class="e f"><span class="ox">H<sub>3</sub>PO<sub>4</sub></span> + 2 H<sup>+</sup> + <span class="el">2 e<sup>−</sup></span> ⟶ <span class="rd">H<sub>3</sub>PO<sub>3</sub></span> + H<sub>2</sub>O</span><span class="lab">× 3</span></div>
+          <div class="row"><span class="e f"><span class="ox">H<sub>3</sub>PO<sub>3</sub></span> + 3 H<sup>+</sup> + <span class="el">3 e<sup>−</sup></span> ⟶ <span class="rd">P</span><span class="st">(s)</span> + 3 H<sub>2</sub>O</span><span class="lab">× 2, dans l'autre sens</span></div>
+          <div class="row bilan"><span class="e f">3 <span class="ox">H<sub>3</sub>PO<sub>4</sub></span> + 2 <span class="rd">P</span><span class="st">(s)</span> + 3 H<sub>2</sub>O ⟶ 5 <span class="rd">H<sub>3</sub>PO<sub>3</sub></span></span><span class="lab">l'oxydant est H₃PO₄</span></div>
+        </div>
+        <ul>
+          <li><span class="f">H<sub>3</sub>PO<sub>4</sub></span> ne peut pas réagir avec <span class="f">H<sub>2</sub>O<sub>2</sub></span> <b>du couple <span class="f">H<sub>2</sub>O<sub>2</sub>/H<sub>2</sub>O</span></b> car les deux sont oxydants.</li>
+          <li>Ni avec <span class="f">H<sub>2</sub>O<sub>2</sub></span> <b>du couple <span class="f">O<sub>2</sub>/H<sub>2</sub>O<sub>2</sub></span></b> car <span class="f">H<sub>2</sub>O<sub>2</sub></span> y est un réducteur plus faible que <span class="f">H<sub>3</sub>PO<sub>3</sub></span>, et <span class="f">H<sub>3</sub>PO<sub>4</sub></span> un oxydant plus faible que <span class="f">O<sub>2</sub></span>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exo">
+      <h3><span class="n4">Exercice 3</span>Loi de Nernst</h3>
+      <p>Écrire la loi de Nernst pour le couple <span class="f"><span class="ox">HSO<sub>4</sub><sup>−</sup></span>/<span class="rd">SO<sub>2</sub></span></span> et calculer le potentiel d'électrode lorsque les concentrations des espèces dissoutes sont de 10<sup>−2</sup> mol·L⁻¹ et le <span class="f">pH = 3</span>.</p>
+      <button class="corr-btn" type="button" aria-expanded="false" aria-controls="c24-3">voir la correction</button>
+      <div class="corr-box" id="c24-3" hidden><span class="k">Le corrigé, transcrit</span>
+        <div class="eqs" style="margin-top:0">
+          <div class="row"><span class="e f"><span class="ox">HSO<sub>4</sub><sup>−</sup></span> + 3 H<sup>+</sup> + <span class="el">2 e<sup>−</sup></span> ⟶ <span class="rd">SO<sub>2</sub></span> + 2 H<sub>2</sub>O</span><span class="lab">n = 2 · 3 protons</span></div>
+          <div class="row"><span class="e f">E = E° + <span class="fr"><span class="n">0,06</span><span class="d">2</span></span> · <span class="op">log</span> <span class="fr"><span class="n">[<span class="ox">HSO<sub>4</sub><sup>−</sup></span>] · [H<sup>+</sup>]<sup>3</sup></span><span class="d">[<span class="rd">SO<sub>2</sub></span>] · a<sub>H<sub>2</sub>O</sub></span></span></span><span class="lab">a<sub>H₂O</sub> = 1</span></div>
+          <div class="row"><span class="e f">E = E° + 0,03 · <span class="op">log</span> <span class="fr"><span class="n">[<span class="ox">HSO<sub>4</sub><sup>−</sup></span>]</span><span class="d">[<span class="rd">SO<sub>2</sub></span>]</span></span> − <span class="fr"><span class="n">0,06 × 3</span><span class="d">2</span></span> · pH</span><span class="lab">le log cassé en deux</span></div>
+          <div class="row"><span class="e f">E = E° + 0,03 · <span class="op">log</span> 1 − 0,09 · pH = E° − 0,09 · pH</span><span class="lab">les deux concentrations<br>sont égales</span></div>
+          <div class="row bilan"><span class="e f">E = 0,16 − 0,09 × 3 = − 0,11 V</span><span class="lab">à pH = 3</span></div>
+        </div>
+        <div class="scan"><b>Attention à la valeur de E°.</b> Le sujet donne <span class="f">E°(HSO<sub>4</sub><sup>−</sup>/SO<sub>2</sub>) = 0,16 V</span>, pas 0,17. La réponse attendue est donc <b>−0,11 V</b>. C'est le seul chiffre à retenir si tu refais ce calcul de mémoire.</div>
+      </div>
+    </div>
+
+    <div class="exo">
+      <h3><span class="n4">Exercice 4</span>Pile</h3>
+      <p>Compartiment A : une lame de fer <span class="f">Fe<span class="st">(s)</span></span> dans une solution de sulfate de fer <span class="f">FeSO<sub>4</sub></span> à 10<sup>−1</sup> mol·L⁻¹. Compartiment B : une lame d'or <span class="f">Au<span class="st">(s)</span></span> dans une solution de nitrate d'or <span class="f">Au(NO<sub>3</sub>)<sub>3</sub></span> à 10<sup>−1</sup> mol·L⁻¹. Pont électrolytique au <span class="f">KNO<sub>3</sub></span>.</p>
+      <ol type="a">
+        <li>Écrire la réaction lorsque la pile débite du courant, ainsi que les réactions à l'anode et à la cathode.</li>
+        <li>À quelle électrode y a-t-il le phénomène d'oxydation ?</li>
+      </ol>
+      <button class="corr-btn" type="button" aria-expanded="false" aria-controls="c24-4">voir la correction</button>
+      <div class="corr-box" id="c24-4" hidden><span class="k">Le corrigé, transcrit</span>
+        <p>Compartiment A : <span class="f">Fe<span class="st">(s)</span></span> et <span class="f">Fe<sup>2+</sup></span>. Compartiment B : <span class="f">Au<span class="st">(s)</span></span> et <span class="f">Au<sup>3+</sup></span>.</p>
+        <p><b>a.</b> <span class="f">E°(Au<sup>3+</sup>/Au<span class="st">(s)</span>) > E°(Fe<sup>2+</sup>/Fe<span class="st">(s)</span>)</span>, donc <span class="f">Au<sup>3+</sup></span> va spontanément réagir avec <span class="f">Fe<span class="st">(s)</span></span>.</p>
+        <div class="eqs">
+          <div class="row"><span class="e f"><span class="ox">Au<sup>3+</sup></span> + <span class="el">3 e<sup>−</sup></span> ⟶ <span class="rd">Au</span><span class="st">(s)</span></span><span class="lab">cathode · compartiment B</span></div>
+          <div class="row"><span class="e f"><span class="rd">Fe</span><span class="st">(s)</span> ⟶ <span class="ox">Fe<sup>2+</sup></span> + <span class="el">2 e<sup>−</sup></span></span><span class="lab">anode · compartiment A</span></div>
+          <div class="row bilan"><span class="e f">2 <span class="ox">Au<sup>3+</sup></span> + 3 <span class="rd">Fe</span><span class="st">(s)</span> ⟶ 2 <span class="rd">Au</span><span class="st">(s)</span> + 3 <span class="ox">Fe<sup>2+</sup></span></span><span class="lab">6 électrons de part et d'autre</span></div>
+        </div>
+        <p><b>b.</b> Il y a oxydation à l'anode, donc dans le <b>compartiment A</b>.</p>
+      </div>
+    </div>
+
+    <div class="exo">
+      <h3><span class="n4">Exercice 5</span>Diagramme E-pH du manganèse</h3>
+      <p>Le diagramme est établi pour des concentrations d'espèces dissoutes de 10<sup>−2</sup> mol·L⁻¹. Les points donnés sont <span class="f">A (0 ; −1,24)</span>, <span class="f">D (0 ; 1,29)</span> et <span class="f">G (0 ; 1,65)</span>.</p>
+      <ol type="a">
+        <li>Placer dans le diagramme les espèces <span class="f">Mn<sup>2+</sup></span>, <span class="f">MnO<sub>4</sub><sup>2−</sup></span>, <span class="f">Mn(OH)<sub>2</sub><span class="st">(s)</span></span>, <span class="f">Mn<span class="st">(s)</span></span> et <span class="f">MnO<sub>2</sub><span class="st">(s)</span></span>. Justifier.</li>
+        <li>Établir l'expression mathématique de la frontière (E,B).</li>
+        <li>Établir l'expression mathématique de la frontière (D,E).</li>
+        <li>Calculer le potentiel standard <span class="f">E°</span> du couple correspondant à la frontière (D,E).</li>
+      </ol>
+      <p class="cadre">Les coordonnées des points A, D et G peuvent être utilisées, mais <b>une détermination graphique ne sera pas acceptée</b>.</p>
+      <button class="corr-btn" type="button" aria-expanded="false" aria-controls="c24-5">voir la correction</button>
+      <div class="corr-box" id="c24-5" hidden><span class="k">Le corrigé, transcrit</span>
+        <div class="tw"><table class="tab">
+          <tr><th></th><td><span class="f">Mn<sup>2+</sup></span></td><td><span class="f">MnO<sub>4</sub><sup>2−</sup></span></td><td><span class="f">Mn(OH)<sub>2</sub><span class="st">(s)</span></span></td><td><span class="f">Mn<span class="st">(s)</span></span></td><td><span class="f">MnO<sub>2</sub><span class="st">(s)</span></span></td></tr>
+          <tr><th>n.o.(Mn)</th><td class="num">+II</td><td class="num">+VI</td><td class="num">+II</td><td class="num">0</td><td class="num">+IV</td></tr>
+        </table></div>
+        <p><b>a.</b> La règle de placement tient en deux axes : les <b>oxydants</b>, ceux dont le n.o. est grand, vont <b>en haut</b> ; les <b>réducteurs</b>, n.o. petit, <b>en bas</b>. Les espèces <b>acides</b> vont <b>à gauche</b>, les <b>bases à droite</b>.</p>
+        <p>De bas en haut : <span class="f">Mn<span class="st">(s)</span></span>, puis <span class="f">Mn<sup>2+</sup></span> à gauche et <span class="f">Mn(OH)<sub>2</sub><span class="st">(s)</span></span> à droite — même n.o., séparés par une frontière <b>verticale</b> — puis <span class="f">MnO<sub>2</sub><span class="st">(s)</span></span>, puis <span class="f">MnO<sub>4</sub><sup>2−</sup></span> tout en haut.</p>
+        <p><b>b.</b> La frontière (E,B) sépare <span class="f">Mn<sup>2+</sup></span> et <span class="f">Mn(OH)<sub>2</sub><span class="st">(s)</span></span> : c'est un équilibre de <b>précipitation</b>, sans électrons, donc une <b>verticale</b>.</p>
+        <div class="eqs">
+          <div class="row"><span class="e f">K<sub>s</sub> = <span class="fr"><span class="n">[<span class="ox">Mn<sup>2+</sup></span>] · [OH<sup>−</sup>]<sup>2</sup></span><span class="d">a<sub>Mn(OH)<sub>2</sub></sub></span></span> = [<span class="ox">Mn<sup>2+</sup></span>] · [OH<sup>−</sup>]<sup>2</sup> = 2 × 10<sup>−13</sup></span><span class="lab">le solide vaut 1</span></div>
+          <div class="row"><span class="e f">[OH<sup>−</sup>] = <span class="fr"><span class="n">K<sub>s</sub></span><span class="d">[Mn<sup>2+</sup>]</span></span><sup>1/2</sup> = <span class="fr"><span class="n">2 × 10<sup>−13</sup></span><span class="d">10<sup>−2</sup></span></span><sup>1/2</sup> = 4,47 × 10<sup>−6</sup> mol·L⁻¹</span><span class="lab"></span></div>
+          <div class="row"><span class="e f">[H<sup>+</sup>] = <span class="fr"><span class="n">K<sub>e</sub></span><span class="d">[OH<sup>−</sup>]</span></span> = 2,24 × 10<sup>−9</sup> mol·L⁻¹</span><span class="lab">K<sub>e</sub> = 10⁻¹⁴</span></div>
+          <div class="row bilan"><span class="e f">pH = − <span class="op">log</span> [H<sup>+</sup>] = 8,65</span><span class="lab">la verticale (E,B)</span></div>
+        </div>
+        <p><b>c.</b> La frontière (D,E) sépare <span class="f">MnO<sub>2</sub><span class="st">(s)</span></span> et <span class="f">Mn<sup>2+</sup></span> : rédox <b>et</b> protons, donc une <b>oblique</b>.</p>
+        <div class="eqs">
+          <div class="row"><span class="e f"><span class="ox">MnO<sub>2</sub></span><span class="st">(s)</span> + 4 H<sup>+</sup> + <span class="el">2 e<sup>−</sup></span> ⟶ <span class="rd">Mn<sup>2+</sup></span> + 2 H<sub>2</sub>O</span><span class="lab">4 protons pour 2 e⁻<br>pente = −0,12</span></div>
+          <div class="row"><span class="e f">E = E° + <span class="fr"><span class="n">0,06</span><span class="d">2</span></span> · <span class="op">log</span> <span class="fr"><span class="n">a<sub>MnO<sub>2</sub></sub> · [H<sup>+</sup>]<sup>4</sup></span><span class="d">[<span class="rd">Mn<sup>2+</sup></span>]</span></span> = E° − 0,12 · pH + <span class="fr"><span class="n">0,06</span><span class="d">2</span></span> · <span class="op">log</span> 10<sup>2</sup></span><span class="lab"></span></div>
+          <div class="row bilan"><span class="e f">E = E° + 0,06 − 0,12 · pH</span><span class="lab">la frontière (D,E)</span></div>
+        </div>
+        <p><b>d.</b> Le point <span class="f">D (0 ; 1,29)</span> appartient à cette frontière :</p>
+        <div class="eqs">
+          <div class="row bilan"><span class="e f">1,29 = E° + 0,06 − 0,12 × 0 &nbsp;⟹&nbsp; E° = 1,29 − 0,06 = 1,23 V</span><span class="lab">le couple MnO₂/Mn²⁺</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exo">
+      <h3><span class="n4">Données</span>du sujet 2024</h3>
+      <div class="tw"><table class="tab">
+        <tr><th>Couple</th><td><span class="f">H<sub>3</sub>PO<sub>3</sub>/P<span class="st">(s)</span></span></td><td><span class="f">Fe<sup>2+</sup>/Fe<span class="st">(s)</span></span></td><td><span class="f">H<sub>3</sub>PO<sub>4</sub>/H<sub>3</sub>PO<sub>3</sub></span></td><td><span class="f">HSO<sub>4</sub><sup>−</sup>/SO<sub>2</sub></span></td><td><span class="f">O<sub>2</sub>/H<sub>2</sub>O<sub>2</sub></span></td><td><span class="f">Au<sup>3+</sup>/Au<span class="st">(s)</span></span></td><td><span class="f">H<sub>2</sub>O<sub>2</sub>/H<sub>2</sub>O</span></td></tr>
+        <tr><th>E° en volts</th><td class="num">−0,45</td><td class="num">−0,44</td><td class="num">−0,28</td><td class="num">0,16</td><td class="num">0,68</td><td class="num">1,52</td><td class="num">1,76</td></tr>
+      </table></div>
+      <p class="don">à T = 298 K : <span class="f"><span class="fr"><span class="n">R·T</span><span class="d">F</span></span> <span class="op">Ln</span> x = 0,06 <span class="op">log</span> x</span><br>
+      <span class="f">Mn(OH)<sub>2</sub><span class="st">(s)</span> ⟶ Mn<sup>2+</sup> + 2 OH<sup>−</sup></span> &nbsp; K<sub>s</sub> = 2 × 10<sup>−13</sup><br>
+      <span class="f">K<sub>e</sub> = 10<sup>−14</sup></span></p>
+    </div>
+  </div>
+
+  <!-- ════════ 2023 ════════ -->
+  <div class="ann" data-ann="2023" hidden>
+    <div class="ann-hd"><span class="k">Contrôle du mercredi 18 octobre 2023</span>
+      <span class="dur">5 exercices · 1 heure</span></div>
+    <p class="cadre">Pas d'exercice de définitions cette année-là, et pas de dismutation : le sujet entre directement dans le calcul.</p>
+
+    <div class="exo">
+      <h3><span class="n4">Exercice 1</span>Nombres d'oxydation</h3>
+      <p>Donner le nombre d'oxydation de l'élément azote et de l'élément carbone dans : <span class="f">N<sub>2</sub></span> ; <span class="f">NH<sub>3</sub></span> ; <span class="f">CO<sub>2</sub></span> ; <span class="f">CO<sub>3</sub><sup>2−</sup></span>.</p>
+      <button class="corr-btn" type="button" aria-expanded="false" aria-controls="c23-1">voir la correction</button>
+      <div class="corr-box" id="c23-1" hidden><span class="k">Le corrigé, transcrit</span>
+        <div class="tw"><table class="tab" style="margin:0">
+          <tr><td><span class="f">N<sub>2</sub></span></td><td class="num">n.o.(N) = 0</td><td class="sm">corps simple</td></tr>
+          <tr><td><span class="f">NH<sub>3</sub></span></td><td class="num">n.o.(N) = −III</td><td class="sm">n.o.(H) = +I, et 3(+1) + N = 0</td></tr>
+          <tr><td><span class="f">CO<sub>2</sub></span></td><td class="num">n.o.(C) = +IV</td><td class="sm">n.o.(O) = −II</td></tr>
+          <tr><td><span class="f">CO<sub>3</sub><sup>2−</sup></span></td><td class="num">n.o.(C) = +IV</td><td class="sm">x + 3 × (−2) = −2</td></tr>
+        </table></div>
+      </div>
+    </div>
+
+    <div class="exo">
+      <h3><span class="n4">Exercice 2</span>Équations chimiques de réactions rédox</h3>
+      <ol type="a">
+        <li>Ajuster les coefficients stœchiométriques de <span class="f">IO<sub>3</sub><sup>−</sup> + Ag<span class="st">(s)</span> ⟶ HIO + Ag<sup>+</sup></span>, en milieu <b>acide</b> puis en milieu <b>basique</b>.</li>
+        <li>Indiquer si ces espèces peuvent réagir entre elles ; si oui, dire laquelle est l'oxydant : <span class="f">Cl<sub>2</sub><span class="st">(g)</span></span> et <span class="f">Au<span class="st">(s)</span></span> ; <span class="f">Cl<sub>2</sub><span class="st">(g)</span></span> et <span class="f">Au<sup>3+</sup></span>.</li>
+      </ol>
+      <button class="corr-btn" type="button" aria-expanded="false" aria-controls="c23-2">voir la correction</button>
+      <div class="corr-box" id="c23-2" hidden><span class="k">Le corrigé, transcrit</span>
+        <div class="eqs" style="margin-top:0">
+          <div class="row"><span class="e f"><span class="ox">IO<sub>3</sub><sup>−</sup></span> + 5 H<sup>+</sup> + <span class="el">4 e<sup>−</sup></span> ⟶ <span class="rd">HIO</span> + 2 H<sub>2</sub>O</span><span class="lab">l'iode passe de +V à +I</span></div>
+          <div class="row"><span class="e f"><span class="rd">Ag</span><span class="st">(s)</span> ⟶ <span class="ox">Ag<sup>+</sup></span> + <span class="el">e<sup>−</sup></span></span><span class="lab">× 4</span></div>
+          <div class="row bilan"><span class="e f"><span class="ox">IO<sub>3</sub><sup>−</sup></span> + 5 H<sup>+</sup> + 4 <span class="rd">Ag</span><span class="st">(s)</span> ⟶ <span class="rd">HIO</span> + 2 H<sub>2</sub>O + 4 <span class="ox">Ag<sup>+</sup></span></span><span class="lab">milieu acide</span></div>
+          <div class="row"><span class="e f"><span class="ox">IO<sub>3</sub><sup>−</sup></span> + 5 H<sub>2</sub>O + 4 <span class="rd">Ag</span><span class="st">(s)</span> ⟶ <span class="rd">HIO</span> + 2 H<sub>2</sub>O + 5 OH<sup>−</sup> + 4 <span class="ox">Ag<sup>+</sup></span></span><span class="lab">on ajoute 5 OH⁻<br>des deux côtés</span></div>
+          <div class="row bilan"><span class="e f"><span class="ox">IO<sub>3</sub><sup>−</sup></span> + 3 H<sub>2</sub>O + 4 <span class="rd">Ag</span><span class="st">(s)</span> ⟶ <span class="rd">HIO</span> + 5 OH<sup>−</sup> + 4 <span class="ox">Ag<sup>+</sup></span></span><span class="lab">milieu basique</span></div>
+        </div>
+        <p><b>b.</b> Sur l'échelle : <span class="f">Au<sup>3+</sup>/Au<span class="st">(s)</span></span> à 1,52 V, <span class="f">Cl<sub>2</sub><span class="st">(g)</span>/Cl<sup>−</sup></span> à 1,36 V.</p>
+        <ul>
+          <li><span class="f">Cl<sub>2</sub></span> et <span class="f">Au<span class="st">(s)</span></span> <b>ne peuvent pas réagir</b> car <span class="f">Au<span class="st">(s)</span></span> est un réducteur plus faible que <span class="f">Cl<sup>−</sup></span> et <span class="f">Cl<sub>2</sub></span> un oxydant plus faible que <span class="f">Au<sup>3+</sup></span>. La réaction qui a spontanément lieu est l'inverse : <span class="f">Au<sup>3+</sup> + Cl<sup>−</sup> ⟶ Au + Cl<sub>2</sub></span> — non équilibrée.</li>
+          <li><span class="f">Cl<sub>2</sub></span> et <span class="f">Au<sup>3+</sup></span> <b>ne peuvent pas réagir</b> car ils sont oxydants tous les deux.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="exo">
+      <h3><span class="n4">Exercice 3</span>Pile zinc-argent</h3>
+      <p>Compartiment A : une lame de zinc <span class="f">Zn<span class="st">(s)</span></span> dans du sulfate de zinc <span class="f">ZnSO<sub>4</sub></span> à 10<sup>−1</sup> mol·L⁻¹. Compartiment B : une lame d'argent <span class="f">Ag<span class="st">(s)</span></span> dans du nitrate d'argent <span class="f">AgNO<sub>3</sub></span> à 10<sup>−1</sup> mol·L⁻¹. Pont électrolytique au <span class="f">KNO<sub>3</sub></span>.</p>
+      <ol type="a">
+        <li>Quels ions obtient-on en solution ?</li>
+        <li>Écrire la réaction lorsque la pile débite, ainsi que les réactions à l'anode et à la cathode.</li>
+        <li>Faire un schéma annoté : signe des électrodes, anode, cathode, sens des électrons et du courant.</li>
+        <li>À quelle électrode y a-t-il oxydation ?</li>
+        <li>Donner l'écriture symbolique de la pile.</li>
+        <li>Quel est le rôle du pont électrolytique ? Quels phénomènes y ont lieu ?</li>
+        <li>Calculer la fem de la pile à <span class="f">pH = 0</span>.</li>
+        <li>Comment modifier le schéma pour obtenir une cellule d'électrolyse ?</li>
+      </ol>
+      <button class="corr-btn" type="button" aria-expanded="false" aria-controls="c23-3">voir la correction</button>
+      <div class="corr-box" id="c23-3" hidden><span class="k">Le corrigé, transcrit</span>
+        <div class="eqs" style="margin-top:0">
+          <div class="row"><span class="e f">ZnSO<sub>4</sub><span class="st">(s)</span> ⟶ <span class="ox">Zn<sup>2+</sup></span> + SO<sub>4</sub><sup>2−</sup></span><span class="lab">a · ion zinc et ion sulfate</span></div>
+          <div class="row"><span class="e f">AgNO<sub>3</sub><span class="st">(s)</span> ⟶ <span class="ox">Ag<sup>+</sup></span> + NO<sub>3</sub><sup>−</sup></span><span class="lab">ion argent et ion nitrate</span></div>
+        </div>
+        <p><b>b.</b> <span class="f">Ag<sup>+</sup>/Ag</span> à 0,80 V et <span class="f">Zn<sup>2+</sup>/Zn</span> à −0,76 V : <span class="f">Ag<sup>+</sup></span> est l'oxydant, <span class="f">Zn<span class="st">(s)</span></span> le réducteur.</p>
+        <div class="eqs">
+          <div class="row"><span class="e f"><span class="rd">Zn</span><span class="st">(s)</span> ⟶ <span class="ox">Zn<sup>2+</sup></span> + <span class="el">2 e<sup>−</sup></span></span><span class="lab">anode</span></div>
+          <div class="row"><span class="e f"><span class="ox">Ag<sup>+</sup></span> + <span class="el">e<sup>−</sup></span> ⟶ <span class="rd">Ag</span><span class="st">(s)</span></span><span class="lab">cathode</span></div>
+          <div class="row bilan"><span class="e f"><span class="rd">Zn</span><span class="st">(s)</span> + 2 <span class="ox">Ag<sup>+</sup></span> ⟶ <span class="ox">Zn<sup>2+</sup></span> + 2 <span class="rd">Ag</span><span class="st">(s)</span></span><span class="lab">pile qui débite</span></div>
+        </div>
+        <p><b>c.</b> Anode <b>⊖</b> à gauche, plaque de <span class="f">Zn<span class="st">(s)</span></span> dans <span class="f">Zn<sup>2+</sup></span> et <span class="f">SO<sub>4</sub><sup>2−</sup></span> ; cathode <b>⊕</b> à droite, plaque de <span class="f">Ag<span class="st">(s)</span></span> dans <span class="f">Ag<sup>+</sup></span> et <span class="f">NO<sub>3</sub><sup>−</sup></span> ; électrons de gauche à droite, courant en sens inverse ; dans le pont, <span class="f">NO<sub>3</sub><sup>−</sup></span> vers l'anode et <span class="f">K<sup>+</sup></span> vers la cathode.</p>
+        <p><b>d.</b> Oxydation à l'anode. &nbsp; <b>e.</b> <span class="f"><span style="color:var(--mut)">⊖</span> Zn<sup>2+</sup>/Zn ‖ Ag/Ag<sup>+</sup> <span style="color:var(--acc)">⊕</span></span></p>
+        <p><b>f.</b> Fermer le circuit électrique et assurer l'électroneutralité des solutions. Les ions <span class="f">NO<sub>3</sub><sup>−</sup></span> migrent vers le compartiment anodique — il y produit du <span class="f">Zn<sup>2+</sup></span> — et les <span class="f">K<sup>+</sup></span> vers le compartiment cathodique, où l'<span class="f">Ag<sup>+</sup></span> est consommé.</p>
+        <div class="eqs">
+          <div class="row bilan"><span class="e f">fem = E°<sub>cathode</sub> − E°<sub>anode</sub> = 0,80 + 0,76 = 1,56 V</span><span class="lab">g</span></div>
+        </div>
+        <p><b>h.</b> On met une pile à la place du voltmètre.</p>
+      </div>
+    </div>
+
+    <div class="exo">
+      <h3><span class="n4">Exercice 4</span>Loi de Nernst</h3>
+      <p>Écrire la loi de Nernst pour le couple <span class="f"><span class="ox">FeO<sub>4</sub><sup>2−</sup></span>/<span class="rd">Fe<sup>3+</sup></span></span> et calculer le potentiel d'électrode lorsque les concentrations des espèces dissoutes sont de 10<sup>−2</sup> mol·L⁻¹ et le <span class="f">pH = 3</span>.</p>
+      <button class="corr-btn" type="button" aria-expanded="false" aria-controls="c23-4">voir la correction</button>
+      <div class="corr-box" id="c23-4" hidden><span class="k">Le corrigé, transcrit</span>
+        <div class="eqs" style="margin-top:0">
+          <div class="row"><span class="e f"><span class="el">3 e<sup>−</sup></span> + <span class="ox">FeO<sub>4</sub><sup>2−</sup></span> + 8 H<sup>+</sup> ⟶ <span class="rd">Fe<sup>3+</sup></span> + 4 H<sub>2</sub>O</span><span class="lab">le fer passe de +VI à +III</span></div>
+          <div class="row"><span class="e f">E = E° + <span class="fr"><span class="n">0,06</span><span class="d">3</span></span> · <span class="op">log</span> <span class="fr"><span class="n">[<span class="ox">FeO<sub>4</sub><sup>2−</sup></span>] · [H<sup>+</sup>]<sup>8</sup></span><span class="d">[<span class="rd">Fe<sup>3+</sup></span>]</span></span> = E° + <span class="fr"><span class="n">0,06 × 8</span><span class="d">3</span></span> · <span class="op">log</span> [H<sup>+</sup>]</span><span class="lab">concentrations égales :<br>leur rapport vaut 1</span></div>
+          <div class="row"><span class="e f">E = E° − <span class="fr"><span class="n">0,06 × 8</span><span class="d">3</span></span> · pH = E° − 0,16 · pH</span><span class="lab">la pente</span></div>
+          <div class="row bilan"><span class="e f">E = 1,90 − 0,16 × 3 = 1,90 − 0,48 = 1,42 V</span><span class="lab">à pH = 3</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exo">
+      <h3><span class="n4">Exercice 5</span>Diagramme E-pH du chrome</h3>
+      <p>Diagramme établi pour des concentrations d'espèces dissoutes de 10<sup>−1</sup> mol·L⁻¹.</p>
+      <ol type="a">
+        <li>Donner le nombre d'oxydation de Cr dans <span class="f">Cr<sub>2</sub>O<sub>7</sub><sup>2−</sup></span> et <span class="f">CrO<sub>4</sub><sup>2−</sup></span>.</li>
+        <li>Équilibrer la réaction entre <span class="f">Cr<sub>2</sub>O<sub>7</sub><sup>2−</sup></span> et <span class="f">CrO<sub>4</sub><sup>2−</sup></span>. Quelle est l'espèce acide ?</li>
+        <li>Placer dans le diagramme : <span class="f">Cr<sup>2+</sup></span>, <span class="f">Cr<sup>3+</sup></span>, <span class="f">CrO<sub>4</sub><sup>2−</sup></span>, <span class="f">Cr<sub>2</sub>O<sub>7</sub><sup>2−</sup></span>, <span class="f">Cr(OH)<sub>2</sub><span class="st">(s)</span></span>, <span class="f">Cr(OH)<sub>3</sub><span class="st">(s)</span></span> et <span class="f">Cr<span class="st">(s)</span></span>. Justifier.</li>
+        <li>Calculer le coefficient directeur de AB.</li>
+        <li><b>Bonus</b> : calculer les coordonnées du point C.</li>
+      </ol>
+      <button class="corr-btn" type="button" aria-expanded="false" aria-controls="c23-5">voir la correction</button>
+      <div class="corr-box" id="c23-5" hidden><span class="k">Le corrigé, transcrit</span>
+        <p><b>a.</b> <span class="f">Cr<sub>2</sub>O<sub>7</sub><sup>2−</sup></span> : <span class="f">2x + 7 × (−2) = −2</span> donne <span class="f">x = 6</span>, soit <b>+VI</b>. <span class="f">CrO<sub>4</sub><sup>2−</sup></span> : <span class="f">x + 4 × (−2) = −2</span> donne aussi <b>+VI</b>. Ce ne sont donc <b>pas</b> deux formes rédox différentes, mais deux formes <b>acide-base</b> du même degré d'oxydation.</p>
+        <div class="eqs">
+          <div class="row bilan"><span class="e f">Cr<sub>2</sub>O<sub>7</sub><sup>2−</sup> + H<sub>2</sub>O ⟶ 2 CrO<sub>4</sub><sup>2−</sup> + 2 H<sup>+</sup></span><span class="lab">b · l'espèce acide est<br>Cr₂O₇²⁻ : elle libère les H⁺</span></div>
+        </div>
+        <p><b>c.</b> De bas en haut, par n.o. croissant : <span class="f">Cr<span class="st">(s)</span></span> (0), puis <span class="f">Cr<sup>2+</sup></span> à gauche et <span class="f">Cr(OH)<sub>2</sub><span class="st">(s)</span></span> à droite (+II), puis <span class="f">Cr<sup>3+</sup></span> à gauche et <span class="f">Cr(OH)<sub>3</sub><span class="st">(s)</span></span> à droite (+III), puis <span class="f">Cr<sub>2</sub>O<sub>7</sub><sup>2−</sup></span> à gauche et <span class="f">CrO<sub>4</sub><sup>2−</sup></span> à droite (+VI). Le corrigé justifie la frontière basse par :</p>
+        <div class="eqs">
+          <div class="row"><span class="e f"><span class="ox">Cr(OH)<sub>2</sub></span><span class="st">(s)</span> + 2 H<sup>+</sup> + <span class="el">2 e<sup>−</sup></span> ⟶ <span class="rd">Cr</span><span class="st">(s)</span> + 2 H<sub>2</sub>O</span><span class="lab">2 protons pour 2 e⁻</span></div>
+          <div class="row bilan"><span class="e f">E = E° + <span class="fr"><span class="n">0,06</span><span class="d">2</span></span> × 2 · <span class="op">log</span> [H<sup>+</sup>] = E° − 0,06 · pH</span><span class="lab">pente −0,06</span></div>
+        </div>
+        <div class="eqs">
+          <div class="row"><span class="e f"><span class="ox">Cr<sub>2</sub>O<sub>7</sub><sup>2−</sup></span> + 14 H<sup>+</sup> + <span class="el">6 e<sup>−</sup></span> ⟶ 2 <span class="rd">Cr<sup>3+</sup></span> + 7 H<sub>2</sub>O</span><span class="lab">d · la frontière AB</span></div>
+          <div class="row bilan"><span class="e f">E = E° − <span class="fr"><span class="n">0,06 × 14</span><span class="d">6</span></span> · pH + … = E° − 0,14 · pH + …</span><span class="lab">coefficient directeur : <b>−0,14</b></span></div>
+        </div>
+        <p><b>Bonus — le point C.</b> C'est l'intersection de la verticale de précipitation de <span class="f">Cr(OH)<sub>2</sub></span> et de l'horizontale <span class="f">Cr<sup>2+</sup>/Cr</span>.</p>
+        <div class="eqs">
+          <div class="row"><span class="e f">K<sub>s</sub> = [<span class="ox">Cr<sup>2+</sup></span>] · [OH<sup>−</sup>]<sup>2</sup> &nbsp;⟹&nbsp; [OH<sup>−</sup>] = <span class="fr"><span class="n">10<sup>−19</sup></span><span class="d">10<sup>−1</sup></span></span><sup>1/2</sup> = 10<sup>−9</sup></span><span class="lab">l'abscisse</span></div>
+          <div class="row"><span class="e f">[H<sup>+</sup>] = 10<sup>−5</sup> &nbsp;⟹&nbsp; pH = 5</span><span class="lab"></span></div>
+          <div class="row"><span class="e f">E = E° + <span class="fr"><span class="n">0,06</span><span class="d">2</span></span> · <span class="op">log</span> [<span class="ox">Cr<sup>2+</sup></span>] = − 0,91 + 0,03 · <span class="op">log</span> 10<sup>−1</sup></span><span class="lab">l'ordonnée</span></div>
+          <div class="row bilan"><span class="e f">E = − 0,91 − 0,03 = − 0,94 V &nbsp;⟹&nbsp; C (5 ; − 0,94)</span><span class="lab"></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exo">
+      <h3><span class="n4">Données</span>du sujet 2023</h3>
+      <div class="tw"><table class="tab">
+        <tr><th>Couple</th><td><span class="f">Cr<sup>2+</sup>/Cr<span class="st">(s)</span></span></td><td><span class="f">Zn<sup>2+</sup>/Zn<span class="st">(s)</span></span></td><td><span class="f">Cr<sup>3+</sup>/Cr<span class="st">(s)</span></span></td><td><span class="f">Cr<sup>3+</sup>/Cr<sup>2+</sup></span></td><td><span class="f">H<sup>+</sup>/H<sub>2</sub><span class="st">(g)</span></span></td><td><span class="f">Ag<sup>+</sup>/Ag<span class="st">(s)</span></span></td><td><span class="f">Cr<sub>2</sub>O<sub>7</sub><sup>2−</sup>/Cr<sup>3+</sup></span></td><td><span class="f">Cl<sub>2</sub><span class="st">(g)</span>/Cl<sup>−</sup></span></td><td><span class="f">Au<sup>3+</sup>/Au<span class="st">(s)</span></span></td><td><span class="f">FeO<sub>4</sub><sup>2−</sup>/Fe<sup>3+</sup></span></td></tr>
+        <tr><th>E° en volts</th><td class="num">−0,91</td><td class="num">−0,76</td><td class="num">−0,74</td><td class="num">−0,41</td><td class="num">0,00</td><td class="num">0,80</td><td class="num">1,33</td><td class="num">1,36</td><td class="num">1,52</td><td class="num">1,90</td></tr>
+      </table></div>
+      <p class="don">à T = 298 K : <span class="f"><span class="fr"><span class="n">R·T</span><span class="d">F</span></span> <span class="op">Ln</span> x = 0,06 <span class="op">log</span> x</span><br>
+      <span class="f">Cr(OH)<sub>2</sub><span class="st">(s)</span> ⟶ Cr<sup>2+</sup> + 2 OH<sup>−</sup></span> &nbsp; K<sub>s</sub> = 10<sup>−19</sup><br>
+      <span class="f">Cr(OH)<sub>3</sub><span class="st">(s)</span> ⟶ Cr<sup>3+</sup> + 3 OH<sup>−</sup></span> &nbsp; K<sub>s</sub> = 10<sup>−30</sup></p>
+    </div>
+  </div>
+
+  <!-- ════════ 2022 ════════ -->
+  <div class="ann" data-ann="2022" hidden>
+    <div class="ann-hd"><span class="k">Contrôle du lundi 7 novembre 2022</span>
+      <span class="dur">5 exercices · 1 heure</span></div>
+    <p class="cadre">Le sujet le plus long à l'exercice 2 — <b>quatre</b> équations à équilibrer — et le seul dont le diagramme contient une frontière qui <b>monte</b>.</p>
+
+    <div class="exo">
+      <h3><span class="n4">Exercice 1</span>Nombres d'oxydation</h3>
+      <p>Donner le nombre d'oxydation de l'élément brome et de l'élément platine dans : <span class="f">Br<sub>2</sub></span> ; <span class="f">BrO<sub>4</sub><sup>−</sup></span> ; <span class="f">PtCl<sub>4</sub></span> ; <span class="f">PtCl<sub>6</sub><sup>2−</sup></span>.</p>
+      <button class="corr-btn" type="button" aria-expanded="false" aria-controls="c22-1">voir la correction</button>
+      <div class="corr-box" id="c22-1" hidden><span class="k">Le corrigé, transcrit</span>
+        <div class="tw"><table class="tab" style="margin:0">
+          <tr><td><span class="f">Br<sub>2</sub></span></td><td class="num">n.o.(Br) = 0</td><td class="sm">corps simple</td></tr>
+          <tr><td><span class="f">BrO<sub>4</sub><sup>−</sup></span></td><td class="num">n.o.(Br) = +VII</td><td class="sm">x + 4 × (−2) = −1</td></tr>
+          <tr><td><span class="f">PtCl<sub>4</sub></span></td><td class="num">n.o.(Pt) = +IV</td><td class="sm">pas d'oxygène : n.o.(Cl) = −I</td></tr>
+          <tr><td><span class="f">PtCl<sub>6</sub><sup>2−</sup></span></td><td class="num">n.o.(Pt) = +IV</td><td class="sm">x + 6 × (−1) = −2</td></tr>
+        </table></div>
+      </div>
+    </div>
+
+    <div class="exo">
+      <h3><span class="n4">Exercice 2</span>Équations chimiques de réactions rédox</h3>
+      <ol type="a">
+        <li>Ajuster les coefficients stœchiométriques :
+          <div class="eqs" style="margin:8px 0">
+            <div class="row"><span class="e f">Fe<sup>2+</sup> + Hg<sup>2+</sup> ⟶ Fe<sup>3+</sup> + Hg</span><span class="lab">en milieu acide</span></div>
+            <div class="row"><span class="e f">Mn<sup>3+</sup> + Br<sub>2</sub> ⟶ MnO<sub>2</sub><span class="st">(s)</span> + Br<sup>−</sup></span><span class="lab">en milieu acide</span></div>
+            <div class="row"><span class="e f">IO<sub>3</sub><sup>−</sup> + Br<sup>−</sup> ⟶ HIO + Br<sub>2</sub></span><span class="lab">en milieu acide</span></div>
+            <div class="row"><span class="e f">IO<sub>3</sub><sup>−</sup> + Br<sup>−</sup> ⟶ HIO + Br<sub>2</sub></span><span class="lab">en milieu basique</span></div>
+          </div></li>
+        <li>Indiquer si ces espèces peuvent réagir ; si oui, dire laquelle est l'oxydant : <span class="f">Br<sub>2</sub></span> et <span class="f">Au<sup>3+</sup></span> ; <span class="f">Br<sub>2</sub></span> et <span class="f">Fe<sup>2+</sup></span> ; <span class="f">Fe<sup>3+</sup></span> et <span class="f">Au</span>.</li>
+      </ol>
+      <button class="corr-btn" type="button" aria-expanded="false" aria-controls="c22-2">voir la correction</button>
+      <div class="corr-box" id="c22-2" hidden><span class="k">Le corrigé, transcrit</span>
+        <div class="eqs" style="margin-top:0">
+          <div class="row"><span class="e f"><span class="rd">Fe<sup>2+</sup></span> ⟶ <span class="ox">Fe<sup>3+</sup></span> + <span class="el">e<sup>−</sup></span> &nbsp;·&nbsp; <span class="ox">Hg<sup>2+</sup></span> + <span class="el">2 e<sup>−</sup></span> ⟶ <span class="rd">Hg</span></span><span class="lab">premier cas</span></div>
+          <div class="row bilan"><span class="e f">2 <span class="rd">Fe<sup>2+</sup></span> + <span class="ox">Hg<sup>2+</sup></span> ⟶ 2 <span class="ox">Fe<sup>3+</sup></span> + <span class="rd">Hg</span></span><span class="lab"></span></div>
+          <div class="row"><span class="e f"><span class="rd">Mn<sup>3+</sup></span> + 2 H<sub>2</sub>O ⟶ <span class="ox">MnO<sub>2</sub></span> + 4 H<sup>+</sup> + <span class="el">e<sup>−</sup></span> &nbsp;·&nbsp; <span class="ox">Br<sub>2</sub></span> + <span class="el">2 e<sup>−</sup></span> ⟶ 2 <span class="rd">Br<sup>−</sup></span></span><span class="lab">deuxième cas<br>ici Mn³⁺ est le réducteur</span></div>
+          <div class="row bilan"><span class="e f">2 <span class="rd">Mn<sup>3+</sup></span> + 4 H<sub>2</sub>O + <span class="ox">Br<sub>2</sub></span> ⟶ 2 <span class="ox">MnO<sub>2</sub></span> + 8 H<sup>+</sup> + 2 <span class="rd">Br<sup>−</sup></span></span><span class="lab"></span></div>
+          <div class="row"><span class="e f"><span class="ox">IO<sub>3</sub><sup>−</sup></span> + 5 H<sup>+</sup> + <span class="el">4 e<sup>−</sup></span> ⟶ <span class="rd">HIO</span> + 2 H<sub>2</sub>O &nbsp;·&nbsp; 2 <span class="rd">Br<sup>−</sup></span> ⟶ <span class="ox">Br<sub>2</sub></span> + <span class="el">2 e<sup>−</sup></span></span><span class="lab">troisième cas · × 2</span></div>
+          <div class="row bilan"><span class="e f"><span class="ox">IO<sub>3</sub><sup>−</sup></span> + 5 H<sup>+</sup> + 4 <span class="rd">Br<sup>−</sup></span> ⟶ <span class="rd">HIO</span> + 2 H<sub>2</sub>O + 2 <span class="ox">Br<sub>2</sub></span></span><span class="lab">milieu acide</span></div>
+          <div class="row bilan"><span class="e f"><span class="ox">IO<sub>3</sub><sup>−</sup></span> + 3 H<sub>2</sub>O + 4 <span class="rd">Br<sup>−</sup></span> ⟶ <span class="rd">HIO</span> + 2 <span class="ox">Br<sub>2</sub></span> + 5 OH<sup>−</sup></span><span class="lab">milieu basique<br>5 OH⁻ des deux côtés</span></div>
+        </div>
+        <p><b>b.</b> Sur l'échelle : <span class="f">Au<sup>3+</sup>/Au</span> 1,52 · <span class="f">Br<sub>2</sub>/Br<sup>−</sup></span> 1,07 · <span class="f">Ag<sup>+</sup>/Ag</span> 0,80 · <span class="f">Fe<sup>3+</sup>/Fe<sup>2+</sup></span> 0,77 · <span class="f">Cu<sup>2+</sup>/Cu</span> 0,34.</p>
+        <ul>
+          <li><span class="f">Br<sub>2</sub></span> et <span class="f">Au<sup>3+</sup></span> <b>ne peuvent pas réagir</b> : ce sont deux oxydants.</li>
+          <li><span class="f">Br<sub>2</sub></span> et <span class="f">Fe<sup>2+</sup></span> <b>peuvent réagir</b> : <span class="f">Br<sub>2</sub></span> est un oxydant fort et <span class="f">Fe<sup>2+</sup></span> un réducteur fort. L'oxydant est <span class="f">Br<sub>2</sub></span>.</li>
+          <li><span class="f">Fe<sup>3+</sup></span> et <span class="f">Au</span> <b>ne peuvent pas réagir</b> : <span class="f">Fe<sup>3+</sup></span> est un oxydant faible et <span class="f">Au</span> un réducteur faible.</li>
+        </ul>
+        <div class="scan"><b>Une inattention du corrigé.</b> Son échelle porte <span class="f">Br<sub>2</sub>/Br<sup>−</sup></span> à 1,06 V alors que le tableau du sujet donne <b>1,07 V</b>. L'écart ne change aucune des trois réponses.</div>
+      </div>
+    </div>
+
+    <div class="exo">
+      <h3><span class="n4">Exercice 3</span>Pile argent-cuivre</h3>
+      <p>Compartiment A : une lame d'argent <span class="f">Ag<span class="st">(s)</span></span> dans une solution d'ions <span class="f">Ag<sup>+</sup></span> à 1 mol·L⁻¹. Compartiment B : une lame de cuivre <span class="f">Cu<span class="st">(s)</span></span> dans une solution acide d'ions <span class="f">Cu<sup>2+</sup></span> à 1 mol·L⁻¹. Pont au <span class="f">KCl</span>.</p>
+      <ol type="a">
+        <li>Faire un schéma annoté : signe des électrodes, anode, cathode, sens des électrons et du courant.</li>
+        <li>Écrire les réactions à l'anode et à la cathode, ainsi que la réaction lorsque la pile débite.</li>
+        <li>À quelle électrode y a-t-il oxydation ?</li>
+        <li>Donner l'écriture symbolique de la pile.</li>
+        <li>Quel est le rôle du pont électrolytique ? Quels phénomènes y ont lieu ?</li>
+        <li>Calculer la fem de la pile à <span class="f">pH = 0</span>.</li>
+      </ol>
+      <button class="corr-btn" type="button" aria-expanded="false" aria-controls="c22-3">voir la correction</button>
+      <div class="corr-box" id="c22-3" hidden><span class="k">Le corrigé, transcrit</span>
+        <p><b>a.</b> Le compartiment <b>A</b>, l'argent, est la <b>cathode ⊕</b> ; le compartiment <b>B</b>, le cuivre, est l'<b>anode ⊖</b>. Les électrons vont de B vers A dans le fil, le courant en sens inverse.</p>
+        <div class="eqs">
+          <div class="row"><span class="e f"><span class="ox">Ag<sup>+</sup></span> + <span class="el">e<sup>−</sup></span> ⟶ <span class="rd">Ag</span></span><span class="lab">b · réduction · cathode</span></div>
+          <div class="row"><span class="e f"><span class="rd">Cu</span> ⟶ <span class="ox">Cu<sup>2+</sup></span> + <span class="el">2 e<sup>−</sup></span></span><span class="lab">oxydation · anode</span></div>
+          <div class="row bilan"><span class="e f">2 <span class="ox">Ag<sup>+</sup></span> + <span class="rd">Cu</span> ⟶ <span class="ox">Cu<sup>2+</sup></span> + 2 <span class="rd">Ag</span></span><span class="lab">pile qui débite</span></div>
+        </div>
+        <p><b>c.</b> Oxydation à l'anode, donc au compartiment B. &nbsp; <b>d.</b> <span class="f"><span style="color:var(--mut)">⊖</span> Cu/Cu<sup>2+</sup> ‖ Ag<sup>+</sup>/Ag<span class="st">(s)</span> <span style="color:var(--acc)">⊕</span></span></p>
+        <p><b>e.</b> Le pont assure l'électroneutralité des solutions et ferme le circuit électrique. En A, il y a <b>consommation</b> de <span class="f">Ag<sup>+</sup></span> : un <span class="f">K<sup>+</sup></span> va vers A pour chaque <span class="f">Ag<sup>+</sup></span> consommé. En B, il y a <b>production</b> de <span class="f">Cu<sup>2+</sup></span> : deux <span class="f">Cl<sup>−</sup></span> vont vers B pour chaque <span class="f">Cu<sup>2+</sup></span> produit.</p>
+        <div class="eqs">
+          <div class="row bilan"><span class="e f">fem = E°(Ag<sup>+</sup>/Ag) − E°(Cu<sup>2+</sup>/Cu) = 0,80 − 0,34 = 0,46 V</span><span class="lab">f</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="exo">
+      <h3><span class="n4">Exercice 4</span>Loi de Nernst</h3>
+      <p>Écrire la loi de Nernst pour le couple <span class="f"><span class="ox">MnO<sub>2</sub><span class="st">(s)</span></span>/<span class="rd">Mn<sup>3+</sup></span></span> et calculer le potentiel d'électrode lorsque les concentrations des espèces dissoutes sont de 10<sup>−2</sup> mol·L⁻¹ et le <span class="f">pH = 2</span>.</p>
+      <button class="corr-btn" type="button" aria-expanded="false" aria-controls="c22-4">voir la correction</button>
+      <div class="corr-box" id="c22-4" hidden><span class="k">Le corrigé, transcrit</span>
+        <div class="eqs" style="margin-top:0">
+          <div class="row"><span class="e f"><span class="ox">MnO<sub>2</sub></span><span class="st">(s)</span> + 4 H<sup>+</sup> + <span class="el">e<sup>−</sup></span> = <span class="rd">Mn<sup>3+</sup></span> + 2 H<sub>2</sub>O</span><span class="lab">n = 1 · 4 protons<br>Mn passe de +IV à +III</span></div>
+          <div class="row"><span class="e f">E = E° + <span class="fr"><span class="n">0,06</span><span class="d">1</span></span> · <span class="op">log</span> <span class="fr"><span class="n">[H<sup>+</sup>]<sup>4</sup></span><span class="d">[<span class="rd">Mn<sup>3+</sup></span>]</span></span></span><span class="lab">le solide vaut 1</span></div>
+          <div class="row"><span class="e f">E = E° − 0,06 × 4 · pH + 0,06 · <span class="op">log</span> 10<sup>2</sup></span><span class="lab">la pente vaut −0,24</span></div>
+          <div class="row bilan"><span class="e f">E = 0,95 − 0,06 × 4 × 2 + 0,12 = 0,59 V</span><span class="lab">à pH = 2</span></div>
+        </div>
+        <div class="scan"><b>Le seul des quatre où le terme de concentration ne s'annule pas.</b> Le réducteur est dissous, l'oxydant est solide : il n'y a qu'une concentration dans le log, et elle apporte <b>+0,12 V</b>. Ne recopie pas mécaniquement « les concentrations sont égales, le terme disparaît ».</div>
+      </div>
+    </div>
+
+    <div class="exo">
+      <h3><span class="n4">Exercice 5</span>Diagramme E-pH du cuivre</h3>
+      <p>Diagramme établi pour des concentrations d'espèces dissoutes de 10<sup>−2</sup> mol·L⁻¹.</p>
+      <ol type="a">
+        <li>Placer dans le diagramme <span class="f">Cu(OH)<sub>2</sub><span class="st">(s)</span></span>, <span class="f">Cu<sup>2+</sup></span> et <span class="f">Cu<span class="st">(s)</span></span>. Justifier la place de <span class="f">Cu<sub>2</sub>O<span class="st">(s)</span></span>.</li>
+        <li>Calculer le coefficient directeur de AB.</li>
+        <li>Calculer les coordonnées du point B.</li>
+        <li>Tracer la droite du couple <span class="f">H<sup>+</sup>/H<sub>2</sub><span class="st">(g)</span></span> en fonction du pH et dire s'il y a corrosion de <span class="f">Cu<span class="st">(s)</span></span>.</li>
+      </ol>
+      <button class="corr-btn" type="button" aria-expanded="false" aria-controls="c22-5">voir la correction</button>
+      <div class="corr-box" id="c22-5" hidden><span class="k">Le corrigé, transcrit</span>
+        <p><b>a.</b> Dans <span class="f">Cu<sub>2</sub>O<span class="st">(s)</span></span> : <span class="f">2x − 2 = 0</span>, donc n.o.(Cu) = <b>+I</b>. Cette valeur est <b>entre</b> celle de <span class="f">Cu<span class="st">(s)</span></span> (0) et celle de <span class="f">Cu(OH)<sub>2</sub><span class="st">(s)</span></span> (+II) : <span class="f">Cu<sub>2</sub>O</span> se place donc entre les deux.</p>
+        <div class="scan"><b>Une inattention du corrigé.</b> Il écrit « n.o.(Cu) = −I » juste après avoir posé <span class="f">2x − 2 = 0</span>, qui donne <span class="f">x = +1</span>. Le raisonnement qui suit — placer <span class="f">Cu<sub>2</sub>O</span> entre 0 et +II — n'a de sens qu'avec <b>+I</b>. C'est un lapsus d'écriture, pas une erreur de fond.</div>
+        <p><b>b.</b> La frontière AB sépare <span class="f">Cu<sup>2+</sup></span> et <span class="f">Cu<sub>2</sub>O<span class="st">(s)</span></span>.</p>
+        <div class="eqs">
+          <div class="row"><span class="e f">2 <span class="ox">Cu<sup>2+</sup></span> + H<sub>2</sub>O + <span class="el">2 e<sup>−</sup></span> ⟶ <span class="rd">Cu<sub>2</sub>O</span><span class="st">(s)</span> + 2 H<sup>+</sup></span><span class="lab">les protons sont du côté<br><b>du réducteur</b></span></div>
+          <div class="row"><span class="e f">E = E° + <span class="fr"><span class="n">0,06</span><span class="d">2</span></span> · <span class="op">log</span> <span class="fr"><span class="n">[<span class="ox">Cu<sup>2+</sup></span>]<sup>2</sup></span><span class="d">[H<sup>+</sup>]<sup>2</sup></span></span></span><span class="lab">le solide et l'eau valent 1</span></div>
+          <div class="row"><span class="e f">E = E° + 0,06 · <span class="op">log</span> [<span class="ox">Cu<sup>2+</sup></span>] − 0,06 · <span class="op">log</span> [H<sup>+</sup>]</span><span class="lab">le log cassé en deux</span></div>
+          <div class="row bilan"><span class="e f">E = E° + 0,06 · <span class="op">log</span> 10<sup>−2</sup> + 0,06 · pH = E° − 0,12 + 0,06 · pH</span><span class="lab">coefficient directeur : <b>+ 0,06</b></span></div>
+        </div>
+        <div class="scan"><b>Une pente positive.</b> C'est le seul cas des quatre annales où une frontière <b>monte</b>. La raison tient en une ligne : les <span class="f">H<sup>+</sup></span> sont du côté du <b>réducteur</b>, donc au <b>dénominateur</b> du log — et le signe s'inverse. Relis l'étape 14 : la règle de la pente s'y accompagne exactement de cette réserve.</div>
+        <p><b>c.</b> L'abscisse de B vient de la précipitation de <span class="f">Cu(OH)<sub>2</sub></span> ; son ordonnée, de l'équation de b).</p>
+        <div class="eqs">
+          <div class="row"><span class="e f">K<sub>s</sub> = [<span class="ox">Cu<sup>2+</sup></span>] · [OH<sup>−</sup>]<sup>2</sup> &nbsp;⟹&nbsp; [OH<sup>−</sup>] = <span class="fr"><span class="n">10<sup>−20</sup></span><span class="d">10<sup>−2</sup></span></span><sup>1/2</sup> = 10<sup>−9</sup></span><span class="lab"></span></div>
+          <div class="row"><span class="e f">pOH = 9 &nbsp;et&nbsp; pOH + pH = 14 &nbsp;⟹&nbsp; pH = 5</span><span class="lab">l'abscisse de B</span></div>
+          <div class="row bilan"><span class="e f">E = 0,22 − 0,12 + 0,06 × 5 = 0,40 V &nbsp;⟹&nbsp; B (5 ; 0,40)</span><span class="lab">l'ordonnée</span></div>
+        </div>
+        <p><b>d.</b> La droite de l'eau :</p>
+        <div class="eqs">
+          <div class="row"><span class="e f">2 <span class="ox">H<sup>+</sup></span> + <span class="el">2 e<sup>−</sup></span> ⟶ <span class="rd">H<sub>2</sub></span><span class="st">(g)</span> &nbsp;·&nbsp; E = 0 + <span class="fr"><span class="n">0,06</span><span class="d">2</span></span> · <span class="op">log</span> <span class="fr"><span class="n">[H<sup>+</sup>]<sup>2</sup></span><span class="d">1</span></span></span><span class="lab">le gaz est pris à 1 bar</span></div>
+          <div class="row bilan"><span class="e f">E = − 0,06 · pH</span><span class="lab"></span></div>
+        </div>
+        <p>Cette droite passe <b>sous</b> le domaine de <span class="f">Cu<span class="st">(s)</span></span> à tout pH : le proton n'est pas assez oxydant pour attaquer le cuivre. <b>Le cuivre n'est pas corrodé</b> — c'est au contraire <span class="f">Cu<sup>2+</sup></span> qui réagirait avec <span class="f">H<sub>2</sub></span>.</p>
+        <div class="fig">
+          <svg viewBox="0 0 610 300" role="img" aria-label="Diagramme potentiel-pH du cuivre du sujet 2022, avec les points A et B et la droite de l'eau.">
+      <line class="gr" x1="56.0" y1="20" x2="56.0" y2="258"/>
+      <line class="gr" x1="132.6" y1="20" x2="132.6" y2="258"/>
+      <line class="gr" x1="209.1" y1="20" x2="209.1" y2="258"/>
+      <line class="gr" x1="285.7" y1="20" x2="285.7" y2="258"/>
+      <line class="gr" x1="362.3" y1="20" x2="362.3" y2="258"/>
+      <line class="gr" x1="438.9" y1="20" x2="438.9" y2="258"/>
+      <line class="gr" x1="515.4" y1="20" x2="515.4" y2="258"/>
+      <line class="gr" x1="592.0" y1="20" x2="592.0" y2="258"/>
+      <line class="gr" x1="56" y1="248.5" x2="592" y2="248.5"/>
+      <line class="gr" x1="56" y1="210.4" x2="592" y2="210.4"/>
+      <line class="gr" x1="56" y1="172.3" x2="592" y2="172.3"/>
+      <line class="gr" x1="56" y1="134.2" x2="592" y2="134.2"/>
+      <line class="gr" x1="56" y1="96.2" x2="592" y2="96.2"/>
+      <line class="gr" x1="56" y1="58.1" x2="592" y2="58.1"/>
+      <line class="gr" x1="56" y1="20.0" x2="592" y2="20.0"/>
+      <line class="ax" x1="56" y1="20" x2="56" y2="258"/>
+      <line class="ax" x1="56" y1="172.3" x2="592" y2="172.3"/>
+      <text class="mt" x="56.0" y="273" text-anchor="middle">0</text>
+      <text class="mt" x="132.6" y="273" text-anchor="middle">2</text>
+      <text class="mt" x="209.1" y="273" text-anchor="middle">4</text>
+      <text class="mt" x="285.7" y="273" text-anchor="middle">6</text>
+      <text class="mt" x="362.3" y="273" text-anchor="middle">8</text>
+      <text class="mt" x="438.9" y="273" text-anchor="middle">10</text>
+      <text class="mt" x="515.4" y="273" text-anchor="middle">12</text>
+      <text class="mt" x="592.0" y="273" text-anchor="middle">14</text>
+      <text class="mt" x="49" y="252.0" text-anchor="end">−0,4</text>
+      <text class="mt" x="49" y="175.8" text-anchor="end">0,0</text>
+      <text class="mt" x="49" y="99.7" text-anchor="end">0,4</text>
+      <text class="mt" x="49" y="23.5" text-anchor="end">0,8</text>
+      <text class="lbs" x="324" y="291" text-anchor="middle">pH</text>
+      <text class="lbs" x="14" y="139" text-anchor="middle" transform="rotate(-90 14 139)">E en volts</text>
+      <path class="fr2" d="M56.0 119.0 L170.9 119.0"/>
+      <path class="fr2" d="M170.9 119.0 L247.4 96.2"/>
+      <path class="fr2" d="M247.4 96.2 L247.4 20.0"/>
+      <path class="fr2" d="M170.9 119.0 L592.0 244.7"/>
+      <path class="fr2" d="M247.4 96.2 L592.0 199.0"/>
+      <circle cx="170.9" cy="119.0" r="3" style="fill:var(--acc)"/>
+      <circle cx="247.4" cy="96.2" r="3" style="fill:var(--acc)"/>
+      <text class="lb" x="164.9" y="111.0" text-anchor="end" style="fill:var(--acc);font-weight:600">A (3 ; 0,28)</text>
+      <text class="lb" x="254.4" y="89.2" style="fill:var(--acc);font-weight:600">B (5 ; 0,40)</text>
+      <path class="wl" d="M56.0 172.3 L343.1 258.0"/>
+      <text class="mt" x="186.2" y="197.1" style="fill:var(--rd)">H⁺ / H₂</text>
+      <text class="sp" x="101.9" y="58.1" text-anchor="middle">Cu²⁺</text>
+      <text class="sp" x="423.5" y="58.1" text-anchor="middle">Cu(OH)₂ solide</text>
+      <text class="sp" x="113.4" y="214.2" text-anchor="middle">Cu solide</text>
+      <text class="sp" x="423.5" y="160.9" text-anchor="middle">Cu₂O solide</text>
+    </svg>
+          <p class="cap"><b>Le diagramme du cuivre, redessiné à partir du corrigé.</b> La frontière <span class="f">A → B</span> <b>monte</b> — c'est celle dont le coefficient directeur vaut +0,06. La droite bleue est celle du couple de l'eau : elle reste sous le domaine du cuivre métallique, donc pas de corrosion.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="exo">
+      <h3><span class="n4">Données</span>du sujet 2022</h3>
+      <div class="tw"><table class="tab">
+        <tr><th>Couple</th><td><span class="f">H<sup>+</sup>/H<sub>2</sub><span class="st">(g)</span></span></td><td><span class="f">Cu<sup>2+</sup>/Cu<sub>2</sub>O<span class="st">(s)</span></span></td><td><span class="f">Cu<sup>2+</sup>/Cu<span class="st">(s)</span></span></td><td><span class="f">Fe<sup>3+</sup>/Fe<sup>2+</sup></span></td><td><span class="f">Ag<sup>+</sup>/Ag<span class="st">(s)</span></span></td><td><span class="f">MnO<sub>2</sub><span class="st">(s)</span>/Mn<sup>3+</sup></span></td><td><span class="f">Br<sub>2</sub>/Br<sup>−</sup></span></td><td><span class="f">Au<sup>3+</sup>/Au<span class="st">(s)</span></span></td></tr>
+        <tr><th>E° en volts</th><td class="num">0,00</td><td class="num">0,22</td><td class="num">0,34</td><td class="num">0,77</td><td class="num">0,80</td><td class="num">0,95</td><td class="num">1,07</td><td class="num">1,52</td></tr>
+      </table></div>
+      <p class="don">à T = 298 K : <span class="f"><span class="fr"><span class="n">R·T</span><span class="d">F</span></span> <span class="op">Ln</span> x = 0,06 <span class="op">log</span> x</span><br>
+      <span class="f">Cu(OH)<sub>2</sub><span class="st">(s)</span> ⟶ Cu<sup>2+</sup> + 2 OH<sup>−</sup></span> &nbsp; K<sub>s</sub> = 10<sup>−20</sup></p>
+    </div>
+  </div>
+
+  <h2>Ce que quatre années disent de la cinquième</h2>
+  <div class="def"><span class="k">Le noyau dur</span>
+    <p>Quatre choses tombent <b>les quatre années</b> : les nombres d'oxydation, l'équilibrage en milieu acide puis basique, « ces espèces peuvent-elles réagir », et la loi de Nernst. Elles représentent, à elles seules, la moitié des points. Ce sont les gestes <b>2a</b>, <b>2b</b>, <b>2c</b>, <b>2d</b> et <b>4</b> du parcours.</p></div>
+  <div class="def"><span class="k">Le reste, à ne pas négliger pour autant</span>
+    <p>Le diagramme E-pH est absent en 2025 mais présent les trois années d'avant, et c'est l'exercice le plus long. Le schéma de pile et la fem sautent en 2024 mais sont là les trois autres fois. Aucun des deux n'est sûr, aucun des deux n'est improbable.</p></div>
+  <div class="piege"><span class="k">Trois choses vues nulle part ailleurs que dans les annales</span>
+    <p><b>Le terme de concentration ne s'annule pas toujours.</b> En 2022, l'oxydant est solide et le réducteur dissous : le log garde une seule concentration, qui apporte +0,12 V.</p>
+    <p><b>Une frontière peut monter.</b> En 2022 encore, les <span class="f">H<sup>+</sup></span> de la demi-équation sont du côté du réducteur : le coefficient directeur vaut <b>+0,06</b>.</p>
+    <p><b>Deux espèces au même n.o. ne forment pas un couple rédox.</b> En 2023, <span class="f">Cr<sub>2</sub>O<sub>7</sub><sup>2−</sup></span> et <span class="f">CrO<sub>4</sub><sup>2−</sup></span> sont toutes deux à +VI : elles sont séparées par une frontière <b>acide-base</b>, pas rédox.</p></div>
 </article>
 
   </main>
@@ -2391,6 +3115,11 @@ input[type=range]{width:100%;accent-color:var(--acc);margin:0}
               <input type="number" id="eph-n" step="1" min="1" value="1" aria-label="Nombre d'électrons"></div>
             <div class="fld" style="margin-top:9px"><span class="k">nombre de protons</span>
               <input type="number" id="eph-h" step="1" min="0" value="3" aria-label="Nombre de protons"></div>
+            <div class="fld" style="margin-top:9px"><span class="k">les protons sont du côté</span>
+              <select id="eph-cote" aria-label="Côté des protons">
+                <option value="ox">de l'oxydant — la pente descend</option>
+                <option value="rd">du réducteur — la pente monte</option>
+              </select></div>
           </div>
 
           <div class="fld" id="eph-man" hidden><span class="k">pente</span>
@@ -2416,7 +3145,7 @@ input[type=range]{width:100%;accent-color:var(--acc);margin:0}
           <span class="k">Compare ta réponse au calcul en cours</span>
           <p class="hint2">Le calcul repris est celui de l'onglet <b>Calculateur Nernst</b>, avec ses valeurs actuelles.</p>
           <div class="fld"><span class="k">ta réponse, en volts</span>
-            <input type="number" id="ti-rep" step="0.001" placeholder="par exemple −0,10" aria-label="Ta réponse en volts"></div>
+            <input type="number" id="ti-rep" step="0.001" placeholder="par exemple −0,11" aria-label="Ta réponse en volts"></div>
           <p class="hint2">Si l'écart n'est pas nul, l'outil cherche <b>laquelle des six erreurs classiques</b> donne exactement ton nombre.</p>
         </div>
         <div class="tool-out" id="ti-out"></div>
@@ -2449,7 +3178,7 @@ var segs=$('#segs'), pos=$('#pos'), themeBtn=$('#theme'), navlist=$('#navlist'),
 
 /* ── état persisté ────────────────────────────────────────────────── */
 var LS='redox.v1';
-var S={theme:'auto', step:0, mode:'fil', tool:null, cp:{}, tools:{}, entr:{}};
+var S={theme:'auto', step:0, mode:'fil', tool:null, cp:{}, tools:{}, entr:{}, ann:'2025'};
 try{
   var raw=localStorage.getItem(LS);
   if(raw){ var o=JSON.parse(raw); for(var k in S){ if(o[k]!=null) S[k]=o[k]; } }
@@ -2951,9 +3680,9 @@ var ephFig=$('#eph-fig'), ephRead=$('#eph-read'), ephN=$('#eph-n'), ephH=$('#eph
     ephM1=$('#eph-m1'), ephM2=$('#eph-m2'), ephAuto=$('#eph-auto'), ephMan=$('#eph-man');
 var ephMode='auto';
 function ephPente(){
-  return ephMode==='auto'
-    ? -0.06*Math.max(0,+ephH.value||0)/Math.max(1,+ephN.value||1)
-    : (+ephA.value||0);
+  if(ephMode!=='auto') return (+ephA.value||0);
+  var sgn = ($('#eph-cote').value==='rd') ? 1 : -1;   /* le signe suit le côté des protons */
+  return sgn*0.06*Math.max(0,+ephH.value||0)/Math.max(1,+ephN.value||1);
 }
 function ephDraw(){
   var a=ephPente(), b=+ephB.value||0;
@@ -2995,11 +3724,11 @@ function ephDraw(){
     + '<tr><td class="sm">E en volts</td><td class="num">'+fv(e0v)+'</td><td class="num">'+fv(b+7*a)+'</td><td class="num">'+fv(e14)+'</td></tr>'
     + '</table></div>'
     + (ephMode==='auto'
-       ? '<p class="tool-note"><b>La pente n\'a pas été calculée</b>, elle a été lue : − 0,06 × '+Math.max(0,+ephH.value||0)
+       ? '<p class="tool-note"><b>La pente n\'a pas été calculée</b>, elle a été lue : '+(a>0?'+':'−')+' 0,06 × '+Math.max(0,+ephH.value||0)
          +' ÷ '+Math.max(1,+ephN.value||1)+' = '+fr(a,4)+'. Deux nombres sur la demi-équation, rien d\'autre. '+'Sur le diagramme, une vraie frontière <b>s\'arrête aux bornes de son domaine</b> : ici le trait va d\'un bout à l\'autre pour que tu puisses le lire.</p>'
        : '')
     + (hors ? '<p class="tool-note"><b>La droite sort du cadre.</b> Les deux points lus restent justes ; c\'est le tracé qui est coupé.</p>' : '');
-  S.tools.eph={mode:ephMode,n:ephN.value,h:ephH.value,a:ephA.value,b:ephB.value,fer:ephFer.checked,eau:ephEau.checked};
+  S.tools.eph={mode:ephMode,n:ephN.value,h:ephH.value,cote:$('#eph-cote').value,a:ephA.value,b:ephB.value,fer:ephFer.checked,eau:ephEau.checked};
   save();
 }
 function ephSetMode(m){
@@ -3007,12 +3736,13 @@ function ephSetMode(m){
   ephM1.setAttribute('aria-pressed', m==='auto'?'true':'false');
   ephM2.setAttribute('aria-pressed', m==='auto'?'false':'true');
   ephAuto.hidden = (m!=='auto'); ephMan.hidden = (m==='auto');
-  if(m==='man') ephA.value = fr(-0.06*Math.max(0,+ephH.value||0)/Math.max(1,+ephN.value||1),4).replace('−','-').replace(',','.');
+  if(m==='man') ephA.value = String(Math.round(ephPente()*1e6)/1e6);
   ephDraw();
 }
 ephM1.addEventListener('click',function(){ ephSetMode('auto'); });
 ephM2.addEventListener('click',function(){ ephSetMode('man'); });
 [ephN,ephH,ephA,ephB].forEach(function(el){ el.addEventListener('input',ephDraw); });
+$('#eph-cote').addEventListener('change',ephDraw);
 [ephFer,ephEau].forEach(function(el){ el.addEventListener('change',ephDraw); });
 
 /* ═══ outil 4 · vérifier mon calcul ════════════════════════════════ */
@@ -3499,6 +4229,7 @@ function toolsRestore(){
   if(t.eph){ var e=t.eph;
     if(e.n!=null) ephN.value=e.n; if(e.h!=null) ephH.value=e.h;
     if(e.a!=null) ephA.value=e.a; if(e.b!=null) ephB.value=e.b;
+    if(e.cote) $('#eph-cote').value=e.cote;
     ephFer.checked=!!e.fer; ephEau.checked=!!e.eau;
     ephMode = e.mode==='man' ? 'man' : 'auto';
   }
@@ -3512,6 +4243,56 @@ function toolsRestore(){
    Rien du site ne s'en sert.                                            */
 window.__redox = {COUPLES:COUPLES, BYKEY:BYKEY, EQUIL:EQUIL, NOX:NOX, DISM:DISM,
                   METAUX:METAUX, GEN:GEN, demiEq:demiEq, nernst:nernst, fr:fr, fv:fv, plainF:plainF};
+
+/* ═══ les annales : navigation, corrections repliées, chronomètre ═══ */
+var annBtns=$$('.ann-nav button'), anns=$$('.ann');
+annBtns.forEach(function(b){
+  b.addEventListener('click',function(){
+    annBtns.forEach(function(x){ x.setAttribute('aria-pressed', x===b?'true':'false'); });
+    anns.forEach(function(a){ a.hidden = (a.dataset.ann!==b.dataset.ann); });
+    S.ann=b.dataset.ann; save();
+  });
+});
+if(S.ann){ var b0=document.querySelector('.ann-nav button[data-ann="'+S.ann+'"]'); if(b0) b0.click(); }
+
+$$('.corr-btn').forEach(function(b){
+  var box=document.getElementById(b.getAttribute('aria-controls'));
+  if(!box) return;
+  b.addEventListener('click',function(){
+    var ouvre=box.hidden;
+    box.hidden=!ouvre;
+    b.setAttribute('aria-expanded', ouvre?'true':'false');
+    b.textContent = ouvre ? 'replier la correction' : 'voir la correction';
+  });
+});
+
+var chrT=$('#chr-t'), chrGo=$('#chr-go'), chrRz=$('#chr-rz'), chrLb=$('#chr-lb'), chrRail=$('#chr-rail');
+var CHR_TOT=3600, chrLeft=CHR_TOT, chrTick=null;
+function chrFmt(x){ x=Math.max(0,Math.round(x));
+  var m=Math.floor(x/60), sec=x%60;
+  return (m<10?'0':'')+m+':'+(sec<10?'0':'')+sec; }
+function chrPaint(){
+  var t=chrFmt(chrLeft), fini=(chrLeft<=0);
+  chrT.textContent=t; chrT.classList.toggle('fini',fini);
+  chrRail.textContent=t;
+  chrRail.hidden = (!chrTick && chrLeft===CHR_TOT);
+  chrRail.style.color = fini ? 'var(--mark)' : 'var(--acc)';
+  chrGo.textContent = fini ? 'terminé' : (chrTick ? 'mettre en pause' : (chrLeft===CHR_TOT ? 'démarrer' : 'reprendre'));
+  chrLb.textContent = fini ? 'temps écoulé — compare ta copie aux corrections'
+    : (chrTick ? 'le compte à rebours suit, même si tu changes d\'étape'
+               : 'une heure, comme le jour du contrôle');
+}
+function chrStop(){ if(chrTick){ clearInterval(chrTick); chrTick=null; } }
+chrGo.addEventListener('click',function(){
+  if(chrLeft<=0) return;
+  if(chrTick){ chrStop(); }
+  else { chrTick=setInterval(function(){
+           chrLeft--; if(chrLeft<=0){ chrLeft=0; chrStop(); } chrPaint();
+         },1000); }
+  chrPaint();
+});
+chrRz.addEventListener('click',function(){ chrStop(); chrLeft=CHR_TOT; chrPaint(); });
+chrPaint();
 
 /* ── démarrage ────────────────────────────────────────────────────── */
 setMode(S.mode==='gestes'?'gestes':'fil');

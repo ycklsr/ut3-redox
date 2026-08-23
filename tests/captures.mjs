@@ -71,6 +71,11 @@ await shot('26-geste-sombre', { hash: 'e7', scheme: 'dark', after: async p => { 
 await shot('27-paillasse-ner',{ hash: 'e12', after: p => p.click('.dock .tab[data-tool="ner"]') });
 await shot('28-paillasse-eph',{ hash: 'e14', after: p => p.click('.dock .tab[data-tool="eph"]') });
 
+await shot('29-annales',      { hash: 'e16' });
+await shot('30-annale-corr',  { hash: 'e16', after: async p => { await p.click('.ann-nav button[data-ann="2022"]');
+                                const btns = await p.$$('.ann[data-ann="2022"] .corr-btn'); await btns[4].click();
+                                await p.evaluate(() => document.querySelector('#c22-5 .fig').scrollIntoView()); } });
+
 await b.close();
 srv.close();
 console.log('captures dans ' + OUT);

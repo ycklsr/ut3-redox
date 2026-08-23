@@ -211,6 +211,8 @@ test('chaque figure a une aire de dessin et une légende', async () => {
   const { ctx, page } = await open();
   const bilan = await page.evaluate(async () => {
     const out = [];
+    /* une figure peut vivre dans un bloc replié : on ouvre tout pour mesurer */
+    for (const el of document.querySelectorAll('.ann[hidden], .corr-box[hidden]')) el.hidden = false;
     for (const f of document.querySelectorAll('.fig')) {
       const st = f.closest('article.step');
       const cache = st.hidden; st.hidden = false;
