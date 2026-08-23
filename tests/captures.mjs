@@ -76,6 +76,11 @@ await shot('30-annale-corr',  { hash: 'e16', after: async p => { await p.click('
                                 const btns = await p.$$('.ann[data-ann="2022"] .corr-btn'); await btns[4].click();
                                 await p.evaluate(() => document.querySelector('#c22-5 .fig').scrollIntoView()); } });
 
+await shot('31-controle',     { hash: 'e14', after: async p => { await p.locator('#e14 .cp').nth(1).click();
+                                const q = p.locator('#e14 .q:not([hidden])').first();
+                                await q.locator('.opt[data-ok="0"]').first().click();
+                                await q.elementHandle().then(e => e.scrollIntoViewIfNeeded()); } });
+
 await b.close();
 srv.close();
 console.log('captures dans ' + OUT);

@@ -392,7 +392,18 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
    exercice, corrections repliées par défaut, avec un chronomètre d'une heure
    visible depuis n'importe quelle étape. Un tableau ouvre l'étape : ce qui
    tombe, année par année.
-7. **Les points de contrôle** et les tests de non-régression.
+7. ~~**Les points de contrôle et les tests de non-régression**~~ — **fait.**
+   **43 points de contrôle**, au moins un par étape, chacun déclarant sa forme
+   dans `data-forme` parmi les cinq admises. Le test exigé par la convention 6
+   vit dans `tests/controle.test.mjs` : il compare la bonne réponse et les
+   mauvaises au texte qui précède la pastille, et refuse la question si la
+   bonne y est présente à 60 % ou plus quand aucune mauvaise n'atteint 30 %.
+   Un second test **vérifie la garde elle-même** en lui glissant une question
+   de lecture fabriquée : elle doit l'attraper.
+
+   La garde a refusé **deux** de mes propres questions à la première
+   exécution — les deux recopiaient le vocabulaire du paragraphe voisin.
+   Elles ont été réécrites.
 
 ---
 
@@ -450,15 +461,38 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 
 ---
 
+## 10 bis. L'état des tests
+
+**63 tests**, répartis en cinq fichiers, tous branchés en `pre-commit` et en CI :
+
+| Fichier | Ce qu'il garde |
+|---|---|
+| `squelette.test.mjs` | le fil, le thème, l'impression, la casse chimique, les débordements de 375 à 1280 px, le contraste sur fond accent, l'intégrité des figures |
+| `paillasse.test.mjs` | les quatre outils, avec les valeurs de contrôle des exercices 12 et 13 et du sujet 2024 |
+| `gestes.test.mjs` | les dix entraîneurs, plus les bilans de charge, d'oxygène et d'hydrogène des douze demi-équations et les vingt n.o., recopiés d'une vérification à la main |
+| `annales.test.mjs` | les quatre annales, le chronomètre, et les valeurs des quatre corrigés officiels |
+| `controle.test.mjs` | la couverture, les formes déclarées, **la garde de la convention 6**, et la garde de la garde |
+
+`npm run captures` rend 31 vues clair/sombre pour la relecture à l'œil.
+
+---
+
 ## 11. Pour reprendre
 
-> Lis `PLAN.md`, ouvre `redox.html`, et prends le **point 7**, le dernier :
-> les points de contrôle. Le mécanisme existe depuis le point 1 et trois
-> questions modèles vivent dans l'étape 12 ; il reste à en écrire pour les seize
-> autres étapes, et à **écrire le test automatique** exigé par la convention 6 —
-> celui qui refuse toute question dont la bonne réponse est la seule des options
-> à figurer dans le paragraphe qui la précède.
+> **L'ordre des travaux est terminé.** Les sept points sont faits, le site
+> couvre tout le dossier, et 63 tests le gardent.
 >
-> **La prise de test** `window.__redox` expose les tables et les fonctions pures
-> (`COUPLES`, `EQUIL`, `NOX`, `GEN`, `nernst`, `demiEq`, `fr`, `fv`, `plainF`) :
-> c'est par là que les tests vérifient la chimie sans passer par l'interface.
+> S'il faut y revenir, trois choses valent d'être sues avant de toucher au
+> fichier :
+>
+> - **Les conventions du §7 ne sont pas des préférences**, ce sont des tests.
+>   La casse chimique, les débordements, le contraste, la garde des points de
+>   contrôle : toute infraction fait échouer `npm test` et bloque le commit.
+> - **La prise de test** `window.__redox` expose les tables et les fonctions
+>   pures (`COUPLES`, `EQUIL`, `NOX`, `GEN`, `nernst`, `demiEq`, `fr`, `fv`,
+>   `plainF`) : c'est par là que les tests vérifient la chimie sans passer par
+>   l'interface. Rien du site ne s'en sert.
+> - **`npm run captures` avant de conclure.** Les tests vérifient la mécanique,
+>   pas l'allure. Trois bugs de ce projet — le γ qui ne se dessinait pas, le
+>   proton compté deux fois, les étiquettes superposées — n'ont été trouvés
+>   qu'à l'œil.
