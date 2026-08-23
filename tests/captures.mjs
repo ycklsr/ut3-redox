@@ -64,6 +64,13 @@ await shot('18-corrosion',     { hash: 'e15', after: p => p.evaluate(() => { doc
 await shot('19-mobile-eph',    { hash: 'e14', w: 390, h: 844, after: p => p.evaluate(() => { document.getElementById('read').scrollTop = 780; }) });
 await shot('20-mobile-pile',   { hash: 'e7', w: 390, h: 844, after: p => p.evaluate(() => { document.getElementById('read').scrollTop = 400; }) });
 
+await shot('25-geste',        { hash: 'e4', after: async p => { await p.click('.go[data-entr="2b"]');
+                                await p.evaluate(() => document.querySelector('.entr[data-entr-for="2b"]').scrollIntoView()); } });
+await shot('26-geste-sombre', { hash: 'e7', scheme: 'dark', after: async p => { await p.click('.go[data-entr="3a"]');
+                                await p.evaluate(() => document.querySelector('.entr[data-entr-for="3a"]').scrollIntoView()); } });
+await shot('27-paillasse-ner',{ hash: 'e12', after: p => p.click('.dock .tab[data-tool="ner"]') });
+await shot('28-paillasse-eph',{ hash: 'e14', after: p => p.click('.dock .tab[data-tool="eph"]') });
+
 await b.close();
 srv.close();
 console.log('captures dans ' + OUT);

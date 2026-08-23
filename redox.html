@@ -318,6 +318,40 @@ table.tab{border-collapse:collapse;margin:0;font-size:14.5px;width:100%;min-widt
 .geste.pending{background:none;border-left-style:dashed}
 .geste.pending .att{font-size:12.5px;color:var(--mut);line-height:1.5}
 
+/* ── l'entraîneur d'un geste ───────────────────────────────────────── */
+.geste .go[data-entr]{cursor:pointer;border:0}
+.geste .go[data-entr]:hover{filter:brightness(1.12)}
+.entr{border-top:1px solid var(--line);margin-top:13px;padding-top:12px;font-family:var(--sans)}
+.entr[hidden]{display:none}
+.entr .hd2{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:9px}
+.entr .hd2 .k{color:var(--acc)}
+.entr .hd2 .sc{margin-left:auto;font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;color:var(--mut)}
+.entr .q3{font-family:var(--serif);font-size:15.5px;line-height:1.55;margin:0 0 11px;text-wrap:pretty}
+.entr .q3 b{font-weight:600}
+.ent-fields{display:flex;flex-wrap:wrap;gap:11px 16px;align-items:flex-end;margin-bottom:11px}
+.ent-fields .f2{display:flex;flex-direction:column;gap:3px;min-width:0}
+.ent-fields .f2 label{font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;
+                      text-transform:uppercase;color:var(--mut);font-weight:600}
+.ent-fields input[type=number]{width:6.4em}
+.ent-fields select{width:auto;min-width:9em}
+.entr .btn{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;
+  background:var(--acc);color:var(--on-acc);border-radius:99px;padding:5px 13px;cursor:pointer}
+.entr .btn.sec{background:none;color:var(--mut);border:1px solid var(--line)}
+.entr .btn.sec:hover{color:var(--acc);border-color:var(--acc)}
+.entr .corr{margin-top:12px;border-left:2px solid var(--line);padding-left:12px;font-size:13px;line-height:1.55}
+.entr .corr[hidden]{display:none}
+.entr .corr.bon{border-color:var(--ok)}
+.entr .corr.mauvais{border-color:var(--mark)}
+.entr .corr .t3{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+                font-weight:600;display:block;margin-bottom:5px}
+.entr .corr.bon .t3{color:var(--ok)}
+.entr .corr.mauvais .t3{color:var(--mark)}
+.entr .corr .eqs{margin:9px 0 0;max-width:none}
+.entr .corr p{margin:0 0 6px;max-width:none;font-family:var(--sans)}
+.entr .corr p:last-child{margin-bottom:0}
+.ent-fields .bad2 input,.ent-fields .bad2 select{border-color:var(--mark)}
+.ent-fields .good2 input,.ent-fields .good2 select{border-color:var(--ok)}
+
 /* ── points de contrôle ─────────────────────────────────────────── */
 .cp{font-family:var(--mono);font-size:9px;letter-spacing:.09em;text-transform:uppercase;font-weight:600;
     color:var(--mut);border:1px solid var(--line);border-radius:99px;padding:2px 8px 3px;
@@ -902,10 +936,18 @@ input[type=range]{width:100%;accent-color:var(--acc);margin:0}
     <p><b>C'est le dichlore qui s'est réduit</b> : il a capté les deux électrons cédés par le zinc. Il joue donc le rôle d'oxydant.</p>
   </div>
 
-  <div class="geste pending" data-geste="1" data-gt="Lire un couple et écrire sa demi-équation" data-yr="tombé chaque année depuis 2022">
+  <div class="geste" data-geste="1" data-gt="Lire un couple et écrire sa demi-équation" data-yr="tombé chaque année depuis 2022">
     <span class="k">Geste 1 sur 5 — posé ici, dès que le cours l'a rendu exécutable <span class="y">tombé chaque année depuis 2022</span></span>
     <h3>Lire un couple et écrire sa demi-équation</h3>
-    <p class="att">La recette numérotée, le piège et l'entraîneur seront écrits ici — point 5 de l'ordre des travaux.</p>
+    <ol>
+      <li><b>Repère qui a le nombre d'oxydation le plus élevé</b> : c'est l'oxydant.</li>
+      <li><b>Écris le couple avec l'oxydant en premier</b> — <span class="f">Ox / Red</span>, jamais l'inverse.</li>
+      <li><b>Recopie-le en demi-équation, dans le sens de la réduction</b> : <span class="f">Ox + n e<sup>−</sup> = Red</span>.</li>
+      <li><b>Compte les électrons</b> par la différence de n.o. de l'élément qui change.</li>
+    </ol>
+    <div class="piege"><b>Le piège —</b> L'oxydant n'est pas celui qui s'oxyde. Il <b>capte</b> les électrons, donc il <b>se réduit</b> — et c'est l'autre qu'il oxyde. Chaque espèce fait à sa voisine l'inverse de ce qu'elle subit.</div>
+    <button class="go" data-entr="1" type="button">S'entraîner — tirage au hasard</button>
+    <div class="entr" data-entr-for="1" hidden></div>
   </div>
 </article>
 
@@ -966,10 +1008,18 @@ input[type=range]{width:100%;accent-color:var(--acc);margin:0}
   <div class="piege"><span class="k">Les deux cas qui font perdre des points</span>
     <p>L'oxygène vaut <b>−II</b> partout, <em>sauf</em> dans les peroxydes comme <span class="f">H<sub>2</sub>O<sub>2</sub></span> où il vaut <b>−I</b>. Et un halogène vaut <b>−I</b> seulement s'il n'y a <b>pas d'oxygène</b> dans le composé : dans <span class="f">ClO<sub>4</sub><sup>−</sup></span> le chlore vaut +VII, pas −I.</p></div>
 
-  <div class="geste pending" data-geste="2a" data-gt="Poser les nombres d'oxydation" data-yr="tombé chaque année depuis 2022">
+  <div class="geste" data-geste="2a" data-gt="Poser les nombres d'oxydation" data-yr="tombé chaque année depuis 2022">
     <span class="k">Geste 2a — posé ici, dès que le cours l'a rendu exécutable <span class="y">tombé chaque année depuis 2022</span></span>
     <h3>Poser les nombres d'oxydation</h3>
-    <p class="att">La recette numérotée, le piège et l'entraîneur seront écrits ici — point 5 de l'ordre des travaux.</p>
+    <ol>
+      <li><b>Applique les quatre règles dans l'ordre</b> : corps simple, oxygène, hydrogène, halogène.</li>
+      <li><b>Note les n.o. que tu connais</b> et laisse l'inconnu en lettre.</li>
+      <li><b>Écris que la somme des n.o. vaut la charge de l'espèce</b> — nulle si elle est neutre.</li>
+      <li><b>Résous l'équation à une inconnue</b>, et repasse la réponse en chiffres romains.</li>
+    </ol>
+    <div class="piege"><b>Le piège —</b> L'oxygène vaut <b>−II partout, sauf dans les peroxydes</b> où il vaut −I. Et un halogène vaut −I <b>seulement s'il n'y a pas d'oxygène</b> : dans <span class="f">ClO<sub>4</sub><sup>−</sup></span> le chlore est à +VII.</div>
+    <button class="go" data-entr="2a" type="button">S'entraîner — tirage au hasard</button>
+    <div class="entr" data-entr-for="2a" hidden></div>
   </div>
 </article>
 
@@ -1074,10 +1124,19 @@ input[type=range]{width:100%;accent-color:var(--acc);margin:0}
   <div class="piege"><span class="k">Le piège de l'ordre</span>
     <p>Les cinq temps ne sont pas interchangeables. Si tu places les électrons <b>avant</b> les <span class="f">H<sup>+</sup></span>, le bilan des charges est faux et tu trouveras un <i>n</i> qui ne correspondra à aucune différence de n.o. Les électrons se posent <b>en dernier</b>, toujours.</p></div>
 
-  <div class="geste pending" data-geste="2b" data-gt="Équilibrer une demi-équation en milieu acide" data-yr="tombé chaque année depuis 2022">
+  <div class="geste" data-geste="2b" data-gt="Équilibrer une demi-équation en milieu acide" data-yr="tombé chaque année depuis 2022">
     <span class="k">Geste 2b — posé ici, dès que le cours l'a rendu exécutable <span class="y">tombé chaque année depuis 2022</span></span>
     <h3>Équilibrer une demi-équation en milieu acide</h3>
-    <p class="att">La recette numérotée, le piège et l'entraîneur seront écrits ici — point 5 de l'ordre des travaux.</p>
+    <ol>
+      <li><b>Écris dans le sens conventionnel</b> : <span class="f">Ox + n e<sup>−</sup> = Red</span>.</li>
+      <li><b>Ajuste les éléments autres que H et O</b>.</li>
+      <li><b>Ajuste l'oxygène</b> en ajoutant des <span class="f">H<sub>2</sub>O</span> du côté qui en manque.</li>
+      <li><b>Ajuste l'hydrogène</b> en ajoutant des <span class="f">H<sup>+</sup></span> en face.</li>
+      <li><b>Équilibre les charges</b> avec les électrons, puis <b>vérifie par la différence de n.o.</b></li>
+    </ol>
+    <div class="piege"><b>Le piège —</b> Les électrons se posent <b>en dernier</b>. Si tu les places avant les <span class="f">H<sup>+</sup></span>, le bilan des charges est faux et tu trouves un <i>n</i> qui ne correspond à aucune différence de n.o.</div>
+    <button class="go" data-entr="2b" type="button">S'entraîner — tirage au hasard</button>
+    <div class="entr" data-entr-for="2b" hidden></div>
   </div>
 </article>
 
@@ -1191,10 +1250,19 @@ input[type=range]{width:100%;accent-color:var(--acc);margin:0}
     <p style="font-size:14px;color:var(--mut)">Contrôle : charges <span class="f">−2 + 5 = +3</span> à gauche, <span class="f">+6 − 3 = +3</span> à droite. Oxygènes : <span class="f">7 + 6 = 13</span> et <span class="f">1 + 12 = 13</span>. Hydrogènes : <span class="f">5</span> et <span class="f">2 + 3 = 5</span>.</p>
   </div>
 
-  <div class="geste pending" data-geste="2c" data-gt="Passer une équation en milieu basique" data-yr="tombé chaque année depuis 2022">
+  <div class="geste" data-geste="2c" data-gt="Passer une équation en milieu basique" data-yr="tombé chaque année depuis 2022">
     <span class="k">Geste 2c — posé ici, dès que le cours l'a rendu exécutable <span class="y">tombé chaque année depuis 2022</span></span>
     <h3>Passer une équation en milieu basique</h3>
-    <p class="att">La recette numérotée, le piège et l'entraîneur seront écrits ici — point 5 de l'ordre des travaux.</p>
+    <ol>
+      <li><b>Équilibre d'abord en milieu acide</b>, entièrement. Le milieu basique est une opération de fin.</li>
+      <li><b>Compte les <span class="f">H<sup>+</sup></span></b> de l'équation obtenue.</li>
+      <li><b>Ajoute autant de <span class="f">OH<sup>−</sup></span> des deux côtés</b>.</li>
+      <li><b>Recombine</b> <span class="f">H<sup>+</sup> + OH<sup>−</sup></span> en <span class="f">H<sub>2</sub>O</span>, du côté où ils se rencontrent.</li>
+      <li><b>Simplifie</b> les <span class="f">H<sub>2</sub>O</span> présents des deux côtés.</li>
+    </ol>
+    <div class="piege"><b>Le piège —</b> <b>Des deux côtés.</b> Ajouter les <span class="f">OH<sup>−</sup></span> d'un seul côté rend l'équation fausse, et le contrôle des charges le montre aussitôt. À la fin, il ne doit plus rester <b>aucun</b> <span class="f">H<sup>+</sup></span>.</div>
+    <button class="go" data-entr="2c" type="button">S'entraîner — tirage au hasard</button>
+    <div class="entr" data-entr-for="2c" hidden></div>
   </div>
 </article>
 
@@ -1251,10 +1319,18 @@ input[type=range]{width:100%;accent-color:var(--acc);margin:0}
   <div class="def"><span class="k">La réaction inverse porte un nom</span>
     <p>Quand deux espèces d'un même élément, l'une plus oxydée et l'autre plus réduite, se rencontrent pour donner une espèce intermédiaire, on parle de <b>médiamutation</b>. C'est la dismutation lue à l'envers.</p></div>
 
-  <div class="geste pending" data-geste="1b" data-gt="Reconnaître et écrire une dismutation" data-yr="tombé chaque année depuis 2022">
+  <div class="geste" data-geste="1b" data-gt="Reconnaître et écrire une dismutation" data-yr="tombé chaque année depuis 2022">
     <span class="k">Geste 1 — cas particulier, posé ici <span class="y">tombé chaque année depuis 2022</span></span>
     <h3>Reconnaître et écrire une dismutation</h3>
-    <p class="att">La recette numérotée, le piège et l'entraîneur seront écrits ici — point 5 de l'ordre des travaux.</p>
+    <ol>
+      <li><b>Repère l'espèce qui apparaît dans deux couples</b>, une fois comme oxydant, une fois comme réducteur.</li>
+      <li><b>Compare les deux E°</b> : la dismutation n'a lieu que si le couple où elle est <b>oxydant</b> est le plus haut.</li>
+      <li><b>Écris les deux demi-équations</b>, l'une dans le sens de la réduction, l'autre dans celui de l'oxydation.</li>
+      <li><b>Additionne</b> : les protons et les électrons s'annulent. Il ne doit rester qu'un seul réactif.</li>
+    </ol>
+    <div class="piege"><b>Le piège —</b> Un n.o. intermédiaire rend la dismutation <b>possible</b>, pas certaine. C'est la comparaison des deux <span class="f">E°</span> qui décide, et elle seule : <span class="f">Fe<sup>2+</sup></span> est dans deux couples et ne se dismute pourtant pas.</div>
+    <button class="go" data-entr="1b" type="button">S'entraîner — tirage au hasard</button>
+    <div class="entr" data-entr-for="1b" hidden></div>
   </div>
 </article>
 
@@ -1364,10 +1440,19 @@ input[type=range]{width:100%;accent-color:var(--acc);margin:0}
     <p class="note">La <b>barre simple</b> marque une frontière entre deux phases — le métal et sa solution. La <b>double barre</b> marque la jonction assurée par le pont salin.</p>
   </div>
 
-  <div class="geste pending" data-geste="3a" data-gt="Annoter un schéma de pile" data-yr="tombé chaque année depuis 2022">
+  <div class="geste" data-geste="3a" data-gt="Annoter un schéma de pile" data-yr="tombé chaque année depuis 2022">
     <span class="k">Geste 3a — posé ici, dès que le cours l'a rendu exécutable <span class="y">tombé chaque année depuis 2022</span></span>
     <h3>Annoter un schéma de pile</h3>
-    <p class="att">La recette numérotée, le piège et l'entraîneur seront écrits ici — point 5 de l'ordre des travaux.</p>
+    <ol>
+      <li><b>Le couple au E° le plus bas donne l'anode</b> : c'est le meilleur réducteur, il cède ses électrons.</li>
+      <li><b>Anode = oxydation = pôle ⊖</b> ; cathode = réduction = pôle ⊕. Dans une pile, jamais l'inverse.</li>
+      <li><b>Les électrons vont de l'anode vers la cathode</b> dans le fil.</li>
+      <li><b>Le courant va en sens contraire</b> — c'est la convention, pas un choix.</li>
+      <li><b>Dans le pont salin</b> : les anions vers l'anode, les cations vers la cathode.</li>
+    </ol>
+    <div class="piege"><b>Le piège —</b> <b>Deux flèches, deux sens.</b> Une seule flèche sur un schéma de pile coûte des points, et deux flèches dans le même sens en coûtent davantage.</div>
+    <button class="go" data-entr="3a" type="button">S'entraîner — tirage au hasard</button>
+    <div class="entr" data-entr-for="3a" hidden></div>
   </div>
 </article>
 
@@ -1435,10 +1520,18 @@ input[type=range]{width:100%;accent-color:var(--acc);margin:0}
     <p class="note">C'est exactement la valeur affichée par le voltmètre du schéma de l'étape 7, dans les conditions standard. Le calcul et la mesure se rejoignent.</p>
   </div>
 
-  <div class="geste pending" data-geste="3b" data-gt="Calculer la fem et écrire la pile" data-yr="tombé chaque année depuis 2022">
+  <div class="geste" data-geste="3b" data-gt="Calculer la fem et écrire la pile" data-yr="tombé chaque année depuis 2022">
     <span class="k">Geste 3b — posé ici, dès que le cours l'a rendu exécutable <span class="y">tombé chaque année depuis 2022</span></span>
     <h3>Calculer la fem et écrire la pile symboliquement</h3>
-    <p class="att">La recette numérotée, le piège et l'entraîneur seront écrits ici — point 5 de l'ordre des travaux.</p>
+    <ol>
+      <li><b>Repère la cathode</b> : c'est le couple au <span class="f">E°</span> le plus élevé.</li>
+      <li><b>Applique</b> <span class="f">fem = E<sub>cathode</sub> − E<sub>anode</sub></span>.</li>
+      <li><b>Vérifie qu'elle est positive.</b> Si elle ne l'est pas, tu as interverti les rôles.</li>
+      <li><b>Écris la pile</b> : <span class="f">⊖ anode | son ion ‖ ion de la cathode | cathode ⊕</span>.</li>
+    </ol>
+    <div class="piege"><b>Le piège —</b> Une fem négative n'est <b>pas</b> une erreur de soustraction : c'est une erreur d'attribution des rôles. Ne change pas le signe, reprends le schéma.</div>
+    <button class="go" data-entr="3b" type="button">S'entraîner — tirage au hasard</button>
+    <div class="entr" data-entr-for="3b" hidden></div>
   </div>
 </article>
 
@@ -1660,7 +1753,8 @@ input[type=range]{width:100%;accent-color:var(--acc);margin:0}
       <li><b>Remplace et calcule</b> ; vérifie que <span class="f">E</span> reste dans le voisinage de <span class="f">E°</span>.</li>
     </ol>
     <div class="piege"><b>Le piège —</b> oublier que <span class="f">[H<sup>+</sup>]</span> est <i>dans</i> le log. Le terme en pH ne s'ajoute pas après coup : il en <b>sort</b>, avec le coefficient de la demi-équation.</div>
-    <button class="go" disabled>Entraîneur — point 5 de l'ordre des travaux</button>
+    <button class="go" data-entr="4" type="button">S'entraîner — tirage au hasard</button>
+    <div class="entr" data-entr-for="4" hidden></div>
   </div>
 
   <h2>D'où vient le <span class="f">0,06</span></h2>
@@ -1815,10 +1909,19 @@ input[type=range]{width:100%;accent-color:var(--acc);margin:0}
     </ol>
   </div>
 
-  <div class="geste pending" data-geste="2d" data-gt="Prévoir si une réaction se fait" data-yr="tombé chaque année depuis 2022">
+  <div class="geste" data-geste="2d" data-gt="Prévoir si une réaction se fait" data-yr="tombé chaque année depuis 2022">
     <span class="k">Geste 2d — posé ici, dès que le cours l'a rendu exécutable <span class="y">tombé chaque année depuis 2022</span></span>
     <h3>Prévoir si une réaction se fait, et dans quel sens</h3>
-    <p class="att">La recette numérotée, le piège et l'entraîneur seront écrits ici — point 5 de l'ordre des travaux.</p>
+    <ol>
+      <li><b>Identifie le couple de chaque espèce</b> donnée par l'énoncé.</li>
+      <li><b>Place les deux couples sur l'échelle</b>, l'oxydant à gauche, le réducteur à droite.</li>
+      <li><b>Trace le trajet</b> de l'oxydant du couple du haut vers le réducteur du couple du bas.</li>
+      <li><b>S'il descend, la réaction se fait</b> ; s'il devrait monter, elle ne se fait pas.</li>
+      <li><b>L'écart des E°</b> dit laquelle de deux réactions possibles est la plus favorisée.</li>
+    </ol>
+    <div class="piege"><b>Le piège —</b> La question porte sur <b>les deux espèces données</b>, pas sur les deux couples. Si l'énoncé te donne le <i>réducteur</i> du couple du haut et l'<i>oxydant</i> du couple du bas, la réponse est <b>non</b> — même si les deux couples, eux, pourraient réagir dans l'autre sens.</div>
+    <button class="go" data-entr="2d" type="button">S'entraîner — tirage au hasard</button>
+    <div class="entr" data-entr-for="2d" hidden></div>
   </div>
 </article>
 
@@ -2041,10 +2144,19 @@ input[type=range]{width:100%;accent-color:var(--acc);margin:0}
   <div class="piege"><span class="k">L'erreur qui fait rater le tracé entier</span>
     <p>Les frontières <b>ne se prolongent pas</b> au-delà de leur domaine. La frontière 1 s'arrête à <span class="f">pH = 2</span> : au-delà, le fer(III) n'existe plus en solution, il a précipité. Une droite tracée sur toute la largeur du graphique est une droite fausse sur les trois quarts de sa longueur.</p></div>
 
-  <div class="geste pending" data-geste="5" data-gt="Tracer et lire un diagramme E-pH" data-yr="tombé chaque année depuis 2022">
+  <div class="geste" data-geste="5" data-gt="Tracer et lire un diagramme E-pH" data-yr="tombé chaque année depuis 2022">
     <span class="k">Geste 5 sur 5 — posé ici, dès que le cours l'a rendu exécutable <span class="y">tombé chaque année depuis 2022</span></span>
     <h3>Tracer et lire un diagramme E-pH</h3>
-    <p class="att">La recette numérotée, le piège et l'entraîneur seront écrits ici — point 5 de l'ordre des travaux.</p>
+    <ol>
+      <li><b>Écris la demi-équation</b> : elle donne <i>n</i> et le nombre de <span class="f">H<sup>+</sup></span>.</li>
+      <li><b>La pente vaut</b> <span class="f">− 0,06 × H<sup>+</sup> ÷ n</span>. Elle se lit, elle ne se calcule pas.</li>
+      <li><b>L'ordonnée à l'origine</b> est <span class="f">E</span> à <span class="f">pH = 0</span> : c'est Nernst sans le terme en pH.</li>
+      <li><b>Place deux points</b>, à <span class="f">pH 0</span> et <span class="f">pH 14</span>, et trace le trait entre eux.</li>
+      <li><b>Arrête-le aux bornes du domaine</b> de l'espèce.</li>
+    </ol>
+    <div class="piege"><b>Le piège —</b> Une droite tracée sur <b>toute la largeur</b> du graphique est fausse sur les trois quarts de sa longueur. Une frontière n'existe qu'entre deux domaines voisins.</div>
+    <button class="go" data-entr="5" type="button">S'entraîner — tirage au hasard</button>
+    <div class="entr" data-entr-for="5" hidden></div>
   </div>
 </article>
 
@@ -2337,7 +2449,7 @@ var segs=$('#segs'), pos=$('#pos'), themeBtn=$('#theme'), navlist=$('#navlist'),
 
 /* ── état persisté ────────────────────────────────────────────────── */
 var LS='redox.v1';
-var S={theme:'auto', step:0, mode:'fil', tool:null, cp:{}, tools:{}};
+var S={theme:'auto', step:0, mode:'fil', tool:null, cp:{}, tools:{}, entr:{}};
 try{
   var raw=localStorage.getItem(LS);
   if(raw){ var o=JSON.parse(raw); for(var k in S){ if(o[k]!=null) S[k]=o[k]; } }
@@ -2988,6 +3100,383 @@ function tiDraw(){
 }
 tiRep.addEventListener('input',tiDraw);
 
+/* ═══════════════════════════════════════════════════════════════════
+   LES ENTRAÎNEURS — un tirage au hasard, une correction nommée
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* demi-équations d'entraînement : oxydant, réducteur, n, protons, eau, E°
+   (E° nul quand le couple n'est pas dans la table du cours) */
+var EQUIL = [
+ ['MnO<sub>4</sub><sup>−</sup>','Mn<sup>2+</sup>',5,8,4,1.51,'MnO4-/Mn2+'],
+ ['Cr<sub>2</sub>O<sub>7</sub><sup>2−</sup>','Cr<sup>3+</sup>',6,14,7,1.33,'Cr2O7/Cr3+'],
+ ['O<sub>2</sub>','H<sub>2</sub>O',4,4,2,1.23,'O2/H2O'],
+ ['NO<sub>3</sub><sup>−</sup>','NO',3,4,2,0.96,'NO3-/NO'],
+ ['H<sub>2</sub>O<sub>2</sub>','H<sub>2</sub>O',2,2,2,1.77,'H2O2/H2O'],
+ ['O<sub>2</sub>','H<sub>2</sub>O<sub>2</sub>',2,2,0,0.68,'O2/H2O2'],
+ ['H<sup>+</sup>','H<sub>2</sub>',2,2,0,0,'H+/H2'],
+ ['HSO<sub>4</sub><sup>−</sup>','SO<sub>2</sub>',2,3,2,null,null],
+ ['ClO<sup>−</sup>','Cl<sup>−</sup>',2,2,1,null,null],
+ ['AsO<sub>4</sub><sup>3−</sup>','AsO<sub>2</sub><sup>−</sup>',2,4,2,null,null],
+ ['SO<sub>4</sub><sup>2−</sup>','SO<sub>2</sub>',2,4,2,null,null],
+ ['NO<sub>3</sub><sup>−</sup>','NO<sub>2</sub>',1,2,1,null,null]
+].map(function(r){ return {ox:r[0],rd:r[1],n:r[2],h:r[3],w:r[4],e0:r[5],key:r[6],
+  rdEau: r[1]==='H<sub>2</sub>O',        /* l'eau réduite est le produit lui-même */
+  oxProton: r[0]==='H<sup>+</sup>'};});  /* l'oxydant EST le proton : il est déjà compté */
+
+function demiEq(q){
+  return (q.oxProton ? '' : '<span class="ox">'+q.ox+'</span>')
+    + (q.h? (q.oxProton?'<span class="ox">':' + ')+(q.h>1?q.h+' ':'')+'H<sup>+</sup>'+(q.oxProton?'</span>':'') : '')
+    + ' + <span class="el">'+(q.n>1?q.n+' ':'')+'e<sup>−</sup></span> = <span class="rd">'
+    + (q.rdEau && q.w>1 ? q.w+' ' : '') + q.rd + '</span>'
+    + (q.w && !q.rdEau ? ' + '+(q.w>1?q.w+' ':'')+'H<sub>2</sub>O' : '');
+}
+/* les nombres d'oxydation à trouver */
+var NOX = [
+ ['ClO<sub>4</sub><sup>−</sup>','Cl',7],['CO<sub>3</sub><sup>2−</sup>','C',4],
+ ['TiCl<sub>4</sub>','Ti',4],['MnO<sub>4</sub><sup>−</sup>','Mn',7],
+ ['Cr<sub>2</sub>O<sub>7</sub><sup>2−</sup>','Cr',6],['SO<sub>4</sub><sup>2−</sup>','S',6],
+ ['NO<sub>3</sub><sup>−</sup>','N',5],['H<sub>2</sub>O<sub>2</sub>','O',-1],
+ ['SO<sub>2</sub>','S',4],['HSO<sub>4</sub><sup>−</sup>','S',6],
+ ['Fe<sub>2</sub>O<sub>3</sub>','Fe',3],['Fe(OH)<sub>3</sub>','Fe',3],
+ ['Fe(OH)<sub>2</sub>','Fe',2],['NH<sub>4</sub><sup>+</sup>','N',-3],
+ ['ClO<sup>−</sup>','Cl',1],['AsO<sub>2</sub><sup>−</sup>','As',3],
+ ['AsO<sub>4</sub><sup>3−</sup>','As',5],['PbO<sub>2</sub>','Pb',4],
+ ['H<sub>2</sub>SO<sub>4</sub>','S',6],['KMnO<sub>4</sub>','Mn',7]
+].map(function(r){ return {f:r[0],el:r[1],no:r[2]}; });
+
+/* les espèces à cheval sur deux couples — candidates à la dismutation */
+var DISM = [
+ ['H<sub>2</sub>O<sub>2</sub>','H2O2/H2O','O2/H2O2'],
+ ['Sn<sup>2+</sup>','Sn2+/Sn','Sn4+/Sn2+'],
+ ['Fe<sup>2+</sup>','Fe2+/Fe','Fe3+/Fe2+'],
+ ['PbSO<sub>4</sub>','PbSO4/Pb','PbO2/PbSO4']
+].map(function(r){ return {f:r[0], cOx:r[1], cRd:r[2]}; });
+
+/* les métaux dont on peut monter une pile */
+var METAUX = ['Ag+/Ag','Cu2+/Cu','Pb2+/Pb','Sn2+/Sn','Fe2+/Fe','Zn2+/Zn','Mg2+/Mg'];
+
+var ROM = {1:'I',2:'II',3:'III',4:'IV',5:'V',6:'VI',7:'VII'};
+function rom(v){ return (v<0?'−':'+')+ROM[Math.abs(v)]; }
+function alea(a){ return a[Math.floor(Math.random()*a.length)]; }
+function aleaEnt(a,b){ return a+Math.floor(Math.random()*(b-a+1)); }
+
+/* ── les dix générateurs ──────────────────────────────────────────── */
+var GEN = {};
+
+GEN['1'] = function(){
+  var c = alea(COUPLES), envers = Math.random()<0.5;
+  var g = envers ? c.rd : c.ox, d = envers ? c.ox : c.rd;
+  return {
+    q: 'On écrit <span class="f" style="font-size:1.05em">'+g+' / '+d+'</span>.',
+    champs: [
+      {k:'conv', lab:'cette écriture suit la convention Ox/Red ?', type:'sel',
+       opts:[['oui','oui'],['non','non — les deux sont inversés']]},
+      {k:'capte', lab:'quelle espèce capte les électrons ?', type:'sel',
+       opts:[['g',plainF(g)],['d',plainF(d)]]}],
+    sol: {conv: envers?'non':'oui', capte: envers?'d':'g'},
+    corr: '<p>L\'oxydant est <span class="f ox">'+c.ox+'</span> : c\'est lui qui <b>capte</b> les électrons, '
+      + 'donc lui qui <b>se réduit</b>. La convention le place <b>à gauche</b> de la barre.</p>'
+      + '<div class="eqs"><div class="row"><span class="e f">'+c.half+'</span>'
+      + '<span class="lab">écriture correcte</span></div></div>'
+  };
+};
+
+GEN['1b'] = function(){
+  var d = alea(DISM), a = BYKEY[d.cOx], b = BYKEY[d.cRd];
+  var possible = a.e0 > b.e0;
+  return {
+    q: 'L\'espèce <span class="f" style="font-size:1.05em">'+d.f+'</span> est l\'<b>oxydant</b> du couple '
+      + '<span class="f">'+a.ox+'/'+a.rd+'</span> et le <b>réducteur</b> du couple '
+      + '<span class="f">'+b.ox+'/'+b.rd+'</span>.',
+    champs: [
+      {k:'dis', lab:'se dismute-t-elle ?', type:'sel', opts:[['oui','oui'],['non','non, elle est stable']]},
+      {k:'eox', lab:'E° du couple où elle est oxydant', type:'num', unit:'V', tol:0.005}],
+    sol: {dis: possible?'oui':'non', eox: a.e0},
+    corr: '<p>Elle se dismute <b>si et seulement si</b> le couple où elle est <b>oxydant</b> a le potentiel '
+      + 'le plus élevé : c\'est la règle du γ appliquée à une seule espèce.</p>'
+      + '<p style="font-family:var(--mono);font-size:12.5px">oxydant dans <span class="f">'+a.ox+'/'+a.rd+'</span> · E° = '+fr(a.e0,2)+' V'
+      + '<br>réducteur dans <span class="f">'+b.ox+'/'+b.rd+'</span> · E° = '+fr(b.e0,2)+' V</p>'
+      + '<p>'+(possible
+          ? fr(a.e0,2)+' > '+fr(b.e0,2)+' : le γ se trace sur elle-même, <b>la dismutation a lieu</b>.'
+          : fr(a.e0,2)+' < '+fr(b.e0,2)+' : le γ serait à l\'envers, <b>l\'espèce est stable</b>. '
+            + 'C\'est la réaction inverse qui se produit — une médiamutation.')+'</p>'
+  };
+};
+
+GEN['2a'] = function(){
+  var x = alea(NOX);
+  return {
+    q: 'Donne le nombre d\'oxydation de l\'élément <b>'+x.el+'</b> dans '
+      + '<span class="f" style="font-size:1.05em">'+x.f+'</span>.',
+    champs: [{k:'no', lab:'n.o. en chiffres — signe compris', type:'num', tol:0}],
+    sol: {no: x.no},
+    corr: '<p>Réponse : <b>'+rom(x.no)+'</b>, soit '+(x.no>0?'+':'')+x.no+'.</p>'
+      + '<p>On applique les quatre règles, puis le principe : <b>la somme des n.o. est la charge de l\'espèce</b>. '
+      + 'C\'est une équation à une inconnue.</p>'
+  };
+};
+
+GEN['2b'] = function(){
+  var q = alea(EQUIL);
+  return {
+    q: 'Équilibre la demi-équation du couple <span class="f" style="font-size:1.05em">'
+      + q.ox+' / '+q.rd+'</span> en <b>milieu acide</b>.',
+    champs: [
+      {k:'h', lab:'nombre de H+', type:'num', tol:0},
+      {k:'n', lab:'nombre d\'électrons', type:'num', tol:0},
+      {k:'w', lab:'nombre de H2O', type:'num', tol:0}],
+    sol: {h:q.h, n:q.n, w:q.w},
+    corr: '<div class="eqs"><div class="row"><span class="e f">'+demiEq(q)+'</span>'
+      + '<span class="lab">l\'ordre : éléments,<br>puis O, puis H, puis les charges</span></div></div>'
+      + '<p style="margin-top:9px">Contrôle des charges : la différence entre les deux côtés vaut <b>'+q.n+'</b>, '
+      + 'le nombre d\'électrons. C\'est la vérification qui coûte trois secondes.</p>'
+  };
+};
+
+GEN['2c'] = function(){
+  /* on écarte les couples dont le réducteur est l'eau : elle est alors
+     consommée par les OH− et le décompte mécanique ne tient plus */
+  var q = alea(EQUIL.filter(function(x){ return !x.rdEau; }));
+  var reste = Math.abs(q.h - q.w), cote = q.h > q.w ? 'gauche' : 'droite';
+  return {
+    q: 'On part de la demi-équation en milieu acide <span class="f">'+demiEq(q)+'</span>.<br>'
+      + 'Fais-la passer en <b>milieu basique</b>.',
+    champs: [
+      {k:'oh', lab:'OH− ajoutés de chaque côté', type:'num', tol:0},
+      {k:'eau', lab:'H2O restants après simplification', type:'num', tol:0},
+      {k:'cote', lab:'de quel côté ?', type:'sel', opts:[['gauche','à gauche'],['droite','à droite']]}],
+    sol: {oh:q.h, eau:reste, cote: reste===0 ? cote : cote},
+    corr: '<p>On ajoute <b>'+q.h+' OH<sup>−</sup></b> des deux côtés — autant que de <span class="f">H<sup>+</sup></span>. '
+      + 'À gauche, les '+q.h+' <span class="f">H<sup>+</sup></span> et les '+q.h+' <span class="f">OH<sup>−</sup></span> '
+      + 'se recombinent en <b>'+q.h+' H<sub>2</sub>O</b>.</p>'
+      + '<p>Il y a alors '+q.h+' <span class="f">H<sub>2</sub>O</span> à gauche et '+q.w+' à droite : '
+      + 'on simplifie, il reste <b>'+reste+'</b> à '+cote+'.</p>'
+      + '<div class="eqs"><div class="row"><span class="e f">'
+      + (q.oxProton ? '' : '<span class="ox">'+q.ox+'</span>')
+      + (cote==='gauche'&&reste? (q.oxProton?'':' + ')+(reste>1?reste+' ':'')+'H<sub>2</sub>O':'')
+      + ' + <span class="el">'+(q.n>1?q.n+' ':'')+'e<sup>−</sup></span> = <span class="rd">'+q.rd+'</span>'
+      + (cote==='droite'&&reste? ' + '+(reste>1?reste+' ':'')+'H<sub>2</sub>O':'')
+      + ' + '+(q.h>1?q.h+' ':'')+'OH<sup>−</sup></span><span class="lab">plus aucun H⁺</span></div></div>'
+  };
+};
+
+GEN['2d'] = function(){
+  var a, b, i=0;
+  do { a = alea(COUPLES); b = alea(COUPLES); i++; }
+  while ((a.key===b.key || Math.abs(a.e0-b.e0)<0.15) && i<60);
+  var oxDe = Math.random()<0.5 ? a : b, rdDe = (oxDe===a ? b : a);
+  var possible = oxDe.e0 > rdDe.e0;
+  return {
+    q: 'Peut-on faire réagir <span class="f ox" style="font-size:1.05em">'+oxDe.ox+'</span>'
+      + ' avec <span class="f rd" style="font-size:1.05em">'+rdDe.rd+'</span> ?',
+    champs: [
+      {k:'ok', lab:'la réaction se fait ?', type:'sel', opts:[['oui','oui'],['non','non']]},
+      {k:'d', lab:'écart entre les deux E°', type:'num', unit:'V', tol:0.005}],
+    sol: {ok: possible?'oui':'non', d: Math.abs(oxDe.e0-rdDe.e0)},
+    corr: '<p style="font-family:var(--mono);font-size:12.5px">'
+      + 'l\'oxydant <span class="f">'+oxDe.ox+'</span> vient du couple à <b>'+fr(oxDe.e0,2)+' V</b><br>'
+      + 'le réducteur <span class="f">'+rdDe.rd+'</span> vient du couple à <b>'+fr(rdDe.e0,2)+' V</b></p>'
+      + '<p>'+(possible
+        ? 'L\'oxydant est <b>au-dessus</b> du réducteur : le γ se trace, <b>la réaction se fait</b>.'
+        : 'L\'oxydant est <b>en dessous</b> du réducteur : le γ serait à l\'envers, <b>la réaction ne se fait pas</b>.')
+      + ' L\'écart des potentiels vaut '+fr(Math.abs(oxDe.e0-rdDe.e0),2)+' V.</p>'
+  };
+};
+
+function pileAlea(){
+  var a, b, i=0;
+  do { a = BYKEY[alea(METAUX)]; b = BYKEY[alea(METAUX)]; i++; }
+  while ((a.key===b.key || Math.abs(a.e0-b.e0)<0.2) && i<60);
+  var cat = a.e0>b.e0 ? a : b, an = a.e0>b.e0 ? b : a;
+  return {a:a, b:b, cat:cat, an:an, fem:cat.e0-an.e0};
+}
+
+GEN['3a'] = function(){
+  var p = pileAlea();
+  var g = Math.random()<0.5 ? p.cat : p.an, d = (g===p.cat ? p.an : p.cat);
+  return {
+    q: 'On monte une pile avec une électrode de <span class="f rd" style="font-size:1.05em">'+g.rd+'</span> '
+      + 'à gauche et une électrode de <span class="f rd" style="font-size:1.05em">'+d.rd+'</span> à droite.',
+    champs: [
+      {k:'an', lab:'quelle électrode est l\'anode ?', type:'sel',
+       opts:[['g',plainF(g.rd)+' — à gauche'],['d',plainF(d.rd)+' — à droite']]},
+      {k:'sg', lab:'le signe de l\'anode', type:'sel', opts:[['moins','⊖ négatif'],['plus','⊕ positif']]},
+      {k:'e', lab:'sens des électrons dans le fil', type:'sel',
+       opts:[['gd','de gauche vers la droite'],['dg','de droite vers la gauche']]}],
+    sol: {an: (p.an===g?'g':'d'), sg:'moins', e: (p.an===g?'gd':'dg')},
+    corr: '<p>L\'<b>anode</b> est l\'électrode du couple au potentiel <b>le plus bas</b> : '
+      + '<span class="f rd">'+p.an.rd+'</span>, à '+fr(p.an.e0,2)+' V. C\'est là que se produit l\'<b>oxydation</b>, '
+      + 'donc la production d\'électrons — et dans une pile, c\'est le pôle <b>⊖</b>.</p>'
+      + '<div class="eqs">'
+      + '<div class="row"><span class="e f"><span class="rd">'+p.an.rd+'</span> ⟶ <span class="ox">'+p.an.ox+'</span> + <span class="el">'+p.an.n+' e<sup>−</sup></span></span><span class="lab">anode · oxydation · ⊖</span></div>'
+      + '<div class="row"><span class="e f"><span class="ox">'+p.cat.ox+'</span> + <span class="el">'+p.cat.n+' e<sup>−</sup></span> ⟶ <span class="rd">'+p.cat.rd+'</span></span><span class="lab">cathode · réduction · ⊕</span></div>'
+      + '</div>'
+      + '<p style="margin-top:9px">Les électrons vont de l\'anode vers la cathode dans le fil. '
+      + 'Le <b>courant</b>, lui, va en sens contraire.</p>'
+  };
+};
+
+GEN['3b'] = function(){
+  var p = pileAlea();
+  return {
+    q: 'On monte la pile qui associe les couples <span class="f">'+p.a.ox+'/'+p.a.rd+'</span> '
+      + '(E° = '+fr(p.a.e0,2)+' V) et <span class="f">'+p.b.ox+'/'+p.b.rd+'</span> (E° = '+fr(p.b.e0,2)+' V).',
+    champs: [
+      {k:'fem', lab:'la force électromotrice', type:'num', unit:'V', tol:0.005},
+      {k:'gauche', lab:'quel métal s\'écrit à gauche ?', type:'sel',
+       opts:[['a',plainF(p.a.rd)],['b',plainF(p.b.rd)]]}],
+    sol: {fem: p.fem, gauche: (p.an===p.a?'a':'b')},
+    corr: '<p style="font-family:var(--mono);font-size:12.5px">fem = E<sub>cathode</sub> − E<sub>anode</sub> = '
+      + fr(p.cat.e0,2)+' − '+(p.an.e0<0?'(':'')+fr(p.an.e0,2)+(p.an.e0<0?')':'')+' = <b style="color:var(--acc)">'+fv(p.fem)+' V</b></p>'
+      + '<p>Par convention, l\'<b>anode s\'écrit à gauche</b> : c\'est '
+      + '<span class="f rd">'+p.an.rd+'</span>, le couple au potentiel le plus bas.</p>'
+      + '<div class="eqs"><div class="row"><span class="e f"><span style="color:var(--mut)">⊖</span> '
+      + '<span class="rd">'+p.an.rd+'</span> | <span class="ox">'+p.an.ox+'</span> ‖ '
+      + '<span class="ox">'+p.cat.ox+'</span> | <span class="rd">'+p.cat.rd+'</span> '
+      + '<span style="color:var(--acc)">⊕</span></span><span class="lab">écriture symbolique</span></div></div>'
+  };
+};
+
+GEN['4'] = function(){
+  var pool = EQUIL.filter(function(q){ return q.key && BYKEY[q.key] && BYKEY[q.key].h>0; });
+  var q = alea(pool), c = BYKEY[q.key];
+  var oe = c.oxP ? -aleaEnt(0,4) : 0, re = c.rdP ? -aleaEnt(0,4) : 0;
+  var ph = aleaEnt(0,14);
+  var r = nernst(c, Math.pow(10,oe), Math.pow(10,re), ph);
+  var don = [];
+  if(c.oxP) don.push('[<span class="f ox">'+c.ox+'</span>] = <span class="f">10<sup>'+(oe?'−'+(-oe):'0')+'</sup></span>');
+  if(c.rdP) don.push('[<span class="f rd">'+c.rd+'</span>] = <span class="f">10<sup>'+(re?'−'+(-re):'0')+'</sup></span>');
+  return {
+    q: 'Calcule le potentiel du couple <span class="f" style="font-size:1.05em">'+c.ox+' / '+c.rd+'</span> '
+      + 'à <b>pH = '+ph+'</b>.<br><span style="font-size:.92em;color:var(--mut)">E° = '+fr(c.e0,2)+' V'
+      + (don.length? ' · '+don.join(' · ') : '')+' · demi-équation : <span class="f">'+demiEq(q)+'</span></span>',
+    champs: [
+      {k:'a', lab:'la pente du terme en pH', type:'num', tol:0.002},
+      {k:'E', lab:'le potentiel E', type:'num', unit:'V', tol:0.006}],
+    sol: {a: r.a, E: r.E},
+    corr: '<p>La pente se lit sur la demi-équation : <span class="f">− 0,06 × '+c.h+' ÷ '+c.n+' = '+fr(r.a,4)+'</span>. '
+      + 'Aucun calcul de Nernst n\'est nécessaire pour l\'obtenir.</p>'
+      + '<div class="eqs"><div class="row"><span class="e f">E = '+fr(r.b,4)+' '+(r.a<0?'−':'+')+' '+fr(Math.abs(r.a),4)+' · pH</span>'
+      + '<span class="lab">la forme affine</span></div>'
+      + '<div class="row bilan"><span class="e f">E = '+fv(r.E)+' V</span><span class="lab">à pH = '+ph+'</span></div></div>'
+      + '<p style="margin-top:9px">Ouvre l\'onglet <b>Calculateur Nernst</b> de la paillasse pour revoir les cinq maillons.</p>'
+  };
+};
+
+GEN['5'] = function(){
+  var pool = EQUIL.filter(function(q){ return q.key && BYKEY[q.key] && BYKEY[q.key].h>0; });
+  var q = alea(pool), c = BYKEY[q.key];
+  var a = -0.06*c.h/c.n, b = Math.round((c.e0 + (Math.random()*0.3-0.15))*100)/100;
+  var ph1 = aleaEnt(1,13);
+  var cible = Math.round((b + a*aleaEnt(1,13))*100)/100;
+  return {
+    q: 'Une frontière du diagramme a pour équation <span class="f" style="font-size:1.05em">E = '
+      + fr(b,3)+' − '+fr(-a,3)+' · pH</span>.',
+    champs: [
+      {k:'E', lab:'E au pH '+ph1, type:'num', unit:'V', tol:0.006},
+      {k:'ph', lab:'à quel pH E vaut-il '+fr(cible,2)+' V ?', type:'num', tol:0.06},
+      {k:'h', lab:'combien de H+ pour '+c.n+' e− ?', type:'num', tol:0}],
+    sol: {E: b+a*ph1, ph: (b-cible)/(-a), h: c.h},
+    corr: '<p><b>Dans un sens</b> — on remplace le pH : <span class="f">E = '+fr(b,3)+' − '+fr(-a,3)
+      + ' × '+ph1+' = '+fv(b+a*ph1)+' V</span>.</p>'
+      + '<p><b>Dans l\'autre</b> — on cherche le pH qui donne '+fr(cible,2)+' V. On isole :</p>'
+      + '<div class="eqs"><div class="row"><span class="e f">pH = '
+      + frac(fr(b,3)+' − '+(cible<0?'('+fv(cible)+')':fv(cible)), fr(-a,3))+' = '+fr((b-cible)/(-a),2)+'</span>'
+      + '<span class="lab">on retranche b des deux côtés,<br>puis on divise par la pente</span></div></div>'
+      + '<p style="margin-top:9px"><b>Et la pente se lit à l\'envers</b> : '+fr(-a,3)+' = 0,06 × '
+      + 'H<sup>+</sup> ÷ '+c.n+', donc <b>'+c.h+' protons</b> pour '+c.n+' électrons. '
+      + 'C\'est le couple <span class="f">'+c.ox+'/'+c.rd+'</span>.</p>'
+  };
+};
+
+/* ── le moteur : tirer, corriger, compter ─────────────────────────── */
+if(typeof S.entr!=='object'||!S.entr) S.entr={};
+
+function entrScore(id){ return S.entr[id] || {n:0, ok:0}; }
+function entrLabel(b){
+  var id=b.dataset.entr, sc=entrScore(id);
+  b.textContent = sc.n ? 'S\'entraîner — '+sc.ok+' réussis sur '+sc.n : 'S\'entraîner — tirage au hasard';
+}
+function entrTirer(id, box){
+  var g=GEN[id]; if(!g){ box.innerHTML='<p class="q3">Entraîneur à écrire.</p>'; return; }
+  var Q=g(); box.__Q=Q; box.__tries=0; box.__compte=false;
+  var sc=entrScore(id);
+  var champs=Q.champs.map(function(c){
+    var inp = c.type==='sel'
+      ? '<select data-k="'+c.k+'"><option value="">—</option>'
+        + c.opts.map(function(o){ return '<option value="'+o[0]+'">'+o[1]+'</option>'; }).join('')+'</select>'
+      : '<input type="number" step="any" inputmode="decimal" data-k="'+c.k+'">';
+    return '<div class="f2"><label>'+c.lab+(c.unit?' — en '+c.unit:'')+'</label>'+inp+'</div>';
+  }).join('');
+  box.innerHTML =
+      '<div class="hd2"><span class="k">Tirage au hasard</span>'
+    + '<span class="sc">'+(sc.n? sc.ok+' réussis sur '+sc.n : 'premier tirage')+'</span></div>'
+    + '<p class="q3">'+Q.q+'</p>'
+    + '<div class="ent-fields">'+champs+'</div>'
+    + '<div style="display:flex;gap:9px;flex-wrap:wrap">'
+    +   '<button class="btn ent-ok" type="button">vérifier</button>'
+    +   '<button class="btn sec ent-new" type="button">autre tirage</button>'
+    + '</div>'
+    + '<div class="corr" hidden></div>';
+}
+function entrCorriger(id, box, force){
+  var Q=box.__Q; if(!Q) return;
+  var bon=true;
+  Q.champs.forEach(function(c){
+    var el=box.querySelector('[data-k="'+c.k+'"]');
+    var att=Q.sol[c.k], ok;
+    if(c.type==='sel') ok = (el.value === String(att));
+    else {
+      var num=parseFloat(String(el.value).replace(',','.'));
+      ok = isFinite(num) && Math.abs(num-att) <= (c.tol==null?0.005:c.tol);
+    }
+    el.parentElement.classList.toggle('good2', ok);
+    el.parentElement.classList.toggle('bad2', !ok);
+    if(!ok) bon=false;
+  });
+  box.__tries=(box.__tries||0)+1;
+  if(!box.__compte){
+    box.__compte=true;
+    var sc=entrScore(id);
+    S.entr[id]={n:sc.n+1, ok:sc.ok+(bon?1:0)};
+    save();
+    var b=document.querySelector('.go[data-entr="'+id+'"]'); if(b) entrLabel(b);
+    var s2=box.querySelector('.sc'); if(s2) s2.textContent=S.entr[id].ok+' réussis sur '+S.entr[id].n;
+  }
+  var corr=box.querySelector('.corr');
+  corr.hidden=false;
+  if(bon){
+    corr.className='corr bon';
+    corr.innerHTML='<span class="t3">Juste</span>'+Q.corr;
+  } else if(box.__tries===1 && !force){
+    corr.className='corr mauvais';
+    corr.innerHTML='<span class="t3">Pas encore</span>'
+      + '<p>Les champs entourés de rouge sont ceux à revoir. Reprends-les, puis revérifie.</p>'
+      + '<button class="btn sec ent-voir" type="button">voir la correction</button>';
+  } else {
+    corr.className='corr mauvais';
+    corr.innerHTML='<span class="t3">La correction</span>'+Q.corr;
+  }
+}
+document.addEventListener('click',function(ev){
+  var t=ev.target;
+  var go = t.closest && t.closest('.go[data-entr]');
+  if(go){
+    var id=go.dataset.entr, box=document.querySelector('.entr[data-entr-for="'+id+'"]');
+    if(!box) return;
+    if(box.hidden){ box.hidden=false; entrTirer(id,box); }
+    else { box.hidden=true; }
+    return;
+  }
+  var box2 = t.closest && t.closest('.entr');
+  if(!box2) return;
+  var id2 = box2.dataset.entrFor;
+  if(t.classList.contains('ent-ok'))  entrCorriger(id2, box2, false);
+  if(t.classList.contains('ent-new')) entrTirer(id2, box2);
+  if(t.classList.contains('ent-voir'))entrCorriger(id2, box2, true);
+});
+$$('.go[data-entr]').forEach(entrLabel);
+
 /* ── pré-remplissage depuis l'étape lue, et restitution ───────────── */
 function toolsPrefill(step){
   var a=step.dataset.couple, b=step.dataset.couple2;
@@ -3016,6 +3505,13 @@ function toolsRestore(){
   ephSetMode(ephMode);
   drawGamma(); nerDraw(); tiDraw();
 }
+
+/* ── prise de test ─────────────────────────────────────────────────
+   Les tables et les fonctions pures sont exposées sous un seul nom, pour
+   que les tests puissent vérifier la chimie sans passer par l'interface.
+   Rien du site ne s'en sert.                                            */
+window.__redox = {COUPLES:COUPLES, BYKEY:BYKEY, EQUIL:EQUIL, NOX:NOX, DISM:DISM,
+                  METAUX:METAUX, GEN:GEN, demiEq:demiEq, nernst:nernst, fr:fr, fv:fv, plainF:plainF};
 
 /* ── démarrage ────────────────────────────────────────────────────── */
 setMode(S.mode==='gestes'?'gestes':'fil');

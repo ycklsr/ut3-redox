@@ -365,7 +365,13 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
    puis produit la séquence de touches TI pour le calcul en cours.
    Chaque étape déclare `data-couple`, si bien que la paillasse arrive
    pré-remplie avec le couple qu'on lit.
-5. **Les 5 gestes et leurs entraîneurs** — tirage aléatoire et correction.
+5. ~~**Les 5 gestes et leurs entraîneurs**~~ — **fait.** Les dix blocs portent
+   leur recette numérotée, leur piège et un **entraîneur** : tirage au hasard,
+   champs à remplir, correction nommée, score compté sur le premier essai et
+   persisté. Les questions sont **générées** depuis les mêmes tables que la
+   paillasse, plus trois bancs propres à l'entraînement : `EQUIL`
+   (12 demi-équations), `NOX` (20 nombres d'oxydation) et `DISM` (4 espèces à
+   cheval sur deux couples).
 6. **Les 4 annales retranscrites** — sujets et corrigés, chronométrables.
 7. **Les points de contrôle** et les tests de non-régression.
 
@@ -383,6 +389,13 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 - **Contrôle visuel** : `npm run captures` rend neuf vues clés en clair et en
   sombre dans un dossier temporaire. À relire à l'œil après toute modification
   de mise en page — les tests vérifient la mécanique, pas l'allure.
+- ⚠️ **Deux espèces se comptent deux fois si on n'y prend pas garde.** Quand
+  l'oxydant *est* le proton (`H+/H2`), il ne faut pas l'écrire en plus des
+  `h` protons ; quand le réducteur *est* l'eau (`O2/H2O`, `H2O2/H2O`), le `w`
+  de la table est le coefficient du produit, pas de l'eau ajoutée — et le
+  passage en milieu basique ne s'y applique plus mécaniquement. Les drapeaux
+  `oxProton` et `rdEau` d'`EQUIL` marquent ces deux cas, et un test vérifie
+  que chaque demi-équation rendue ne porte qu'un seul terme en `H+`.
 - ⚠️ **SVG ne connaît ni `<sub>` ni `<sup>`.** Ces balises font *sortir*
   l'analyseur du mode SVG : le dessin est tronqué et le texte s'échappe sous la
   figure. Dans une figure, les indices et exposants passent en **Unicode** —
@@ -414,9 +427,13 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 
 ## 11. Pour reprendre
 
-> Lis `PLAN.md`, ouvre `redox.html`, et prends le **point 5** de l'ordre des
-> travaux : les cinq gestes et leurs entraîneurs. Les dix blocs `.geste.pending`
-> attendent chacun leur recette numérotée, leur piège et leur entraîneur ; la
-> table `COUPLES` et les fonctions `nernst()`, `plainF()` et `fv()` de la
-> paillasse fournissent déjà de quoi tirer des questions au hasard et corriger.
-> Puis les points 6 et 7.
+> Lis `PLAN.md`, ouvre `redox.html`, et prends le **point 6** de l'ordre des
+> travaux : les quatre annales, sujets et corrigés retranscrits. Les corrigés
+> sont des **scans manuscrits** : il faudra les lire page par page avec l'outil
+> de lecture d'images, pas `pdftotext`. L'étape 16 porte la note de chantier qui
+> reste, et elle demande aussi de contrôler sujet par sujet les mentions
+> « tombé chaque année depuis 2022 » des dix blocs gestes. Puis le point 7.
+>
+> **La prise de test** `window.__redox` expose les tables et les fonctions pures
+> (`COUPLES`, `EQUIL`, `NOX`, `GEN`, `nernst`, `demiEq`, `fr`, `fv`, `plainF`) :
+> c'est par là que les tests vérifient la chimie sans passer par l'interface.
