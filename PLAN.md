@@ -380,6 +380,22 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
    puis produit la séquence de touches TI pour le calcul en cours.
    Chaque étape déclare `data-couple`, si bien que la paillasse arrive
    pré-remplie avec le couple qu'on lit.
+
+   **Cinquième outil, ajouté après coup : « Équilibrer ».** On y écrit une
+   équation en texte libre — `MnO4- + 8H+ + 5e- = Mn2+ + 4H2O`, ou la même en
+   Unicode — et elle est vérifiée à mesure : bilan par élément, bilan de
+   charge, et une piste déduite de l'écart (« ajoute 1 H₂O à droite », « ajoute
+   5 e⁻ à gauche »). Aucune intelligence artificielle là-dedans : on compte les
+   atomes et on compare. Le geste 2b a désormais **deux modes**, les
+   coefficients ou l'équation entière, et le second corrige par ce moteur.
+
+   ⚠️ **L'ambiguïté de la charge finale.** En ASCII, `MnO4-` et `Fe3+` ont la
+   même allure et ne disent pas la même chose : le 4 est un indice, le 3 est une
+   charge. La règle du parseur : un exposant explicite (`^2-`) ou détaché
+   (`Cr2O7 2-`) tranche ; sinon, deux chiffres collés donnent indice + charge
+   (`SO42-`), et un seul chiffre est une charge si ce qui précède est un
+   **symbole d'élément seul** (`Fe3+`), un indice sinon (`MnO4-`). Elle est
+   vérifiée sur les huit écritures du cours.
 5. ~~**Les 5 gestes et leurs entraîneurs**~~ — **fait.** Les dix blocs portent
    leur recette numérotée, leur piège et un **entraîneur** : tirage au hasard,
    champs à remplir, correction nommée, score compté sur le premier essai et
@@ -463,17 +479,18 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 
 ## 10 bis. L'état des tests
 
-**63 tests**, répartis en cinq fichiers, tous branchés en `pre-commit` et en CI :
+**73 tests**, répartis en six fichiers, tous branchés en `pre-commit` et en CI :
 
 | Fichier | Ce qu'il garde |
 |---|---|
 | `squelette.test.mjs` | le fil, le thème, l'impression, la casse chimique, les débordements de 375 à 1280 px, le contraste sur fond accent, l'intégrité des figures |
 | `paillasse.test.mjs` | les quatre outils, avec les valeurs de contrôle des exercices 12 et 13 et du sujet 2024 |
 | `gestes.test.mjs` | les dix entraîneurs, plus les bilans de charge, d'oxygène et d'hydrogène des douze demi-équations et les vingt n.o., recopiés d'une vérification à la main |
+| `equilibre.test.mjs` | le moteur d'équilibrage sur 28 équations de référence, l'outil de la paillasse, et le mode « équation entière » du geste 2b |
 | `annales.test.mjs` | les quatre annales, le chronomètre, et les valeurs des quatre corrigés officiels |
 | `controle.test.mjs` | la couverture, les formes déclarées, **la garde de la convention 6**, et la garde de la garde |
 
-`npm run captures` rend 31 vues clair/sombre pour la relecture à l'œil.
+`npm run captures` rend 33 vues clair/sombre pour la relecture à l'œil.
 
 ---
 

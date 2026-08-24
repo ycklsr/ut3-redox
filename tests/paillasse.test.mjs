@@ -244,7 +244,7 @@ for (const w of [1280, 900, 430]) {
     await page.goto(base);
     await page.waitForFunction(() => document.querySelectorAll('#segs .seg').length === 17);
     const fautes = [];
-    for (const t of ['ech', 'ner', 'eph', 'ti']) {
+    for (const t of ['eqb', 'ech', 'ner', 'eph', 'ti']) {
       await page.click(`.dock .tab[data-tool="${t}"]`);
       await page.waitForTimeout(60);
       const d = await page.evaluate(() => {

@@ -81,6 +81,13 @@ await shot('31-controle',     { hash: 'e14', after: async p => { await p.locator
                                 await q.locator('.opt[data-ok="0"]').first().click();
                                 await q.elementHandle().then(e => e.scrollIntoViewIfNeeded()); } });
 
+await shot('32-equilibrer',   { hash: 'e4', after: async p => { await p.click('.dock .tab[data-tool="eqb"]');
+                                await p.fill('#eq-in', 'MnO4- + 8H+ + 5e- = Mn2+ + 3H2O');
+                                await p.dispatchEvent('#eq-in', 'input'); } });
+await shot('33-geste-equation',{ hash: 'e4', after: async p => { await p.click('.go[data-entr="2b"]');
+                                await p.click('.entr[data-entr-for="2b"] .ent-mode[data-mode="eq"]');
+                                await p.evaluate(() => document.querySelector('.entr[data-entr-for="2b"]').scrollIntoView()); } });
+
 await b.close();
 srv.close();
 console.log('captures dans ' + OUT);

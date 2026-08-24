@@ -477,10 +477,30 @@ select:focus-visible,input:focus-visible{outline:2px solid var(--acc);outline-of
 .phrow{display:grid;grid-template-columns:1fr 4.2em;gap:9px;align-items:center}
 input[type=range]{width:100%;accent-color:var(--acc);margin:0}
 .seg2{display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
-.seg2 button{flex:1;padding:5px 4px;font-family:var(--sans);font-size:11.5px;color:var(--mut)}
+.seg2 button{flex:1;padding:5px 8px;font-family:var(--sans);font-size:11.5px;color:var(--mut);white-space:nowrap}
 .seg2 button[aria-pressed="true"]{background:var(--acc);color:var(--on-acc);font-weight:600}
 .chk{display:flex;align-items:center;gap:7px;font-family:var(--sans);font-size:12px;color:var(--mut)}
 .chk input{accent-color:var(--acc);margin:0}
+input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8px 11px}
+.eqwrap{display:flex;flex-direction:column;gap:8px;max-width:64em}
+.eqwrap>.k{color:var(--mut)}
+.eqbar{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
+.eqbar .hint2{flex:1 1 24em;margin:0}
+.eqwrap .tw{max-width:none}
+.eqwrap table.tab{max-width:44em}
+.eqv{font-family:var(--sans);font-size:14px;font-weight:600;margin-bottom:9px;
+     display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+.eqv.bon{color:var(--ok)} .eqv.mauvais{color:var(--mark)} .eqv.flou{color:var(--mut);font-weight:400}
+.eqv .sous{font-weight:400;font-size:12.5px;color:var(--mut)}
+.eqt td.ec{font-family:var(--mono);font-weight:600}
+.eqt tr.faux td{color:var(--mark)}
+.eqp{border-left:2px solid var(--acc);padding-left:12px;margin-top:10px;
+     font-family:var(--sans);font-size:13px;line-height:1.5}
+.eqp b{color:var(--acc)}
+.eqx{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+.eqx button{font-family:var(--mono);font-size:10px;border:1px solid var(--line);border-radius:99px;
+            padding:3px 9px 4px;color:var(--mut)}
+.eqx button:hover{color:var(--acc);border-color:var(--acc)}
 
 /* la sortie d'un outil : des maillons, comme dans le cours */
 .ml{border-top:1px solid var(--line);padding:7px 0;display:grid;grid-template-columns:20px minmax(0,1fr);gap:0 11px}
@@ -3392,6 +3412,7 @@ input[type=range]{width:100%;accent-color:var(--acc);margin:0}
 <!-- ⑤ la paillasse ─────────────────────────────────────────────────── -->
 <div class="dockwrap">
   <div class="dock" role="group" aria-label="La paillasse">
+    <button class="tab" data-tool="eqb" aria-pressed="false" aria-controls="panel">Équilibrer</button>
     <button class="tab" data-tool="ech" aria-pressed="false" aria-controls="panel">Échelle des E°</button>
     <button class="tab" data-tool="ner" aria-pressed="false" aria-controls="panel">Calculateur Nernst</button>
     <button class="tab" data-tool="eph" aria-pressed="false" aria-controls="panel">Traceur E-pH</button>
@@ -3402,6 +3423,19 @@ input[type=range]{width:100%;accent-color:var(--acc);margin:0}
   <div class="panel" id="panel" hidden>
 
     <!-- ── outil 1 · l'échelle des potentiels et la règle du γ ── -->
+    <div data-pane="eqb" hidden>
+      <div class="eqwrap">
+        <label class="k" for="eq-in">Écris ton équation — le bilan se fait à mesure</label>
+        <input type="text" class="eqin" id="eq-in" spellcheck="false" autocomplete="off"
+               placeholder="MnO4- + 8H+ + 5e- = Mn2+ + 4H2O" aria-label="Ton équation">
+        <div class="eqbar">
+          <p class="hint2">Le <span class="f">=</span> ou une flèche séparent les membres · charges <span class="f">MnO4-</span>, <span class="f">Fe3+</span>, <span class="f">Cr2O7 2-</span>, ou en Unicode · électron <span class="f">e-</span> · les états <span class="f">(s)</span> <span class="f">(aq)</span> <span class="f">(g)</span> sont ignorés</p>
+          <div class="eqx" id="eq-ex"></div>
+        </div>
+        <div id="eq-out"></div>
+      </div>
+    </div>
+
     <div data-pane="ech" hidden>
       <div class="tool">
         <div class="tool-in">
@@ -3839,6 +3873,187 @@ var COUPLES = [
 });
 var BYKEY = {}; COUPLES.forEach(function(c){ BYKEY[c.key]=c; });
 
+/* ═══════════════════════════════════════════════════════════════════
+   VÉRIFICATEUR D'ÉQUILIBRAGE
+   Rien d'approximatif ici : on compte les atomes, on somme les charges,
+   on compare. Le diagnostic se déduit des écarts, il ne s'invente pas.
+   ═══════════════════════════════════════════════════════════════════ */
+
+var ELEM = ('H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar K Ca Sc Ti V Cr Mn Fe Co Ni Cu Zn '
+ + 'Ga Ge As Se Br Kr Rb Sr Y Zr Nb Mo Tc Ru Rh Pd Ag Cd In Sn Sb Te I Xe Cs Ba La Ce Pr Nd Pm '
+ + 'Sm Eu Gd Tb Dy Ho Er Tm Yb Lu Hf Ta W Re Os Ir Pt Au Hg Tl Pb Bi Po At Rn Fr Ra Ac Th Pa U '
+ + 'Np Pu Am Cm Bk Cf Es Fm Md No Lr Rf Db Sg Bh Hs Mt Ds Rg Cn Nh Fl Mc Lv Ts Og').split(' ');
+var ELSET = {}; ELEM.forEach(function(e){ ELSET[e]=1; });
+
+var SUPA = {'⁰':'0','¹':'1','²':'2','³':'3','⁴':'4','⁵':'5','⁶':'6','⁷':'7','⁸':'8','⁹':'9','⁺':'+','⁻':'-',
+            '₀':'0','₁':'1','₂':'2','₃':'3','₄':'4','₅':'5','₆':'6','₇':'7','₈':'8','₉':'9'};
+
+function eqNorm(t){
+  t = String(t||'');
+  /* un exposant devient « ^… » : la distinction indice / charge est ainsi
+     conservée, et « SO₄²⁻ » ne devient pas l'ambigu « SO42- » */
+  t = t.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻]+/g, function(g){
+    return '^' + g.split('').map(function(c){ return SUPA[c]; }).join('');
+  });
+  t = t.replace(/[₀₁₂₃₄₅₆₇₈₉]/g, function(c){ return SUPA[c]; });
+  t = t.replace(/[−–—]/g,'-').replace(/[⟶→➝➞⇒]/g,'=').replace(/->/g,'=').replace(/=>/g,'=');
+  t = t.replace(/ /g,' ').replace(/\s+/g,' ').trim();
+  return t;
+}
+
+/* une espèce : atomes, charge, et le drapeau électron */
+function parseEspece(txt){
+  var t = txt.trim();
+  if(!t) return {err:'espèce vide'};
+  /* les états physiques ne sont pas des groupes : (s) (l) (g) (aq) */
+  t = t.replace(/\((s|l|g|aq|sol|liq|gaz)\)/gi,'');
+  if(/^\^?e\^?-$/.test(t)) return {atoms:{}, charge:-1, elec:1};
+  /* La charge se lit en fin de formule. En ASCII, « MnO4- » et « Fe3+ » ont
+     la même allure et ne veulent pas dire la même chose : le 4 est un indice,
+     le 3 est une charge. Trois cas, du plus explicite au plus ambigu.        */
+  var charge = 0, m;
+  if((m = t.match(/\^(\d*)([+-])$/))){              /* exposant explicite */
+    charge = (m[1]?parseInt(m[1],10):1) * (m[2]==='+'?1:-1);
+    t = t.slice(0, m.index);
+  } else if((m = t.match(/\s(\d*)([+-])$/))){       /* charge détachée : « Cr2O7 2- » */
+    charge = (m[1]?parseInt(m[1],10):1) * (m[2]==='+'?1:-1);
+    t = t.slice(0, m.index);
+  } else if((m = t.match(/(\d*)([+-])$/))){
+    var chiffres = m[1], corps = t.slice(0, m.index), signe = (m[2]==='+'?1:-1);
+    if(chiffres.length >= 2){
+      /* deux chiffres collés : le dernier est la charge, l'autre un indice */
+      charge = parseInt(chiffres.slice(-1),10) * signe;
+      corps += chiffres.slice(0,-1);
+    } else if(chiffres.length === 1){
+      /* un seul chiffre : c'est une charge si ce qui précède est un symbole
+         d'élément seul — « Fe3+ » — et un indice sinon — « MnO4- »          */
+      charge = ELSET[corps] ? parseInt(chiffres,10)*signe : signe;
+      if(!ELSET[corps]) corps += chiffres;
+    } else {
+      charge = signe;
+    }
+    t = corps;
+  }
+  t = t.replace(/\s+/g,'');
+  if(!t) return {err:'il n\'y a qu\'une charge, sans formule'};
+  var i = 0, atoms = {};
+  function nombre(){ var d=''; while(i<t.length && /\d/.test(t[i])) d+=t[i++]; return d? parseInt(d,10):1; }
+  function sequence(stop){
+    var acc = {};
+    while(i < t.length){
+      var c = t[i];
+      if(c === ')'){ if(!stop) return {err:'une parenthèse fermante sans ouvrante'}; break; }
+      if(c === '('){
+        i++;
+        var sous = sequence(true);
+        if(sous.err) return sous;
+        if(t[i] !== ')') return {err:'une parenthèse ouvrante jamais fermée'};
+        i++;
+        var k = nombre();
+        for(var e in sous) acc[e] = (acc[e]||0) + sous[e]*k;
+        continue;
+      }
+      if(!/[A-Z]/.test(c)){
+        var maj = c.toUpperCase();
+        if(/[a-z]/.test(c) && ELSET[maj])
+          return {err:'« '+c+' » en minuscule — <b>en chimie la casse porte du sens</b> : '
+                     +'voulais-tu écrire « '+maj+' » ?'};
+        return {err:'« '+c+' » n\'a rien à faire dans une formule'};
+      }
+      var sym = c; i++;
+      while(i<t.length && /[a-z]/.test(t[i]) && ELSET[sym+t[i]]) sym += t[i++];
+      if(!ELSET[sym]){
+        var essai = sym.charAt(0).toUpperCase()+sym.slice(1).toLowerCase();
+        return {err:'« '+sym+' » n\'est pas un élément'
+          + (ELSET[essai] && essai!==sym ? ' — attention à la casse, c\'est « '+essai+' »' : '')};
+      }
+      var n = nombre();
+      acc[sym] = (acc[sym]||0) + n;
+    }
+    return acc;
+  }
+  var r = sequence(false);
+  if(r.err) return r;
+  if(i < t.length) return {err:'la formule s\'arrête mal, à « '+t.slice(i)+' »'};
+  if(!Object.keys(r).length) return {err:'aucun élément reconnu'};
+  return {atoms:r, charge:charge, elec:0};
+}
+
+/* découpe un membre : le + est une charge, sauf s'il ouvre un nouveau terme */
+function coupeTermes(cote){
+  var out=[], cur='', i=0;
+  while(i < cote.length){
+    if(cote[i] === '+'){
+      var reste = cote.slice(i+1).replace(/^\s+/,'');
+      if(/^(\d+\s*)?([A-Z]|e\^?-)/.test(reste)){ out.push(cur); cur=''; i++; continue; }
+    }
+    cur += cote[i]; i++;
+  }
+  out.push(cur);
+  return out.map(function(x){ return x.trim(); }).filter(Boolean);
+}
+
+function parseCote(cote){
+  var termes = coupeTermes(cote), atoms = {}, charge = 0, elec = 0, especes = [];
+  if(!termes.length) return {err:'ce membre est vide'};
+  for(var k=0;k<termes.length;k++){
+    var t = termes[k], coef = 1;
+    var m = t.match(/^(\d+)\s*(.+)$/);
+    if(m){ coef = parseInt(m[1],10); t = m[2]; }
+    var sp = parseEspece(t);
+    if(sp.err) return {err:sp.err, terme:termes[k]};
+    especes.push({coef:coef, txt:t, sp:sp});
+    charge += coef*sp.charge;
+    if(sp.elec) elec += coef;
+    for(var e in sp.atoms) atoms[e] = (atoms[e]||0) + coef*sp.atoms[e];
+  }
+  return {atoms:atoms, charge:charge, elec:elec, especes:especes};
+}
+
+function verifieEquation(txt){
+  var t = eqNorm(txt);
+  if(!t) return {vide:1};
+  var parts = t.split('=');
+  if(parts.length < 2) return {err:'il manque le signe « = » entre les deux membres'};
+  if(parts.length > 2) return {err:'il y a plus d\'un signe « = »'};
+  var G = parseCote(parts[0]), D = parseCote(parts[1]);
+  if(G.err) return {err:G.err, ou:'à gauche', terme:G.terme};
+  if(D.err) return {err:D.err, ou:'à droite', terme:D.terme};
+  var els = {}; Object.keys(G.atoms).forEach(function(e){els[e]=1;}); Object.keys(D.atoms).forEach(function(e){els[e]=1;});
+  var lignes = Object.keys(els).sort().map(function(e){
+    return {el:e, g:G.atoms[e]||0, d:D.atoms[e]||0, dif:(G.atoms[e]||0)-(D.atoms[e]||0)};
+  });
+  var dq = G.charge - D.charge;
+  var ok = lignes.every(function(l){ return l.dif===0; }) && dq===0;
+  return {ok:ok, lignes:lignes, qG:G.charge, qD:D.charge, dq:dq,
+          elecG:G.elec, elecD:D.elec, G:G, D:D, pistes:pistes(lignes, dq)};
+}
+
+/* les pistes se déduisent des écarts — aucune supposition */
+function pistes(lignes, dq){
+  var p = [], m = {};
+  lignes.forEach(function(l){ if(l.dif) m[l.el] = l.dif; });
+  var els = Object.keys(m), cote = function(d){ return d>0 ? 'à droite' : 'à gauche'; };
+  var abs = Math.abs;
+  if(els.length===2 && m.H && m.O && m.H === 2*m.O)
+    p.push('Ajoute <b>'+abs(m.O)+' H<sub>2</sub>O</b> '+cote(m.O)+' : il y manque exactement '
+           +abs(m.O)+' oxygène et '+abs(m.H)+' hydrogène.');
+  else if(els.length===1 && m.O)
+    p.push('Ajuste l\'oxygène avec <b>'+abs(m.O)+' H<sub>2</sub>O</b> '+cote(m.O)
+           +', puis reprends l\'hydrogène.');
+  else if(els.length===1 && m.H && m.H === dq)
+    p.push('Ajoute <b>'+abs(m.H)+' H<sup>+</sup></b> '+cote(m.H)
+           +' : cela règle l\'hydrogène et la charge d\'un coup.');
+  else if(els.length===1 && m.H)
+    p.push('Ajuste l\'hydrogène avec <b>'+abs(m.H)+' H<sup>+</sup></b> '+cote(m.H)+'.');
+  if(!els.length && dq)
+    p.push('Les atomes sont bons, seules les charges ne le sont pas : ajoute <b>'+abs(dq)
+           +' e<sup>−</sup></b> '+cote(dq)+'.');
+  if(els.length && els.some(function(e){ return e!=='H' && e!=='O'; }))
+    p.unshift('Commence par les éléments <b>autres que H et O</b> — ce sont eux qui fixent les coefficients.');
+  return p;
+}
+
 /* ── mise en forme ────────────────────────────────────────────────── */
 function fr(x,d){
   if(!isFinite(x)) return '—';
@@ -4105,6 +4320,62 @@ ephM2.addEventListener('click',function(){ ephSetMode('man'); });
 $('#eph-cote').addEventListener('change',ephDraw);
 [ephFer,ephEau].forEach(function(el){ el.addEventListener('change',ephDraw); });
 
+/* ═══ outil 5 · vérifier un équilibrage ════════════════════════════ */
+var eqIn=$('#eq-in'), eqOut=$('#eq-out'), eqEx=$('#eq-ex');
+function sgn(x){ return x>0 ? '+'+x : (x<0 ? '−'+Math.abs(x) : '0'); }
+function sigEspece(sp){
+  return Object.keys(sp.atoms).sort().map(function(e){ return e+sp.atoms[e]; }).join('')+'|'+sp.charge;
+}
+function aCote(cote, sig){
+  return cote.especes.some(function(x){ return sigEspece(x.sp) === sig; });
+}
+function eqRender(r){
+  if(r.vide) return '<div class="eqv flou">Écris une équation à gauche : le bilan se fait à mesure.</div>';
+  if(r.err) return '<div class="eqv mauvais">Je n\'arrive pas à lire l\'équation'
+      + (r.ou ? ' — le problème est '+r.ou : '') + '</div>'
+      + '<div class="eqp">'+r.err
+      + (r.terme ? '<br>Le terme en cause : <span class="f">'+r.terme+'</span>' : '')+'</div>';
+  var lig = r.lignes.map(function(l){
+    return '<tr class="'+(l.dif?'faux':'')+'"><td><span class="f">'+l.el+'</span></td>'
+      + '<td class="num">'+l.g+'</td><td class="num">'+l.d+'</td>'
+      + '<td class="num ec">'+(l.dif ? sgn(l.dif) : '·')+'</td></tr>'; }).join('');
+  var qq = '<tr class="'+(r.dq?'faux':'')+'"><td>charge</td><td class="num">'+sgn(r.qG)+'</td>'
+      + '<td class="num">'+sgn(r.qD)+'</td><td class="num ec">'+(r.dq ? sgn(r.dq) : '·')+'</td></tr>';
+  var faux = r.lignes.filter(function(l){ return l.dif; }).length + (r.dq?1:0);
+  var tete = r.ok
+    ? '<div class="eqv bon">Équilibrée<span class="sous">atomes et charges se correspondent des deux côtés</span></div>'
+    : '<div class="eqv mauvais">Pas encore<span class="sous">'+faux+(faux>1?' lignes ne tombent':' ligne ne tombe')+' pas juste</span></div>';
+  return tete
+    + '<div class="tw"><table class="tab eqt"><tr><th></th><th>à gauche</th><th>à droite</th><th>écart</th></tr>'
+    + lig + qq + '</table></div>'
+    + (r.pistes.length ? '<div class="eqp">'+r.pistes.join('<br>')+'</div>' : '')
+    + (r.ok && (r.elecG||r.elecD)
+        ? '<div class="eqp">Cette demi-équation échange <b>'+(r.elecG||r.elecD)+' électron'
+          +((r.elecG||r.elecD)>1?'s':'')+'</b>. Contrôle-le par la différence de n.o. de l\'élément qui change.</div>'
+        : '');
+}
+var EQ_EX = [
+  ['MnO4- + 8H+ + 5e- = Mn2+ + 4H2O', 'juste'],
+  ['MnO4- + 8H+ + 5e- = Mn2+ + 3H2O', 'une eau de moins'],
+  ['MnO4- + 8H+ = Mn2+ + 4H2O', 'électrons oubliés'],
+  ['Cr2O7 2- + 14H+ + 6e- = Cr3+ + 7H2O', 'coefficient oublié'],
+  ['Mno4- + 8H+ + 5e- = Mn2+ + 4H2O', 'casse fautive']
+];
+if(eqEx) eqEx.innerHTML = EQ_EX.map(function(x,i){
+  return '<button type="button" data-eqx="'+i+'">'+x[1]+'</button>'; }).join('');
+function eqDraw(){
+  eqOut.innerHTML = eqRender(verifieEquation(eqIn.value));
+  S.tools.eq = eqIn.value; save();
+}
+if(eqIn){
+  eqIn.addEventListener('input', eqDraw);
+  eqEx.addEventListener('click', function(ev){
+    var b = ev.target.closest && ev.target.closest('[data-eqx]');
+    if(!b) return;
+    eqIn.value = EQ_EX[+b.dataset.eqx][0]; eqDraw(); eqIn.focus();
+  });
+}
+
 /* ═══ outil 4 · vérifier mon calcul ════════════════════════════════ */
 var tiRep=$('#ti-rep'), tiOut=$('#ti-out');
 function K(l,d){ return '<span class="key'+(d?' dark':'')+'">'+l+'</span>'; }
@@ -4306,8 +4577,22 @@ GEN['2a'] = function(){
   };
 };
 
-GEN['2b'] = function(){
+GEN['2b'] = function(mode){
   var q = alea(EQUIL);
+  if(mode === 'eq'){
+    var oxSp = parseEspece(eqNorm(plainF(q.ox))), rdSp = parseEspece(eqNorm(plainF(q.rd)));
+    return {
+      q: 'Écris <b>en entier</b> la demi-équation du couple <span class="f" style="font-size:1.05em">'
+        + q.ox+' / '+q.rd+'</span>, en milieu acide — comme sur une copie.',
+      champs: [{k:'eq', lab:'ta demi-équation', type:'eq'}],
+      sol: {eq: {n:q.n, ox:sigEspece(oxSp), rd:sigEspece(rdSp)}},
+      corr: '<div class="eqs"><div class="row"><span class="e f">'+demiEq(q)+'</span>'
+        + '<span class="lab">l\'écriture attendue</span></div></div>'
+        + '<p style="margin-top:9px">Toute écriture <b>équilibrée</b> qui fait apparaître '
+        + '<span class="f ox">'+q.ox+'</span> à gauche, <span class="f rd">'+q.rd+'</span> à droite '
+        + 'et <b>'+q.n+' électron'+(q.n>1?'s':'')+'</b> est acceptée — l\'ordre des termes est libre.</p>'
+    };
+  }
   return {
     q: 'Équilibre la demi-équation du couple <span class="f" style="font-size:1.05em">'
       + q.ox+' / '+q.rd+'</span> en <b>milieu acide</b>.',
@@ -4322,6 +4607,7 @@ GEN['2b'] = function(){
       + 'le nombre d\'électrons. C\'est la vérification qui coûte trois secondes.</p>'
   };
 };
+GEN['2b'].modes = [['coef','les coefficients'], ['eq','l\'équation entière']];
 
 GEN['2c'] = function(){
   /* on écarte les couples dont le réducteur est l'eau : elle est alors
@@ -4487,19 +4773,36 @@ function entrLabel(b){
   var id=b.dataset.entr, sc=entrScore(id);
   b.textContent = sc.n ? 'S\'entraîner — '+sc.ok+' réussis sur '+sc.n : 'S\'entraîner — tirage au hasard';
 }
+function entrMode(id){
+  var ms = GEN[id] && GEN[id].modes; if(!ms) return null;
+  var m = (S.entr[id]||{}).mode;
+  return ms.some(function(x){ return x[0]===m; }) ? m : ms[0][0];
+}
 function entrTirer(id, box){
   var g=GEN[id]; if(!g){ box.innerHTML='<p class="q3">Entraîneur à écrire.</p>'; return; }
-  var Q=g(); box.__Q=Q; box.__tries=0; box.__compte=false;
+  var mode=entrMode(id);
+  var Q=g(mode); box.__Q=Q; box.__tries=0; box.__compte=false;
   var sc=entrScore(id);
   var champs=Q.champs.map(function(c){
-    var inp = c.type==='sel'
-      ? '<select data-k="'+c.k+'"><option value="">—</option>'
-        + c.opts.map(function(o){ return '<option value="'+o[0]+'">'+o[1]+'</option>'; }).join('')+'</select>'
-      : '<input type="number" step="any" inputmode="decimal" data-k="'+c.k+'">';
-    return '<div class="f2"><label>'+c.lab+(c.unit?' — en '+c.unit:'')+'</label>'+inp+'</div>';
+    var inp;
+    if(c.type==='sel')
+      inp = '<select data-k="'+c.k+'"><option value="">—</option>'
+        + c.opts.map(function(o){ return '<option value="'+o[0]+'">'+o[1]+'</option>'; }).join('')+'</select>';
+    else if(c.type==='eq')
+      inp = '<input type="text" class="eqin" spellcheck="false" autocomplete="off" style="width:30em;max-width:100%"'
+          + ' placeholder="Ox + n H+ + n e- = Red + n H2O" data-k="'+c.k+'">';
+    else
+      inp = '<input type="number" step="any" inputmode="decimal" data-k="'+c.k+'">';
+    return '<div class="f2"'+(c.type==='eq'?' style="flex:1 1 100%"':'')+'><label>'
+         + c.lab+(c.unit?' — en '+c.unit:'')+'</label>'+inp+'</div>';
   }).join('');
+  var bascule = GEN[id].modes
+    ? '<span class="seg2" style="max-width:23em;flex:0 0 auto">'+GEN[id].modes.map(function(m){
+        return '<button type="button" class="ent-mode" data-mode="'+m[0]+'" aria-pressed="'
+             + (m[0]===mode?'true':'false')+'">'+m[1]+'</button>'; }).join('')+'</span>'
+    : '';
   box.innerHTML =
-      '<div class="hd2"><span class="k">Tirage au hasard</span>'
+      '<div class="hd2"><span class="k">Tirage au hasard</span>'+bascule
     + '<span class="sc">'+(sc.n? sc.ok+' réussis sur '+sc.n : 'premier tirage')+'</span></div>'
     + '<p class="q3">'+Q.q+'</p>'
     + '<div class="ent-fields">'+champs+'</div>'
@@ -4511,11 +4814,18 @@ function entrTirer(id, box){
 }
 function entrCorriger(id, box, force){
   var Q=box.__Q; if(!Q) return;
-  var bon=true;
+  var bon=true, diag='';
   Q.champs.forEach(function(c){
     var el=box.querySelector('[data-k="'+c.k+'"]');
     var att=Q.sol[c.k], ok;
     if(c.type==='sel') ok = (el.value === String(att));
+    else if(c.type==='eq'){
+      var r = verifieEquation(el.value);
+      ok = !r.err && r.ok && r.elecG === att.n && aCote(r.G, att.ox) && aCote(r.D, att.rd);
+      diag = eqRender(r);
+      if(!r.err && r.ok && !ok) diag += '<div class="eqp">L\'équation est équilibrée, mais ce n\'est pas '
+        + 'celle du couple demandé : vérifie les espèces de chaque côté et le nombre d\'électrons.</div>';
+    }
     else {
       var num=parseFloat(String(el.value).replace(',','.'));
       ok = isFinite(num) && Math.abs(num-att) <= (c.tol==null?0.005:c.tol);
@@ -4528,7 +4838,7 @@ function entrCorriger(id, box, force){
   if(!box.__compte){
     box.__compte=true;
     var sc=entrScore(id);
-    S.entr[id]={n:sc.n+1, ok:sc.ok+(bon?1:0)};
+    S.entr[id]={n:sc.n+1, ok:sc.ok+(bon?1:0), mode:sc.mode};   /* le mode survit au score */
     save();
     var b=document.querySelector('.go[data-entr="'+id+'"]'); if(b) entrLabel(b);
     var s2=box.querySelector('.sc'); if(s2) s2.textContent=S.entr[id].ok+' réussis sur '+S.entr[id].n;
@@ -4537,15 +4847,17 @@ function entrCorriger(id, box, force){
   corr.hidden=false;
   if(bon){
     corr.className='corr bon';
-    corr.innerHTML='<span class="t3">Juste</span>'+Q.corr;
+    corr.innerHTML='<span class="t3">Juste</span>'+diag+Q.corr;
   } else if(box.__tries===1 && !force){
     corr.className='corr mauvais';
-    corr.innerHTML='<span class="t3">Pas encore</span>'
-      + '<p>Les champs entourés de rouge sont ceux à revoir. Reprends-les, puis revérifie.</p>'
+    corr.innerHTML=(diag?'':'<span class="t3">Pas encore</span>')+diag
+      + '<p>'+(diag?'Le bilan dit où ça cloche.':'Les champs entourés de rouge sont ceux à revoir.')
+      + ' Reprends, puis revérifie.</p>'
       + '<button class="btn sec ent-voir" type="button">voir la correction</button>';
   } else {
     corr.className='corr mauvais';
-    corr.innerHTML='<span class="t3">La correction</span>'+Q.corr;
+    corr.innerHTML=(diag?'':'<span class="t3">La correction</span>')+diag
+      + (diag?'<span class="t3" style="margin-top:11px">La correction</span>':'')+Q.corr;
   }
 }
 document.addEventListener('click',function(ev){
@@ -4564,6 +4876,11 @@ document.addEventListener('click',function(ev){
   if(t.classList.contains('ent-ok'))  entrCorriger(id2, box2, false);
   if(t.classList.contains('ent-new')) entrTirer(id2, box2);
   if(t.classList.contains('ent-voir'))entrCorriger(id2, box2, true);
+  if(t.classList.contains('ent-mode')){
+    var sc0=S.entr[id2]||{n:0,ok:0};
+    S.entr[id2]={n:sc0.n, ok:sc0.ok, mode:t.dataset.mode}; save();
+    entrTirer(id2, box2);
+  }
 });
 $$('.go[data-entr]').forEach(entrLabel);
 
@@ -4594,7 +4911,8 @@ function toolsRestore(){
     ephMode = e.mode==='man' ? 'man' : 'auto';
   }
   ephSetMode(ephMode);
-  drawGamma(); nerDraw(); tiDraw();
+  if(eqIn && t.eq!=null) eqIn.value=t.eq;
+  drawGamma(); nerDraw(); tiDraw(); if(eqIn) eqDraw();
 }
 
 /* ── prise de test ─────────────────────────────────────────────────
@@ -4602,7 +4920,8 @@ function toolsRestore(){
    que les tests puissent vérifier la chimie sans passer par l'interface.
    Rien du site ne s'en sert.                                            */
 window.__redox = {COUPLES:COUPLES, BYKEY:BYKEY, EQUIL:EQUIL, NOX:NOX, DISM:DISM,
-                  METAUX:METAUX, GEN:GEN, demiEq:demiEq, nernst:nernst, fr:fr, fv:fv, plainF:plainF};
+                  METAUX:METAUX, GEN:GEN, demiEq:demiEq, nernst:nernst,
+                  verifieEquation:verifieEquation, parseEspece:parseEspece, eqNorm:eqNorm, fr:fr, fv:fv, plainF:plainF};
 
 /* ═══ les annales : navigation, corrections repliées, chronomètre ═══ */
 var annBtns=$$('.ann-nav button'), anns=$$('.ann');
