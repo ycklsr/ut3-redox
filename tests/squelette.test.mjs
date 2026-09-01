@@ -339,3 +339,24 @@ test('aucune classe n\'est stylée sans être employée', async () => {
   const mortes = [...definies].filter(c => !employes.has(c)).sort();
   assert.deepEqual(mortes, [], 'règles CSS qui ne stylent plus rien');
 });
+
+/* ── 15 · pas de coulisses dans le texte lu ────────────────────────
+   Le site s'adresse à un étudiant, pas au constructeur. Les tournures
+   qui expliquent une décision de conception, renvoient à l'ordre des
+   travaux ou annoncent du travail à venir n'ont rien à y faire.     */
+const COULISSES = [
+  'posé ici', 'rendu exécutable', 'ordre des travaux', 'implémentation de référence',
+  'maquette', 'note de chantier', 'reste à écrire', 'sera écrit', 'pour l\'instant',
+  'provisoire', 'à faire plus tard', 'todo', 'lorem ipsum'
+];
+test('aucune coulisse de fabrication ne subsiste dans le texte lu', async () => {
+  const { ctx, page } = await open();
+  const trouves = await page.evaluate(mots => {
+    /* on ouvre tout ce qui est repliable : les coulisses s'y cachent aussi */
+    for (const el of document.querySelectorAll('[hidden]')) el.hidden = false;
+    const txt = document.querySelector('main').textContent.toLowerCase();
+    return mots.filter(m => txt.indexOf(m) >= 0);
+  }, COULISSES);
+  assert.deepEqual(trouves, []);
+  await ctx.close();
+});

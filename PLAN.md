@@ -479,11 +479,11 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 
 ## 10 bis. L'état des tests
 
-**74 tests**, répartis en six fichiers, tous branchés en `pre-commit` et en CI :
+**75 tests**, répartis en six fichiers, tous branchés en `pre-commit` et en CI :
 
 | Fichier | Ce qu'il garde |
 |---|---|
-| `squelette.test.mjs` | le fil, le thème, l'impression, la casse chimique, les débordements de 375 à 1280 px, le contraste sur fond accent, l'intégrité des figures, l'absence de CSS mort |
+| `squelette.test.mjs` | le fil, le thème, l'impression, la casse chimique, les débordements de 375 à 1280 px, le contraste sur fond accent, l'intégrité des figures, l'absence de CSS mort, l'absence de coulisses dans le texte lu |
 | `paillasse.test.mjs` | les quatre outils, avec les valeurs de contrôle des exercices 12 et 13 et du sujet 2024 |
 | `gestes.test.mjs` | les dix entraîneurs, plus les bilans de charge, d'oxygène et d'hydrogène des douze demi-équations et les vingt n.o., recopiés d'une vérification à la main |
 | `equilibre.test.mjs` | le moteur d'équilibrage sur 28 équations de référence, l'outil de la paillasse, et le mode « équation entière » du geste 2b |
@@ -509,7 +509,11 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 >   pures (`COUPLES`, `EQUIL`, `NOX`, `GEN`, `nernst`, `demiEq`, `fr`, `fv`,
 >   `plainF`) : c'est par là que les tests vérifient la chimie sans passer par
 >   l'interface. Rien du site ne s'en sert.
-> - **`npm run captures` avant de conclure.** Les tests vérifient la mécanique,
+> - **Le site parle à un étudiant, pas au constructeur.** Les bandeaux des
+  gestes ont porté neuf mois durant « posé ici, dès que le cours l'a rendu
+  exécutable » — ma justification de placement, héritée des maquettes, affichée
+  à l'étudiant. Un test refuse maintenant ce vocabulaire dans le texte lu.
+- **`npm run captures` avant de conclure.** Les tests vérifient la mécanique,
 >   pas l'allure. Trois bugs de ce projet — le γ qui ne se dessinait pas, le
 >   proton compté deux fois, les étiquettes superposées — n'ont été trouvés
 >   qu'à l'œil.
