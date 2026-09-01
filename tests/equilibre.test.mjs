@@ -166,6 +166,9 @@ test('le geste 2b propose d\'écrire l\'équation entière, et la corrige', asyn
   assert.equal(await page.locator('.entr[data-entr-for="2b"] .ent-mode').count(), 2, 'deux modes');
   await page.click('.entr[data-entr-for="2b"] .ent-mode[data-mode="eq"]');
   await page.waitForSelector('.entr[data-entr-for="2b"] input.eqin');
+  /* on attend que l'énoncé lui-même soit celui du mode équation */
+  await page.waitForFunction(() =>
+    /en entier/.test(document.querySelector('.entr[data-entr-for="2b"] .q3').textContent));
 
   /* on écrit l'équation attendue, telle que le site la rendrait */
   const attendue = await page.evaluate(() => {

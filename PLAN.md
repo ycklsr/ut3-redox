@@ -479,11 +479,11 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 
 ## 10 bis. L'état des tests
 
-**73 tests**, répartis en six fichiers, tous branchés en `pre-commit` et en CI :
+**74 tests**, répartis en six fichiers, tous branchés en `pre-commit` et en CI :
 
 | Fichier | Ce qu'il garde |
 |---|---|
-| `squelette.test.mjs` | le fil, le thème, l'impression, la casse chimique, les débordements de 375 à 1280 px, le contraste sur fond accent, l'intégrité des figures |
+| `squelette.test.mjs` | le fil, le thème, l'impression, la casse chimique, les débordements de 375 à 1280 px, le contraste sur fond accent, l'intégrité des figures, l'absence de CSS mort |
 | `paillasse.test.mjs` | les quatre outils, avec les valeurs de contrôle des exercices 12 et 13 et du sujet 2024 |
 | `gestes.test.mjs` | les dix entraîneurs, plus les bilans de charge, d'oxygène et d'hydrogène des douze demi-équations et les vingt n.o., recopiés d'une vérification à la main |
 | `equilibre.test.mjs` | le moteur d'équilibrage sur 28 équations de référence, l'outil de la paillasse, et le mode « équation entière » du geste 2b |

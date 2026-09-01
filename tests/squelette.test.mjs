@@ -323,3 +323,19 @@ for (const scheme of ['light', 'dark']) {
     await ctx.close();
   });
 }
+
+/* ── 14 · pas de CSS mort ──────────────────────────────────────────
+   Une règle qui ne style plus rien est un reste de refonte. On relève
+   les classes définies dans la feuille, et on les cherche dans toutes
+   les chaînes du fichier — attributs, className, littéraux JS.       */
+test('aucune classe n\'est stylée sans être employée', async () => {
+  const src = fs.readFileSync(path.join(ROOT, 'redox.html'), 'utf8');
+  const style = src.slice(src.indexOf('<style>'), src.indexOf('</style>'));
+  const definies = new Set([...style.matchAll(/\.([a-zA-Z][\w-]*)/g)].map(m => m[1]));
+  /* tout jeton apparaissant dans une chaîne du fichier compte comme employé */
+  const employes = new Set();
+  for (const m of src.slice(src.indexOf('</style>')).matchAll(/"([^"\n]*)"|'([^'\n]*)'|`([^`]*)`/g))
+    for (const tok of (m[1] ?? m[2] ?? m[3] ?? '').split(/[^\w-]+/)) if (tok) employes.add(tok);
+  const mortes = [...definies].filter(c => !employes.has(c)).sort();
+  assert.deepEqual(mortes, [], 'règles CSS qui ne stylent plus rien');
+});

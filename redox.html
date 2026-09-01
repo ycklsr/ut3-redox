@@ -133,14 +133,6 @@ a{color:var(--acc)}
 .obj p{margin:3px 0 0;font-size:14.5px;line-height:1.5;color:var(--mut)}
 .obj p b{color:var(--ink)}
 
-/* la note de chantier — ce qui reste à écrire ici */
-.chantier{border:1px dashed var(--line);border-radius:8px;padding:11px 14px 13px;margin:20px 0 6px;
-          font-family:var(--sans);font-size:12.5px;line-height:1.5;color:var(--mut);max-width:46em}
-.chantier .k{color:var(--mut);margin-bottom:5px}
-.chantier ul{margin:4px 0 0;padding-left:17px}
-.chantier li{margin-bottom:2px}
-.chantier b{color:var(--ink);font-weight:600}
-
 /* ═══════════════════════════════════════════════════════════════════
    NOTATION CHIMIQUE
    La casse porte du sens : Co ≠ CO, MnO₄⁻ ≠ MNO₄⁻, pH ≠ PH.
@@ -238,7 +230,6 @@ a{color:var(--acc)}
 .pas>li b{font-weight:600}
 .pas .co{display:block;font-family:var(--sans);font-size:12.5px;color:var(--mut);
          line-height:1.45;margin-top:2px}
-.pas.check>li::before{border-style:dashed}
 
 /* ── tableau de données ───────────────────────────────────────────── */
 /* un tableau large défile dans son conteneur, jamais la page */
@@ -315,8 +306,6 @@ table.tab{border-collapse:collapse;margin:0;font-size:14.5px;width:100%;min-widt
 .geste .go{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.08em;
    text-transform:uppercase;background:var(--acc);color:var(--on-acc);border-radius:99px;padding:4px 12px 5px;margin-top:12px}
 .geste .go[disabled]{background:none;color:var(--mut);border:1px dashed var(--line);cursor:default}
-.geste.pending{background:none;border-left-style:dashed}
-.geste.pending .att{font-size:12.5px;color:var(--mut);line-height:1.5}
 
 /* ── les annales ───────────────────────────────────────────────────── */
 .ann-nav{display:flex;gap:0;border:1px solid var(--line);border-radius:8px;overflow:hidden;
@@ -446,15 +435,11 @@ table.tab{border-collapse:collapse;margin:0;font-size:14.5px;width:100%;min-widt
 .panel{background:var(--paper);border-top:1px solid var(--line);padding:14px 18px 17px;
        font-family:var(--sans);max-height:40vh;overflow:auto}
 .panel[hidden]{display:none}
-.panel .cols{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:26px;align-items:start}
 .panel .k{margin-bottom:7px}
 .keys{font-family:var(--mono);font-size:12.5px;line-height:2.2}
 .key{display:inline-block;border:1px solid var(--keyline);border-bottom-width:2px;border-radius:4px;
      padding:1px 6px;background:var(--keybg);font-size:11.5px;margin:0 1px}
 .key.dark{background:var(--keydark);color:#fff;border-color:var(--keydark)}
-.warn{border-left:2px solid var(--amb);padding-left:12px;font-size:12.5px;line-height:1.5;color:var(--amb-ink)}
-.warn b{color:var(--amb)}
-.warn code{font-family:var(--mono);font-size:.88em}
 .cmp{font-family:var(--mono);font-size:12.5px;background:var(--soft);border-radius:6px;padding:9px 12px;margin-top:9px}
 .cmp .good{color:var(--ok);font-weight:600}
 
@@ -516,7 +501,6 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
 .out-res .c3{font-family:var(--sans);font-size:11.5px;color:var(--mut);max-width:32em;line-height:1.45}
 .verdict{font-family:var(--sans);font-size:13px;line-height:1.5;margin-top:10px}
 .verdict .oui{color:var(--ok);font-weight:600}
-.verdict .non{color:var(--mark);font-weight:600}
 .tool-note{font-family:var(--sans);font-size:11.5px;color:var(--mut);line-height:1.45;margin-top:9px;
            border-left:2px solid var(--amb);padding-left:10px}
 .tool-note b{color:var(--amb)}
@@ -550,7 +534,6 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
 @media (max-width:820px){
   .link{grid-template-columns:24px minmax(0,1fr);gap:0 14px}
   .link .aide{grid-column:2;margin-top:9px;padding-left:12px}
-  .panel .cols{grid-template-columns:minmax(0,1fr);gap:16px}
 }
 @media (max-width:620px){
   body{font-size:16px}
