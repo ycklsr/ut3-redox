@@ -559,6 +559,27 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
   .link{break-inside:avoid}
   .cp{display:none}
 }
+
+/* Entraînements guidés : séparés des points de contrôle comptabilisés. */
+.practice{margin:22px 0;padding:18px;border:1px solid var(--line);border-left:3px solid var(--acc);border-radius:4px;background:var(--soft);min-width:0}
+.practice h3{font-family:var(--serif);font-size:1.1rem;line-height:1.35;margin:6px 0 10px}
+.practice>p{margin:8px 0;font-size:15px}
+.practice fieldset{border:0;border-top:1px solid var(--line);padding:12px 0;margin:14px 0 0;min-width:0}
+.practice legend{font:11px var(--mono);color:var(--mut);padding:0 8px 0 0}
+.practice label{display:block;font-size:15px;margin:0 0 8px}
+.practice input{display:block;box-sizing:border-box;width:12em;max-width:100%;padding:8px 10px;border:1px solid var(--keyline);border-radius:3px;background:var(--keybg);color:var(--ink);font:16px var(--mono)}
+.practice input[aria-invalid="true"]{border-color:var(--mark)}
+.practice-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:10px}
+.practice .go{margin:0;white-space:normal}
+.practice-hint,.practice-reset{font:13px var(--sans);text-decoration:underline;text-underline-offset:3px;padding:5px 0}
+.practice fieldset:disabled .practice-actions{display:none}
+.practice-help,.practice-feedback,.practice-finish{font:14px/1.55 var(--sans);margin:10px 0 0;overflow-wrap:anywhere}
+.practice-feedback[data-state="bad"]{color:var(--mark)}
+.practice-feedback[data-state="good"],.practice-finish{color:var(--ok)}
+.practice-reset{margin-top:12px}
+.worked-answer{margin:18px 0;border:1px solid var(--line);padding:12px}
+.worked-answer summary{cursor:pointer;font:14px/1.5 var(--sans);color:var(--acc)}
+.checkpoint-block{margin:16px 0}
 </style>
 </head>
 <body>
@@ -621,16 +642,8 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
     <p><span class="f">10<sup>−2</sup></span> vaut <b>0,01</b>. C'est un nombre <b>positif</b>, simplement très petit. Le signe moins est <b>dans l'exposant</b>, pas devant le nombre. Une concentration de <span class="f">10<sup>−2</sup> mol·L⁻¹</span> est une petite concentration, jamais une concentration négative.</p></div>
 
   <h3 style="font-family:var(--serif);font-size:1rem;font-weight:600;margin:22px 0 8px">Les quatre opérations dont tu auras besoin</h3>
-  <p>Aucune ne demande de calculer les valeurs : on ne touche qu'aux <b>exposants</b>.<button class="cp" type="button" data-cp="0-1" aria-expanded="false" aria-controls="q0-1">vérifier</button></p>
-    <div class="q" id="q0-1" data-forme="transfert" hidden>
-      <span class="k qk">Point de contrôle</span>
-      <p class="qq">Tu dois calculer <span class="f">(10<sup>−5</sup>)<sup>2</sup></span>. Que vaut le résultat ?</p>
-      <button class="opt" data-ok="1" data-fb="Élever à une puissance, c'est <b>multiplier</b> les exposants : −5 × 2 = −10."><span class="f">10<sup>−10</sup></span></button>
-      <button class="opt" data-ok="0" data-fb="C'est ce que donnerait une addition. On additionne pour une <b>multiplication</b> de deux puissances, pas pour une puissance de puissance."><span class="f">10<sup>−3</sup></span></button>
-      <button class="opt" data-ok="0" data-fb="−5 − 2 : c'est la règle de la <b>division</b>."><span class="f">10<sup>−7</sup></span></button>
-      <button class="opt" data-ok="0" data-fb="Le signe de l'exposant ne change pas : le résultat reste un très petit nombre."><span class="f">10<sup>25</sup></span></button>
-      <div class="fb" hidden></div>
-    </div>
+  <p>Aucune ne demande de calculer les valeurs : on ne touche qu'aux <b>exposants</b>.</p>
+    
 
   <div class="tw"><table class="tab">
     <tr><th>Opération</th><th>Sur les exposants</th><th>L'exemple du cours</th></tr>
@@ -640,8 +653,22 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
     <tr><td>prendre une racine</td><td class="num">on <b>divise</b></td><td class="num"><span class="f"><sup>3</sup>√(10<sup>−36</sup>) = 10<sup>−12</sup></span><br><span class="sm">étape 14, encore</span></td></tr>
   </table></div>
 
+  <div class="ex" id="puissances-exemple"><span class="k">Un calcul expliqué</span><p>Mettre au carré, c'est multiplier un nombre par lui-même : <span class="f">(10<sup>−3</sup>)<sup>2</sup> = 10<sup>−3</sup> × 10<sup>−3</sup> = 10<sup>−6</sup></span>. Le raccourci est donc <span class="f">−3 × 2 = −6</span>, pas <span class="f">−3 + 2</span>.</p></div>
+<form class="practice" id="puissances-essai" novalidate aria-labelledby="puissances-essai-title"><span class="k">À toi · entraînement guidé</span><h3 id="puissances-essai-title">Multiplier les exposants</h3><p>Pour <span class="f">(10<sup>−2</sup>)<sup>3</sup></span>, saisis seulement l’exposant final.</p><fieldset data-answer="-6" data-hint-one="Une puissance de puissance multiplie les exposants." data-hint-two="Écris (−2) + (−2) + (−2)." data-success="Oui : le résultat est 10⁻⁶." data-errors="{&quot;1&quot;: &quot;Tu as additionné −2 et 3. Ici, multiplie les exposants.&quot;}"><legend>Étape 1 sur 1</legend><label for="puissances-essai-0">Quel est le résultat de −2 × 3 ?</label><input id="puissances-essai-0" type="text" inputmode="text" autocomplete="off" spellcheck="false" aria-describedby="puissances-essai-fb-0 puissances-essai-hint-0"><div class="practice-actions"><button class="go" type="submit">Vérifier cette étape</button><button type="button" class="practice-hint">Un indice</button></div><p class="practice-help" id="puissances-essai-hint-0" role="status" aria-live="polite" hidden></p><p class="practice-feedback" id="puissances-essai-fb-0" role="status" aria-live="polite" hidden></p></fieldset>
+<p class="practice-finish" role="status" aria-live="polite" hidden>Entraînement terminé. Tu peux refaire cet essai ou poursuivre le parcours.</p><button type="button" class="practice-reset">Recommencer cet entraînement</button></form>
+<div class="checkpoint-block"><p>Vérifie maintenant sur une autre puissance.<button class="cp" type="button" data-cp="0-1" aria-expanded="false" aria-controls="q0-1">vérifier</button></p>
+<div class="q" id="q0-1" data-prerequisites="puissances-exemple puissances-essai" data-forme="transfert" hidden>
+      <span class="k qk">Point de contrôle</span>
+      <p class="qq">Tu dois calculer <span class="f">(10<sup>−5</sup>)<sup>2</sup></span>. Que vaut le résultat ?</p>
+      <button class="opt" data-ok="1" data-fb="Élever à une puissance, c'est <b>multiplier</b> les exposants : −5 × 2 = −10."><span class="f">10<sup>−10</sup></span></button>
+      <button class="opt" data-ok="0" data-fb="C'est ce que donnerait une addition. On additionne pour une <b>multiplication</b> de deux puissances, pas pour une puissance de puissance."><span class="f">10<sup>−3</sup></span></button>
+      <button class="opt" data-ok="0" data-fb="−5 − 2 : c'est la règle de la <b>division</b>."><span class="f">10<sup>−7</sup></span></button>
+      <button class="opt" data-ok="0" data-fb="Le signe de l'exposant ne change pas : le résultat reste un très petit nombre."><span class="f">10<sup>25</sup></span></button>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
+    </div></div>
+
   <div class="piege"><span class="k">Soustraire un nombre négatif</span>
-    <p>C'est là que les erreurs arrivent. <span class="f">−38 − (−2)</span> se lit « moins 38, <b>moins</b> moins 2 », c'est-à-dire <span class="f">−38 + 2 = −36</span>. <b>Deux moins font un plus.</b> Écris-le en deux temps plutôt que de le faire de tête.</p></div>
+    <p>C'est là que les erreurs arrivent. <span class="f">−38 − (−2)</span> se lit « moins 38, <b>moins</b> moins 2 », c'est-à-dire <span class="f">−38 + 2 = −36</span>. <b>Soustraire un nombre négatif revient à ajouter son opposé.</b> Écris-le en deux temps plutôt que de le faire de tête.</p></div>
 
   <div class="def"><span class="k">L'écriture scientifique</span>
     <p>Un nombre écrit <span class="f">5 × 10<sup>−3</sup></span> se lit en deux morceaux : un nombre entre 1 et 10, puis une puissance de 10. Cela vaut <b>0,005</b>. Le cours l'utilise à l'exercice 12, et pour <span class="f">K<sub>s2</sub> = 8 × 10<sup>−16</sup></span> à l'étape 14.</p></div>
@@ -704,7 +731,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
       <button class="opt" data-ok="0" data-fb="C'est la valeur de <span class='f'>10<sup>−5</sup></span> lui-même, pas son logarithme.">0,00001</button>
       <button class="opt" data-ok="0" data-fb="Le signe se perd en route. L'exposant vaut −5, donc le log vaut −5.">5</button>
       <button class="opt" data-ok="0" data-fb="Le logarithme n'inverse rien : il lit l'exposant, tel quel.">1 / 5</button>
-      <div class="fb" hidden></div>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
     </div>
 
   <div class="tw"><table class="tab">
@@ -719,16 +746,18 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
 
   <div class="def"><span class="k">Trois repères qui évitent les fautes de signe</span>
     <p>Le log de <b>1</b> vaut <b>0</b>. Le log d'un nombre <b>plus petit que 1</b> est <b>négatif</b>. Le log d'un nombre <b>plus grand que 1</b> est <b>positif</b>.</p>
-    <p>Une concentration vaut presque toujours moins que 1 mol·L⁻¹ : dans ce module, <b>les logs sont donc presque toujours négatifs</b>. Un log positif au milieu d'un calcul de concentration mérite une relecture.<button class="cp" type="button" data-cp="0-3" aria-expanded="false" aria-controls="q0-3">vérifier</button></p>
-    <div class="q" id="q0-3" data-forme="contre-exemple" hidden>
+    <p>Une concentration vaut presque toujours moins que 1 mol·L⁻¹ : dans ce module, <b>les logs sont donc presque toujours négatifs</b>. Un log positif au milieu d'un calcul de concentration mérite une relecture.</p>
+    <p id="log-inverse">Pour revenir du log au nombre, on utilise <span class="f">log(c) = k ⟺ c = 10<sup>k</sup></span>, avec c exprimée numériquement en mol·L⁻¹. Par exemple : <span class="f">log(c) = −3 ⟹ c = 0,001</span>. Le calcul mathématique et la plausibilité de la concentration sont deux vérifications différentes.</p><div class="checkpoint-block"><p>Vérifie le résultat d’un calcul inverse.<button class="cp" type="button" data-cp="0-3" aria-expanded="false" aria-controls="q0-3">vérifier</button></p><div class="q" id="q0-3" data-forme="contre-exemple" hidden>
       <span class="k qk">Point de contrôle</span>
       <p class="qq">Au milieu d'un calcul, tu obtiens <span class="f"><span class="op">log</span>(c) = + 2</span> pour une concentration <span class="f">c</span>. Que conclus-tu ?</p>
-      <button class="opt" data-ok="1" data-fb="Un log positif signifie un nombre <b>plus grand que 1</b>. Une concentration de 100 mol·L⁻¹ n'existe pas dans ces exercices : l'erreur est en amont.">Que <span class='f'>c</span> vaudrait 100 mol·L⁻¹ : il y a une erreur avant</button>
+      <button class="opt" data-ok="1" data-fb="Mathématiquement, log(c) = 2 donne c = 10² = 100. Une valeur aussi élevée appelle une vérification des données, des unités et du calcul ; le seul signe positif du log ne prouve pas une erreur.">Que <span class='f'>c</span> vaudrait 100 mol·L⁻¹ : il faut vérifier les données et le calcul</button>
       <button class="opt" data-ok="0" data-fb="Ce serait un log de <b>−2</b>. Le signe compte.">Que <span class='f'>c</span> vaut 0,01 mol·L⁻¹</button>
       <button class="opt" data-ok="0" data-fb="Non : dans ce module les concentrations sont petites, donc leurs logs sont presque toujours négatifs.">Que le calcul est juste, c'est courant</button>
       <button class="opt" data-ok="0" data-fb="log(2) vaut 0,30, pas 2. Confusion entre le nombre et son logarithme.">Que <span class='f'>c</span> vaut 2 mol·L⁻¹</button>
-      <div class="fb" hidden></div>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
     </div></div>
+
+  </div>
 
   <div class="piege"><span class="k">Le log ne se distribue pas comme une multiplication</span>
     <p><span class="f"><span class="op">log</span>(a + b)</span> ne vaut <b>pas</b> <span class="f"><span class="op">log</span> a + <span class="op">log</span> b</span>. Le logarithme ne sait rien faire des additions — il ne travaille que sur les <b>multiplications</b>, les divisions et les puissances. C'est l'objet de la section suivante.</p></div>
@@ -788,16 +817,8 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
 
   <h2>5 · Une droite, c'est <span class="f">y = a·x + b</span></h2>
 
-  <p>C'est la marche manquante. Personne ne t'a dit que <span class="f">E = 1,486 − 0,096 · pH</span> est une droite — et tant qu'on ne le dit pas, l'étape 14 reste un mystère.<button class="cp" type="button" data-cp="0-4" aria-expanded="false" aria-controls="q0-4">vérifier</button></p>
-    <div class="q" id="q0-4" data-forme="inversion" hidden>
-      <span class="k qk">Point de contrôle</span>
-      <p class="qq">Une frontière passe par <span class="f">(0 ; 0,50)</span> et descend de <span class="f">0,03 V</span> chaque fois que le pH augmente de 1. Quelle est son équation ?</p>
-      <button class="opt" data-ok="1" data-fb="L'ordonnée à l'origine est la valeur en pH = 0, la pente est la variation par unité — et elle descend, donc elle est négative."><span class="f">E = 0,50 − 0,03 · pH</span></button>
-      <button class="opt" data-ok="0" data-fb="Les deux nombres sont échangés. Celui qui est <b>collé au pH</b> est la pente."><span class="f">E = 0,03 − 0,50 · pH</span></button>
-      <button class="opt" data-ok="0" data-fb="Cette droite <b>monterait</b>. L'énoncé dit qu'elle descend."><span class="f">E = 0,50 + 0,03 · pH</span></button>
-      <button class="opt" data-ok="0" data-fb="L'ordonnée à l'origine est donnée positive : la droite part de +0,50 V."><span class="f">E = − 0,50 + 0,03 · pH</span></button>
-      <div class="fb" hidden></div>
-    </div>
+  <p>C'est la marche manquante. Personne ne t'a dit que <span class="f">E = 1,486 − 0,096 · pH</span> est une droite — et tant qu'on ne le dit pas, l'étape 14 reste un mystère.</p>
+    
 
   <div class="formula">
     <span class="k">La forme, et le nom de chaque morceau</span>
@@ -821,6 +842,20 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
 
   <div class="piege"><span class="k">L'ordre des termes n'a aucune importance</span>
     <p><span class="f">E = 1,486 − 0,096 · pH</span> et <span class="f">E = − 0,096 · pH + 1,486</span> sont <b>la même droite</b>. Le cours écrit la constante d'abord, les manuels de maths écrivent la pente d'abord. Ne cherche pas <span class="f">a·x</span> en tête de ligne : cherche <b>le nombre collé au pH</b>, c'est lui la pente, signe compris.</p></div>
+<div class="ex" id="droite-exemple"><span class="k">Lire puis reconstruire</span><p>À <span class="f">pH = 0</span>, <span class="f">E = 0,60 V</span>. Chaque unité de pH fait perdre <span class="f">0,02 V</span>. On écrit donc <span class="f">E = 0,60 − 0,02 × pH</span>. À pH 1 : <span class="f">E = 0,58 V</span> ; à pH 2 : <span class="f">E = 0,56 V</span>. Le signe moins traduit la baisse.</p></div>
+<form class="practice" id="droite-essai" novalidate aria-labelledby="droite-essai-title"><span class="k">À toi · entraînement guidé</span><h3 id="droite-essai-title">Lire les deux nombres d’une droite</h3><p>Considère <span class="f">E = 0,80 − 0,04 × pH</span>.</p><fieldset data-answer="0.8" data-hint-one="Remplace pH par zéro." data-hint-two="0,04 × 0 vaut 0." data-success="Oui : l’ordonnée à l’origine est 0,80 V." data-errors="{}"><legend>Étape 1 sur 2</legend><label for="droite-essai-0">Quelle est la valeur de E à pH = 0, en volts ?</label><input id="droite-essai-0" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="droite-essai-fb-0 droite-essai-hint-0"><div class="practice-actions"><button class="go" type="submit">Vérifier cette étape</button><button type="button" class="practice-hint">Un indice</button></div><p class="practice-help" id="droite-essai-hint-0" role="status" aria-live="polite" hidden></p><p class="practice-feedback" id="droite-essai-fb-0" role="status" aria-live="polite" hidden></p></fieldset>
+<fieldset hidden disabled data-answer="-0.04" data-hint-one="Lis le coefficient qui multiplie pH, avec son signe." data-hint-two="Quand pH augmente de 1, E baisse de 0,04 V." data-success="Oui : la pente vaut −0,04 V par unité de pH." data-errors="{&quot;0.04&quot;: &quot;La valeur est juste, mais la droite descend : il faut un signe moins.&quot;}"><legend>Étape 2 sur 2</legend><label for="droite-essai-1">Quelle est la pente, signe compris, en V par unité de pH ?</label><input id="droite-essai-1" type="text" inputmode="text" autocomplete="off" spellcheck="false" aria-describedby="droite-essai-fb-1 droite-essai-hint-1"><div class="practice-actions"><button class="go" type="submit">Vérifier cette étape</button><button type="button" class="practice-hint">Un indice</button></div><p class="practice-help" id="droite-essai-hint-1" role="status" aria-live="polite" hidden></p><p class="practice-feedback" id="droite-essai-fb-1" role="status" aria-live="polite" hidden></p></fieldset>
+<p class="practice-finish" role="status" aria-live="polite" hidden>Entraînement terminé. Tu peux refaire cet essai ou poursuivre le parcours.</p><button type="button" class="practice-reset">Recommencer cet entraînement</button></form>
+<div class="checkpoint-block"><p>Retrouve une équation avec de nouvelles données.<button class="cp" type="button" data-cp="0-4" aria-expanded="false" aria-controls="q0-4">vérifier</button></p>
+<div class="q" id="q0-4" data-prerequisites="droite-exemple droite-essai" data-forme="inversion" hidden>
+      <span class="k qk">Point de contrôle</span>
+      <p class="qq">Une frontière passe par <span class="f">(0 ; 0,50)</span> et descend de <span class="f">0,03 V</span> chaque fois que le pH augmente de 1. Quelle est son équation ?</p>
+      <button class="opt" data-ok="1" data-fb="L'ordonnée à l'origine est la valeur en pH = 0, la pente est la variation par unité — et elle descend, donc elle est négative."><span class="f">E = 0,50 − 0,03 · pH</span></button>
+      <button class="opt" data-ok="0" data-fb="Les deux nombres sont échangés. Celui qui est <b>collé au pH</b> est la pente."><span class="f">E = 0,03 − 0,50 · pH</span></button>
+      <button class="opt" data-ok="0" data-fb="Cette droite <b>monterait</b>. L'énoncé dit qu'elle descend."><span class="f">E = 0,50 + 0,03 · pH</span></button>
+      <button class="opt" data-ok="0" data-fb="L'ordonnée à l'origine est donnée positive : la droite part de +0,50 V."><span class="f">E = − 0,50 + 0,03 · pH</span></button>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
+    </div></div>
 
   <div class="fig">
     <svg viewBox="0 0 600 310" role="img" aria-label="Droite E égale 1,486 moins 0,096 fois pH, avec son ordonnée à l'origine et son triangle de pente.">
@@ -877,7 +912,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
     <p class="en">L'exercice peut donner deux coordonnées et demander l'équation. C'est la même formule, prise dans l'autre sens.</p>
     <div class="eqs" style="margin-top:0">
       <div class="row"><span class="e f">a = <span class="fr"><span class="n">E<sub>2</sub> − E<sub>1</sub></span><span class="d">pH<sub>2</sub> − pH<sub>1</sub></span></span></span><span class="lab">la pente : ce qu'on gagne en E<br>divisé par ce qu'on gagne en pH</span></div>
-      <div class="row"><span class="e f">b = E<sub>1</sub> + a × pH<sub>1</sub></span><span class="lab">une fois <i>a</i> connu, n'importe lequel<br>des deux points donne <i>b</i></span></div>
+      <div class="row"><span class="e f">b = E<sub>1</sub> − a × pH<sub>1</sub></span><span class="lab">une fois <i>a</i> connu, n'importe lequel<br>des deux points donne <i>b</i></span></div>
     </div>
     <p style="font-size:14px;color:var(--mut);margin-top:10px">Sur la frontière <span class="f">(2 ; 0,77)</span> et <span class="f">(7,45 ; −0,21)</span> de l'étape 14 : <span class="f">a = (−0,21 − 0,77) / (7,45 − 2)</span>, soit <span class="f">−0,98 / 5,45</span>, soit <span class="f">−0,18</span>. Puis <span class="f">b = 0,77 + 0,18 × 2 = 1,13</span>. On retrouve bien <span class="f">E = 1,13 − 0,18 · pH</span>.</p>
   </div>
@@ -923,7 +958,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
       <button class="opt" data-ok="0" data-fb="Elle sépare le terme des protons du reste, mais elle ne le transforme pas en pH."><span class="f"><span class="op">log</span>(a × b) = <span class="op">log</span> a + <span class="op">log</span> b</span></button>
       <button class="opt" data-ok="0" data-fb="Elle sert <b>après</b>, pour reconnaître une droite — pas pour faire apparaître le pH."><span class="f">y = a·x + b</span></button>
       <button class="opt" data-ok="0" data-fb="Elle sert aux frontières verticales de l'étape 14, jamais dans la loi de Nernst."><span class="f">pH + pOH = 14</span></button>
-      <div class="fb" hidden></div>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
     </div>
 
   <div class="tw"><table class="tab">
@@ -964,7 +999,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
       <button class="opt" data-ok="0" data-fb="C'est la définition de 1777, abandonnée depuis. Le nom est resté, pas le contenu.">Non — sans oxygène, pas d'oxydation</button>
       <button class="opt" data-ok="0" data-fb="L'eau n'entre pas dans la définition. Ce qui compte est le sens du transfert d'électrons.">Oui, mais seulement si la solution contient de l'eau</button>
       <button class="opt" data-ok="0" data-fb="Les potentiels disent si la réaction <b>se produit</b>. La question porte sur ce qu'est une oxydation, pas sur sa possibilité.">On ne peut pas le dire sans connaître les potentiels</button>
-      <div class="fb" hidden></div>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
     </div>
 
   <div class="def"><span class="k">Ce qu'oxyder veut dire aujourd'hui</span>
@@ -994,7 +1029,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
       <button class="opt" data-ok="0" data-fb="Le mot trompe : l'oxydant ne s'oxyde pas, il fait s'oxyder l'autre.">Elle s'oxyde, donc elle joue le rôle d'oxydant</button>
       <button class="opt" data-ok="0" data-fb="Le réducteur est celui qui <b>cède</b>. Celui qui gagne est l'oxydant.">Elle se réduit, donc elle joue le rôle de réducteur</button>
       <button class="opt" data-ok="0" data-fb="Non : gagner des électrons, c'est se réduire, quel que soit le couple.">Cela dépend du couple auquel elle appartient</button>
-      <div class="fb" hidden></div>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
     </div>
 
   <div class="eqs">
@@ -1018,7 +1053,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
       <button class="opt" data-ok="0" data-fb="L'ordre est la convention. Une copie qui l'inverse perd les points de la question.">Elle est correcte, l'ordre n'a pas d'importance</button>
       <button class="opt" data-ok="0" data-fb="<span class='f'>Fe</span> est le métal, il <b>cède</b> les électrons : c'est le réducteur.">Elle est correcte : <span class='f'>Fe</span> est bien l'oxydant</button>
       <button class="opt" data-ok="0" data-fb="Le nombre d'électrons figure dans la <b>demi-équation</b>, pas dans l'écriture du couple.">Elle est fautive : il manque le nombre d'électrons</button>
-      <div class="fb" hidden></div>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
     </div>
 
   <div class="formula">
@@ -1044,16 +1079,8 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
   <div class="piege"><span class="k">Pourquoi aucun électron n'apparaît dans l'équation</span>
     <p>Dans l'équation chimique d'une réaction rédox, <b>aucun électron ne figure</b> : la réduction de <span class="f">Ox<sub>1</sub></span> doit faire intervenir exactement le même nombre d'électrons que l'oxydation de <span class="f">Red<sub>2</sub></span>. Ils se compensent et disparaissent. Un électron qui reste dans une équation-bilan est le signe qu'elle est fausse.</p></div>
 
-  <p>L'équation se décompose donc toujours en deux demi-équations, l'une écrite dans le sens de la réduction, l'autre dans le sens de l'oxydation.<button class="cp" type="button" data-cp="2-3" aria-expanded="false" aria-controls="q2-3">vérifier</button></p>
-    <div class="q" id="q2-3" data-forme="transfert" hidden>
-      <span class="k qk">Point de contrôle</span>
-      <p class="qq">Une demi-équation échange <b>3</b> électrons, l'autre <b>2</b>. Par combien faut-il multiplier chacune avant de les additionner ?</p>
-      <button class="opt" data-ok="1" data-fb="On cherche le plus petit nombre atteignable par les deux : <b>6</b>. La première y va en la doublant, la seconde en la triplant.">La première par 2, la seconde par 3</button>
-      <button class="opt" data-ok="0" data-fb="Les deux facteurs sont intervertis. Celle qui échange le <b>moins</b> d'électrons est celle qu'il faut multiplier le <b>plus</b>.">La première par 3, la seconde par 2</button>
-      <button class="opt" data-ok="0" data-fb="Cela donnerait 15 et 10 électrons : toujours pas le même nombre. Il faut un multiple <b>commun</b>.">Les deux par 5</button>
-      <button class="opt" data-ok="0" data-fb="Sans multiplication, il resterait un électron dans le bilan — et un électron qui survit est la marque d'une équation fausse.">Ni l'une ni l'autre, on additionne directement</button>
-      <div class="fb" hidden></div>
-    </div>
+  <p>L'équation se décompose donc toujours en deux demi-équations, l'une écrite dans le sens de la réduction, l'autre dans le sens de l'oxydation.</p>
+    
 
   <div class="ex"><span class="k">Exemple du cours — diapositive 9</span>
     <div class="eqs" style="margin-top:0">
@@ -1062,6 +1089,16 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
       <div class="row bilan"><span class="e f"><span class="ox">Cu<sup>2+</sup></span> + <span class="rd">Zn</span> = <span class="rd">Cu</span> + <span class="ox">Zn<sup>2+</sup></span></span><span class="lab">équation-bilan<br>les 2 e⁻ se sont annulés</span></div>
     </div>
   </div>
+<div class="checkpoint-block"><p>Fais le bilan du transfert.<button class="cp" type="button" data-cp="2-annulation" aria-expanded="false" aria-controls="q2-annulation">vérifier</button></p>
+<div class="q" id="q2-annulation" data-forme="transfert" hidden>
+<span class="k qk">Point de contrôle</span>
+<p class="qq">Dans <span class="f">Cu<sup>2+</sup> + 2 e<sup>−</sup> = Cu</span> et <span class="f">Zn = Zn<sup>2+</sup> + 2 e<sup>−</sup></span>, combien d’électrons reste-t-il dans l’équation-bilan ?</p>
+<button type="button" class="opt" data-ok="1" data-fb="Les deux électrons fournis par Zn sont les deux électrons captés par Cu²⁺ : ils figurent des deux côtés, puis se simplifient.">0</button>
+<button type="button" class="opt" data-ok="0" data-fb="Deux électrons sont transférés, mais ils ne restent pas dans le bilan.">2</button>
+<button type="button" class="opt" data-ok="0" data-fb="On ne cumule pas quatre électrons : les deux demi-équations décrivent le même transfert.">4</button>
+<button type="button" class="opt" data-ok="0" data-fb="Un nombre d’électrons dans un bilan ne devient pas négatif. Simplifie les termes identiques présents des deux côtés.">−2</button>
+<div class="fb" role="status" aria-live="polite" hidden></div>
+</div></div>
 
   <div class="ex"><span class="k">Exercice 1 du cours</span>
     <p class="en">Pour l'équation <span class="f">Cl<sub>2</sub> + Zn = Zn<sup>2+</sup> + 2 Cl<sup>−</sup></span> : donner les deux couples, les deux demi-équations, et dire <b>quel composé s'est réduit</b>.</p>
@@ -1076,12 +1113,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
   <div class="geste" data-geste="1" data-gt="Lire un couple et écrire sa demi-équation" data-yr="tombé en 2024 et 2025">
     <span class="k">Geste 1 <span class="y">tombé en 2024 et 2025</span></span>
     <h3>Lire un couple et écrire sa demi-équation</h3>
-    <ol>
-      <li><b>Repère qui a le nombre d'oxydation le plus élevé</b> : c'est l'oxydant.</li>
-      <li><b>Écris le couple avec l'oxydant en premier</b> — <span class="f">Ox / Red</span>, jamais l'inverse.</li>
-      <li><b>Recopie-le en demi-équation, dans le sens de la réduction</b> : <span class="f">Ox + n e<sup>−</sup> = Red</span>.</li>
-      <li><b>Compte les électrons</b> par la différence de n.o. de l'élément qui change.</li>
-    </ol>
+    <ol><li><b>Lis une demi-équation fournie</b> : repère le côté où figurent les électrons.</li><li><b>Repère l’espèce qui les capte</b> : c’est l’oxydant, transformé en réducteur.</li><li><b>Écris le couple dans l’ordre Ox/Red</b>, sans les électrons.</li><li><b>Écris la demi-équation dans le sens de la réduction</b>, avec les électrons à gauche. Pour trouver toi-même les coefficients d’un couple nouveau, tu utiliseras les étapes 3 et 4.</li></ol>
     <div class="piege"><b>Le piège —</b> L'oxydant n'est pas celui qui s'oxyde. Il <b>capte</b> les électrons, donc il <b>se réduit</b> — et c'est l'autre qu'il oxyde. Chaque espèce fait à sa voisine l'inverse de ce qu'elle subit.</div>
     <button class="go" data-entr="1" type="button">S'entraîner — tirage au hasard</button>
     <div class="entr" data-entr-for="1" hidden></div>
@@ -1095,41 +1127,25 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
   <div class="obj"><span class="k">En sortant de cette étape, tu sais</span>
     <p>Attribuer un <b>nombre d'oxydation</b> à chaque élément d'une espèce, ion ou molécule, sans hésiter sur l'oxygène ni sur l'hydrogène.</p></div>
 
-  <p>Un même élément peut être impliqué dans plusieurs couples rédox : le fer apparaît dans <span class="f"><span class="ox">Fe<sup>2+</sup></span>/<span class="rd">Fe</span></span> et dans <span class="f"><span class="ox">Fe<sup>3+</sup></span>/<span class="rd">Fe<sup>2+</sup></span></span>. Il faut donc une grandeur qui dise <em>à quel point</em> il est oxydé. C'est le nombre d'oxydation.<button class="cp" type="button" data-cp="3-1" aria-expanded="false" aria-controls="q3-1">vérifier</button></p>
-    <div class="q" id="q3-1" data-forme="transfert" hidden>
-      <span class="k qk">Point de contrôle</span>
-      <p class="qq">Quel est le nombre d'oxydation du soufre dans <span class="f">H<sub>2</sub>SO<sub>3</sub></span> ?</p>
-      <button class="opt" data-ok="1" data-fb="n.o.(H) = +I et n.o.(O) = −II, donc 2(+1) + S + 3(−2) = 0, soit S = +4.">+ IV</button>
-      <button class="opt" data-ok="0" data-fb="C'est la valeur dans <span class='f'>H<sub>2</sub>SO<sub>4</sub></span>. Ici il n'y a que <b>trois</b> oxygènes.">+ VI</button>
-      <button class="opt" data-ok="0" data-fb="C'est la valeur dans <span class='f'>H<sub>2</sub>S</span>, où le soufre est le plus réduit.">− II</button>
-      <button class="opt" data-ok="0" data-fb="Recompte : trois oxygènes à −II font −6, et deux hydrogènes à +I font +2.">+ II</button>
-      <div class="fb" hidden></div>
-    </div>
+  <p>Un même élément peut être impliqué dans plusieurs couples rédox : le fer apparaît dans <span class="f"><span class="ox">Fe<sup>2+</sup></span>/<span class="rd">Fe</span></span> et dans <span class="f"><span class="ox">Fe<sup>3+</sup></span>/<span class="rd">Fe<sup>2+</sup></span></span>. Il faut donc une grandeur qui dise <em>à quel point</em> il est oxydé. C'est le nombre d'oxydation.</p>
+    
 
   <div class="def"><span class="k">Définition</span>
-    <p>Le <b>nombre d'oxydation</b>, noté <span class="f">n.o.</span>, exprime la <b>charge formelle</b> d'un élément dans une espèce chimique. Il s'écrit en <b>chiffres romains</b> : <span class="f">I, II, III, IV, V, VI, VII</span>… précédés de leur signe.<button class="cp" type="button" data-cp="3-3" aria-expanded="false" aria-controls="q3-3">vérifier</button></p>
-    <div class="q" id="q3-3" data-forme="prediction" hidden>
-      <span class="k qk">Point de contrôle</span>
-      <p class="qq">Deux composés du chlore : dans l'un il est à <span class="f">+VII</span>, dans l'autre à <span class="f">−I</span>. Lequel est le plus oxydant ?</p>
-      <button class="opt" data-ok="1" data-fb="Plus le n.o. d'un élément est élevé, plus le composé qui le contient est oxydant — il a de la marge pour descendre.">Celui où le chlore est à + VII</button>
-      <button class="opt" data-ok="0" data-fb="À −I le chlore est déjà au plus bas : il ne peut plus capter d'électrons, donc il ne peut pas oxyder.">Celui où le chlore est à − I</button>
-      <button class="opt" data-ok="0" data-fb="Le n.o. est précisément ce qui les distingue.">Les deux également</button>
-      <button class="opt" data-ok="0" data-fb="Le pH déplace le potentiel, mais il n'inverse pas l'ordre de deux n.o. aussi éloignés.">Cela dépend du pH</button>
-      <div class="fb" hidden></div>
-    </div>
-    <p>Plus le n.o. d'un élément est élevé, plus le composé qui le contient est <b>oxydant</b>.</p></div>
+    <p>Le <b>nombre d'oxydation</b>, noté <span class="f">n.o.</span>, exprime la <b>charge formelle</b> d'un élément dans une espèce chimique. Il s'écrit en <b>chiffres romains</b> : <span class="f">I, II, III, IV, V, VI, VII</span>… précédés de leur signe.</p>
+    
+    <p>Un n.o. plus élevé décrit un état <b>plus oxydé</b>. Cela ne suffit pas à classer la force des oxydants de couples différents : il faudra comparer leurs potentiels à l’étape 11.</p><div class="checkpoint-block"><p>Compare deux états donnés.<button class="cp" type="button" data-cp="3-etat-oxydation" aria-expanded="false" aria-controls="q3-etat-oxydation">vérifier</button></p><div class="q" id="q3-etat-oxydation" data-forme="discrimination" hidden>
+<span class="k qk">Point de contrôle</span>
+<p class="qq">Le chlore est à <span class="f">+VII</span> dans une espèce et à <span class="f">−I</span> dans une autre. Dans laquelle est-il dans l’état le plus oxydé ?</p>
+<button type="button" class="opt" data-ok="1" data-fb="On compare ici les nombres d’oxydation, pas les potentiels : +7 est supérieur à −1.">Dans celle où il est à +VII</button>
+<button type="button" class="opt" data-ok="0" data-fb="−1 est inférieur à +7 : c’est l’état le plus réduit des deux.">Dans celle où il est à −I</button>
+<button type="button" class="opt" data-ok="0" data-fb="Les nombres d’oxydation donnés sont différents.">Dans les deux au même degré</button>
+<button type="button" class="opt" data-ok="0" data-fb="Les deux nombres d’oxydation sont déjà donnés. Le pH serait pertinent pour une comparaison des potentiels, pas pour lire ces deux valeurs.">On doit d’abord connaître le pH</button>
+<div class="fb" role="status" aria-live="polite" hidden></div>
+</div></div></div>
 
   <h2>Les quatre règles</h2>
-  <p>Elles se lisent <b>dans l'ordre</b> : la règle 1 l'emporte sur les autres, et à l'intérieur de chaque règle le premier cas l'emporte sur le suivant.<button class="cp" type="button" data-cp="3-2" aria-expanded="false" aria-controls="q3-2">vérifier</button></p>
-    <div class="q" id="q3-2" data-forme="discrimination" hidden>
-      <span class="k qk">Point de contrôle</span>
-      <p class="qq">Dans laquelle de ces espèces l'oxygène <b>ne vaut pas</b> <span class="f">−II</span> ?</p>
-      <button class="opt" data-ok="1" data-fb="C'est un <b>peroxyde</b> : l'oxygène y vaut −I. C'est l'exception qui tombe le plus souvent."><span class="f">H<sub>2</sub>O<sub>2</sub></span></button>
-      <button class="opt" data-ok="0" data-fb="L'oxygène y vaut −II, comme partout ailleurs. C'est le chlore qui monte à +VII."><span class="f">ClO<sub>4</sub><sup>−</sup></span></button>
-      <button class="opt" data-ok="0" data-fb="−II également. Le carbone compense à +IV."><span class="f">CO<sub>3</sub><sup>2−</sup></span></button>
-      <button class="opt" data-ok="0" data-fb="−II également, et le fer vaut +III."><span class="f">Fe<sub>2</sub>O<sub>3</sub></span></button>
-      <div class="fb" hidden></div>
-    </div>
+  <p>Elles se lisent <b>dans l'ordre</b> : la règle 1 l'emporte sur les autres, et à l'intérieur de chaque règle le premier cas l'emporte sur le suivant.</p>
+    
 
   <div class="tw"><table class="tab">
     <tr><th>Règle</th><th>Cas</th><th>n.o.</th></tr>
@@ -1171,6 +1187,31 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
 
   <div class="piege"><span class="k">Les deux cas qui font perdre des points</span>
     <p>L'oxygène vaut <b>−II</b> partout, <em>sauf</em> dans les peroxydes comme <span class="f">H<sub>2</sub>O<sub>2</sub></span> où il vaut <b>−I</b>. Et un halogène vaut <b>−I</b> seulement s'il n'y a <b>pas d'oxygène</b> dans le composé : dans <span class="f">ClO<sub>4</sub><sup>−</sup></span> le chlore vaut +VII, pas −I.</p></div>
+<div class="checkpoint-block"><p>Distingue maintenant la règle générale et son exception.<button class="cp" type="button" data-cp="3-2" aria-expanded="false" aria-controls="q3-2">vérifier</button></p>
+<div class="q" id="q3-2" data-forme="discrimination" hidden>
+      <span class="k qk">Point de contrôle</span>
+      <p class="qq">Dans laquelle de ces espèces l'oxygène <b>ne vaut pas</b> <span class="f">−II</span> ?</p>
+      <button class="opt" data-ok="1" data-fb="C'est un <b>peroxyde</b> : l'oxygène y vaut −I. C'est l'exception qui tombe le plus souvent."><span class="f">H<sub>2</sub>O<sub>2</sub></span></button>
+      <button class="opt" data-ok="0" data-fb="L'oxygène y vaut −II, comme partout ailleurs. C'est le chlore qui monte à +VII."><span class="f">ClO<sub>4</sub><sup>−</sup></span></button>
+      <button class="opt" data-ok="0" data-fb="−II également. Le carbone compense à +IV."><span class="f">CO<sub>3</sub><sup>2−</sup></span></button>
+      <button class="opt" data-ok="0" data-fb="−II également, et le fer vaut +III."><span class="f">Fe<sub>2</sub>O<sub>3</sub></span></button>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
+    </div></div>
+
+  <div class="ex" id="nox-exemple"><span class="k">Résoudre sans sauter une ligne</span><p>Dans <span class="f">HNO<sub>3</sub></span>, on cherche le n.o. de N, noté <span class="f">x</span>. H vaut +I et O vaut −II. Les trois oxygènes apportent <span class="f">3 × (−2) = −6</span>. La molécule est neutre :</p><div class="eqs"><div class="row"><span class="e f">1 + x − 6 = 0</span><span class="lab">une contribution par atome</span></div><div class="row"><span class="e f">x − 5 = 0</span><span class="lab">on rassemble 1 et −6</span></div><div class="row"><span class="e f">x − 5 + 5 = 0 + 5</span><span class="lab">on ajoute 5 des deux côtés</span></div><div class="row"><span class="e f">x = 5</span><span class="lab">donc N est à +V</span></div></div><p>Vérifie : <span class="f">1 + 5 − 6 = 0</span>. Un indice compte les atomes ; la charge de l’ion fixe la somme attendue.</p></div>
+<form class="practice" id="nox-essai" novalidate aria-labelledby="nox-essai-title"><span class="k">À toi · entraînement guidé</span><h3 id="nox-essai-title">Compléter le calcul du carbonate</h3><p>Dans <span class="f">CO<sub>3</sub><sup>2−</sup></span>, note x le n.o. du carbone. On connaît celui de O : −II.</p><fieldset data-answer="-6" data-hint-one="Compte trois fois −2." data-hint-two="3 × (−2) = (−2) + (−2) + (−2)." data-success="Oui : l’équation est x − 6 = −2." data-errors="{}"><legend>Étape 1 sur 2</legend><label for="nox-essai-0">Quelle est la contribution des trois oxygènes ?</label><input id="nox-essai-0" type="text" inputmode="text" autocomplete="off" spellcheck="false" aria-describedby="nox-essai-fb-0 nox-essai-hint-0"><div class="practice-actions"><button class="go" type="submit">Vérifier cette étape</button><button type="button" class="practice-hint">Un indice</button></div><p class="practice-help" id="nox-essai-hint-0" role="status" aria-live="polite" hidden></p><p class="practice-feedback" id="nox-essai-fb-0" role="status" aria-live="polite" hidden></p></fieldset>
+<fieldset hidden disabled data-answer="4" data-hint-one="La somme doit valoir la charge −2, pas zéro." data-hint-two="Ajoute 6 des deux côtés : x = −2 + 6." data-success="Oui : C est à +IV. Vérification : 4 − 6 = −2." data-errors="{&quot;6&quot;: &quot;Tu as imposé une somme nulle. Ici l’ion a une charge −2.&quot;}"><legend>Étape 2 sur 2</legend><label for="nox-essai-1">Que vaut x ? Écris le nombre avec son signe.</label><input id="nox-essai-1" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="nox-essai-fb-1 nox-essai-hint-1"><div class="practice-actions"><button class="go" type="submit">Vérifier cette étape</button><button type="button" class="practice-hint">Un indice</button></div><p class="practice-help" id="nox-essai-hint-1" role="status" aria-live="polite" hidden></p><p class="practice-feedback" id="nox-essai-fb-1" role="status" aria-live="polite" hidden></p></fieldset>
+<p class="practice-finish" role="status" aria-live="polite" hidden>Entraînement terminé. Tu peux refaire cet essai ou poursuivre le parcours.</p><button type="button" class="practice-reset">Recommencer cet entraînement</button></form>
+<div class="checkpoint-block"><p>Applique la méthode à une autre espèce.<button class="cp" type="button" data-cp="3-1" aria-expanded="false" aria-controls="q3-1">vérifier</button></p>
+<div class="q" id="q3-1" data-prerequisites="nox-exemple nox-essai" data-forme="transfert" hidden>
+      <span class="k qk">Point de contrôle</span>
+      <p class="qq">Quel est le nombre d'oxydation du soufre dans <span class="f">H<sub>2</sub>SO<sub>3</sub></span> ?</p>
+      <button class="opt" data-ok="1" data-fb="n.o.(H) = +I et n.o.(O) = −II, donc 2(+1) + S + 3(−2) = 0, soit S = +4.">+ IV</button>
+      <button class="opt" data-ok="0" data-fb="C'est la valeur dans <span class='f'>H<sub>2</sub>SO<sub>4</sub></span>. Ici il n'y a que <b>trois</b> oxygènes.">+ VI</button>
+      <button class="opt" data-ok="0" data-fb="C'est la valeur dans <span class='f'>H<sub>2</sub>S</span>, où le soufre est le plus réduit.">− II</button>
+      <button class="opt" data-ok="0" data-fb="Recompte : trois oxygènes à −II font −6, et deux hydrogènes à +I font +2.">+ II</button>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
+    </div></div>
 
   <div class="geste" data-geste="2a" data-gt="Poser les nombres d'oxydation" data-yr="tombé les quatre années">
     <span class="k">Geste 2a <span class="y">tombé les quatre années</span></span>
@@ -1194,16 +1235,8 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
   <div class="obj"><span class="k">En sortant de cette étape, tu sais</span>
     <p>Équilibrer une demi-équation <b>en milieu acide</b>, dans l'ordre imposé par la méthode, et <b>vérifier</b> ton résultat par la différence de n.o.</p></div>
 
-  <p>Une demi-équation juste tient trois promesses à la fois : autant d'atomes de chaque élément des deux côtés, autant de charge des deux côtés, et un nombre d'électrons qui correspond au changement de n.o. La méthode ci-dessous les obtient dans un ordre qui ne se discute pas.<button class="cp" type="button" data-cp="4-1" aria-expanded="false" aria-controls="q4-1">vérifier</button></p>
-    <div class="q" id="q4-1" data-forme="prediction" hidden>
-      <span class="k qk">Point de contrôle</span>
-      <p class="qq">Le chrome passe de <span class="f">+VI</span> à <span class="f">+III</span> dans <span class="f">Cr<sub>2</sub>O<sub>7</sub><sup>2−</sup> ⟶ 2 Cr<sup>3+</sup></span>. Combien d'électrons la demi-équation contient-elle ?</p>
-      <button class="opt" data-ok="1" data-fb="Trois unités de n.o. par atome de chrome, et il y en a <b>deux</b> : 3 × 2 = 6.">6</button>
-      <button class="opt" data-ok="0" data-fb="C'est la différence <b>par atome</b>. Le coefficient 2 devant <span class='f'>Cr<sup>3+</sup></span> la double.">3</button>
-      <button class="opt" data-ok="0" data-fb="C'est la somme des deux n.o., pas leur différence.">9</button>
-      <button class="opt" data-ok="0" data-fb="C'est le nombre de protons de cette demi-équation, pas celui des électrons.">14</button>
-      <div class="fb" hidden></div>
-    </div>
+  <p>Une demi-équation juste tient trois promesses à la fois : autant d'atomes de chaque élément des deux côtés, autant de charge des deux côtés, et un nombre d'électrons qui correspond au changement de n.o. La méthode ci-dessous les obtient dans un ordre qui ne se discute pas.</p>
+    
 
   <div class="formula">
     <span class="k">La méthode du cours — diapositive 17, mot pour mot</span>
@@ -1217,16 +1250,8 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
   </div>
 
   <div class="def"><span class="k">La sixième ligne, celle qu'on saute</span>
-    <p>La différence de n.o. de l'élément qui subit la réduction est <b>égale au nombre d'électrons échangés</b>. C'est une vérification gratuite : elle prend trois secondes et elle attrape la quasi-totalité des erreurs.<button class="cp" type="button" data-cp="4-2" aria-expanded="false" aria-controls="q4-2">vérifier</button></p>
-    <div class="q" id="q4-2" data-forme="contre-exemple" hidden>
-      <span class="k qk">Point de contrôle</span>
-      <p class="qq">Tu équilibres une demi-équation et tu trouves <span class="f">n = 4</span>, alors que le n.o. de l'élément ne varie que de 2. Que faire ?</p>
-      <button class="opt" data-ok="1" data-fb="Les électrons se posent en dernier et ne font que solder les charges. Si leur nombre ne correspond pas au n.o., c'est une étape antérieure qui a fauté.">Reprendre l'oxygène et l'hydrogène : l'erreur est avant les électrons</button>
-      <button class="opt" data-ok="0" data-fb="Cela romprait le bilan des charges. Les deux doivent coïncider, on ne force pas l'un.">Remplacer 4 par 2, puisque le n.o. fait foi</button>
-      <button class="opt" data-ok="0" data-fb="Les protons ajustent l'hydrogène ; ils ne rattrapent pas un écart d'électrons.">Ajouter deux <span class='f'>H<sup>+</sup></span> pour compenser</button>
-      <button class="opt" data-ok="0" data-fb="Le milieu ne change pas le nombre d'électrons échangés.">C'est possible si le milieu est basique</button>
-      <div class="fb" hidden></div>
-    </div></div>
+    <p>La variation du n.o. donne le nombre d’électrons <b>par atome</b>. Pour une demi-équation où un seul élément change de n.o., multiplie sa variation en valeur absolue par le <b>nombre d’atomes concernés</b>. Ce contrôle complète celui des atomes et des charges ; il ne le remplace pas.</p>
+    </div>
 
   <h2>Un déroulé complet</h2>
   <div class="chain">
@@ -1288,7 +1313,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
         <div class="expr"><span class="f">n.o.(Mn) : +VII &nbsp;⟶&nbsp; +II</span></div>
         <div class="val">différence = <span class="v">5</span> = nombre d'électrons &nbsp;✓</div>
       </div>
-      <div class="aide"><span class="lvl">Contrôle gratuit</span>Cette ligne coûte trois secondes et attrape presque toutes les erreurs. Si les deux nombres ne coïncident pas, l'erreur est <b>avant</b>, dans l'oxygène ou l'hydrogène.</div>
+      <div class="aide"><span class="lvl">Contrôle gratuit</span>Il y a ici un seul atome de Mn : 1 × 5 = 5 électrons. En cas de désaccord, recompte d’abord les atomes concernés, puis vérifie les coefficients, les H, les O et les charges.</div>
     </div>
   </div>
 
@@ -1307,13 +1332,37 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
     <p>Les cinq temps ne sont pas interchangeables. Si tu places les électrons <b>avant</b> les <span class="f">H<sup>+</sup></span>, le bilan des charges est faux et tu trouveras un <i>n</i> qui ne correspondra à aucune différence de n.o. Les électrons se posent <b>en dernier</b>, toujours.<button class="cp" type="button" data-cp="4-3" aria-expanded="false" aria-controls="q4-3">vérifier</button></p>
     <div class="q" id="q4-3" data-forme="transfert" hidden>
       <span class="k qk">Point de contrôle</span>
-      <p class="qq">Une demi-équation contient <span class="f">4 H<sub>2</sub>O</span> du côté droit. Combien de <span class="f">H<sup>+</sup></span> faudra-t-il à gauche ?</p>
+      <p class="qq">Une demi-équation contient <span class="f">4 H<sub>2</sub>O</span> à droite et aucune autre espèce porteuse de H. Combien de <span class="f">H<sup>+</sup></span> faut-il ajouter à gauche en milieu acide ?</p>
       <button class="opt" data-ok="1" data-fb="Chaque molécule d'eau porte <b>deux</b> hydrogènes : 4 × 2 = 8 protons en face.">8</button>
       <button class="opt" data-ok="0" data-fb="C'est le nombre de molécules d'eau, pas d'atomes d'hydrogène.">4</button>
       <button class="opt" data-ok="0" data-fb="Ce serait le cas pour une seule molécule d'eau.">2</button>
       <button class="opt" data-ok="0" data-fb="Recompte : deux hydrogènes par molécule, pas quatre.">16</button>
-      <div class="fb" hidden></div>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
     </div></div>
+
+  <div class="ex" id="electrons-atomes"><span class="k">Un atome n’est pas toute la demi-équation</span><p>Pour <span class="f">Cl<sub>2</sub> + 2 e<sup>−</sup> = 2 Cl<sup>−</sup></span>, chaque Cl passe de 0 à −I : il gagne <b>1 électron</b>. Mais il y a <b>2 atomes de Cl</b>, donc <span class="f">n = 2 × 1 = 2</span>.</p><p>Le nombre d’atomes se compte sur <b>un seul côté</b> : les deux Cl de gauche sont les mêmes que ceux de droite, pas quatre atomes différents. On multiplie le nombre d’atomes par la variation, pas les deux nombres d’oxydation entre eux.</p></div>
+<form class="practice" id="electrons-essai" novalidate aria-labelledby="electrons-essai-title"><span class="k">À toi · entraînement guidé</span><h3 id="electrons-essai-title">Du changement par atome au total</h3><p>Dans <span class="f">O<sub>2</sub> ⟶ 2 H<sub>2</sub>O</span>, chaque O passe de 0 à −II. On ne cherche ici que le nombre d’électrons.</p><fieldset data-answer="2" data-hint-one="Le n.o. baisse de deux unités." data-hint-two="Compte la distance entre 0 et −2." data-success="Oui : 2 électrons par atome." data-errors="{}"><legend>Étape 1 sur 2</legend><label for="electrons-essai-0">Combien d’électrons un seul atome O gagne-t-il ?</label><input id="electrons-essai-0" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="electrons-essai-fb-0 electrons-essai-hint-0"><div class="practice-actions"><button class="go" type="submit">Vérifier cette étape</button><button type="button" class="practice-hint">Un indice</button></div><p class="practice-help" id="electrons-essai-hint-0" role="status" aria-live="polite" hidden></p><p class="practice-feedback" id="electrons-essai-fb-0" role="status" aria-live="polite" hidden></p></fieldset>
+<fieldset hidden disabled data-answer="4" data-hint-one="La molécule O₂ contient deux atomes O." data-hint-two="Multiplie deux atomes par deux électrons par atome." data-success="Oui : 2 × 2 = 4 électrons." data-errors="{&quot;2&quot;: &quot;Tu as répondu pour un seul atome ; O₂ en contient deux.&quot;}"><legend>Étape 2 sur 2</legend><label for="electrons-essai-1">Combien d’électrons pour la demi-équation entière ?</label><input id="electrons-essai-1" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="electrons-essai-fb-1 electrons-essai-hint-1"><div class="practice-actions"><button class="go" type="submit">Vérifier cette étape</button><button type="button" class="practice-hint">Un indice</button></div><p class="practice-help" id="electrons-essai-hint-1" role="status" aria-live="polite" hidden></p><p class="practice-feedback" id="electrons-essai-fb-1" role="status" aria-live="polite" hidden></p></fieldset>
+<p class="practice-finish" role="status" aria-live="polite" hidden>Entraînement terminé. Tu peux refaire cet essai ou poursuivre le parcours.</p><button type="button" class="practice-reset">Recommencer cet entraînement</button></form>
+<div class="checkpoint-block"><p>Transfère ce raisonnement au chrome.<button class="cp" type="button" data-cp="4-1" aria-expanded="false" aria-controls="q4-1">vérifier</button></p>
+<div class="q" id="q4-1" data-prerequisites="electrons-atomes electrons-essai" data-forme="prediction" hidden>
+      <span class="k qk">Point de contrôle</span>
+      <p class="qq">Le chrome passe de <span class="f">+VI</span> à <span class="f">+III</span> dans <span class="f">Cr<sub>2</sub>O<sub>7</sub><sup>2−</sup> ⟶ 2 Cr<sup>3+</sup></span>. Combien d'électrons la demi-équation contient-elle ?</p>
+      <button class="opt" data-ok="1" data-fb="Trois unités de n.o. par atome de chrome, et il y en a <b>deux</b> : 3 × 2 = 6.">6</button>
+      <button class="opt" data-ok="0" data-fb="C'est la différence <b>par atome</b>. Le coefficient 2 devant <span class='f'>Cr<sup>3+</sup></span> la double.">3</button>
+      <button class="opt" data-ok="0" data-fb="C'est la somme des deux n.o., pas leur différence.">9</button>
+      <button class="opt" data-ok="0" data-fb="C'est le nombre de protons de cette demi-équation, pas celui des électrons.">14</button>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
+    </div></div><div class="checkpoint-block"><p>Vérifie aussi un résultat déjà proposé.<button class="cp" type="button" data-cp="4-compter-atomes" aria-expanded="false" aria-controls="q4-compter-atomes">vérifier</button></p>
+<div class="q" id="q4-compter-atomes" data-prerequisites="electrons-atomes electrons-essai" data-forme="contre-exemple" hidden>
+<span class="k qk">Point de contrôle</span>
+<p class="qq">Une demi-équation fait passer <b>deux atomes</b> de +IV à +II. Le bilan des charges donne <span class="f">n = 4</span>. Est-ce cohérent avec les nombres d’oxydation ?</p>
+<button type="button" class="opt" data-ok="1" data-fb="Deux atomes × deux unités de variation = quatre électrons. Il faut aussi vérifier les atomes et les charges dans l’équation complète.">Oui : chaque atome gagne 2 électrons, donc 4 au total</button>
+<button type="button" class="opt" data-ok="0" data-fb="2 est le nombre par atome, pas le total pour deux atomes.">Non : il faut forcément remplacer 4 par 2</button>
+<button type="button" class="opt" data-ok="0" data-fb="On utilise la différence, pas la somme : 4 − 2 = 2 par atome.">Oui : on additionne +IV et +II</button>
+<button type="button" class="opt" data-ok="0" data-fb="Pour ces mêmes transformations, le transfert reste de quatre électrons ; le milieu change l’écriture de H⁺, OH⁻ et H₂O.">Cela dépend du milieu acide ou basique</button>
+<div class="fb" role="status" aria-live="polite" hidden></div>
+</div></div>
 
   <div class="geste" data-geste="2b" data-gt="Équilibrer une demi-équation en milieu acide" data-yr="tombé les quatre années">
     <span class="k">Geste 2b <span class="y">tombé les quatre années</span></span>
@@ -1350,34 +1399,8 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
   </div>
 
   <div class="piege"><span class="k">Le pourquoi de l'étape 3</span>
-    <p>Le cours le dit ainsi : <em>aucun électron n'apparaît dans l'équation d'une réaction rédox, car la réduction de <span class="f">Ox<sub>1</sub></span> doit faire intervenir exactement le même nombre d'électrons que l'oxydation de <span class="f">Red<sub>2</sub></span></em>. C'est toute la justification du produit en croix : sans lui, les électrons ne s'annulent pas.<button class="cp" type="button" data-cp="5-2" aria-expanded="false" aria-controls="q5-2">vérifier</button></p>
-    <div class="q" id="q5-2" data-forme="discrimination" hidden>
-      <span class="k qk">Point de contrôle</span>
-      <p class="qq">Après passage en milieu basique, quelle est la marque d'un travail terminé ?</p>
-      <button class="opt" data-ok="1" data-fb="C'est la signature. Un proton survivant signifie que la recombinaison n'a pas été faite jusqu'au bout.">Il ne reste plus aucun <span class='f'>H<sup>+</sup></span></button>
-      <button class="opt" data-ok="0" data-fb="L'eau reste presque toujours : c'est elle qui naît de la recombinaison.">Il ne reste plus aucune molécule d'eau</button>
-      <button class="opt" data-ok="0" data-fb="Le nombre d'électrons ne change jamais : le milieu n'a rien à voir avec le transfert.">Le nombre d'électrons a changé</button>
-      <button class="opt" data-ok="0" data-fb="Elles doivent l'être avant <b>et</b> après. C'est le contrôle à refaire à la fin.">Les charges ne sont plus équilibrées</button>
-      <div class="fb" hidden></div>
-    </div></div>
-
-  <h2>Le passage en milieu basique</h2>
-  <p>Les quatre premiers temps se font <b>toujours en milieu acide</b>, avec des <span class="f">H<sup>+</sup></span> — c'est le milieu par défaut de la méthode. Le passage en milieu basique est une <b>opération de fin</b>, purement mécanique, qu'on applique sur l'équation déjà équilibrée.<button class="cp" type="button" data-cp="5-1" aria-expanded="false" aria-controls="q5-1">vérifier</button></p>
-    <div class="q" id="q5-1" data-forme="prediction" hidden>
-      <span class="k qk">Point de contrôle</span>
-      <p class="qq">Une équation équilibrée en milieu acide contient <span class="f">6 H<sup>+</sup></span> à gauche et <span class="f">2 H<sub>2</sub>O</span> à droite. Après passage en milieu basique, que reste-t-il ?</p>
-      <button class="opt" data-ok="1" data-fb="Les 6 protons deviennent 6 <span class='f'>H<sub>2</sub>O</span> à gauche ; on simplifie avec les 2 de droite, il en reste 4.">4 <span class='f'>H<sub>2</sub>O</span> à gauche et 6 <span class='f'>OH<sup>−</sup></span> à droite</button>
-      <button class="opt" data-ok="0" data-fb="Il reste les 2 molécules d'eau de droite à simplifier : 6 − 2 = 4.">6 <span class='f'>H<sub>2</sub>O</span> à gauche et 6 <span class='f'>OH<sup>−</sup></span> à droite</button>
-      <button class="opt" data-ok="0" data-fb="Les <span class='f'>OH<sup>−</sup></span> vont du côté <b>opposé</b> aux protons après recombinaison.">6 <span class='f'>OH<sup>−</sup></span> à gauche et 2 <span class='f'>H<sub>2</sub>O</span> à droite</button>
-      <button class="opt" data-ok="0" data-fb="Le nombre de <span class='f'>OH<sup>−</sup></span> est celui des protons de départ, soit 6.">2 <span class='f'>H<sub>2</sub>O</span> à gauche et 4 <span class='f'>OH<sup>−</sup></span> à droite</button>
-      <div class="fb" hidden></div>
+    <p>Le cours le dit ainsi : <em>aucun électron n'apparaît dans l'équation d'une réaction rédox, car la réduction de <span class="f">Ox<sub>1</sub></span> doit faire intervenir exactement le même nombre d'électrons que l'oxydation de <span class="f">Red<sub>2</sub></span></em>. On cherche donc un <b>même total d’électrons</b> fournis et captés. Il n’est pas nécessaire de multiplier si les deux totaux sont déjà égaux.</p>
     </div>
-
-  <div class="formula">
-    <span class="k">Passer une équation en milieu basique</span>
-    <span class="e">ajouter autant de <span class="f">OH<sup>−</sup></span> que de <span class="f">H<sup>+</sup></span>, <b>des deux côtés</b></span>
-    <p class="note">Là où <span class="f">H<sup>+</sup></span> et <span class="f">OH<sup>−</sup></span> se rencontrent, ils se recombinent en <span class="f">H<sub>2</sub>O</span>. On simplifie ensuite les molécules d'eau présentes des deux côtés.</p>
-  </div>
 
   <div class="ex"><span class="k">Exercice 6 du cours — le cas simple</span>
     <p class="en"><span class="f">Fe<sup>2+</sup> + H<sub>2</sub> → Fe + H<sup>+</sup></span>, en milieu acide.</p>
@@ -1386,9 +1409,26 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
       <div class="row"><span class="e f"><span class="rd">H<sub>2</sub></span> = 2 <span class="ox">H<sup>+</sup></span> + <span class="el">2 e<sup>−</sup></span></span><span class="lab">oxydation · 2 e⁻</span></div>
       <div class="row bilan"><span class="e f"><span class="ox">Fe<sup>2+</sup></span> + <span class="rd">H<sub>2</sub></span> = <span class="rd">Fe</span> + 2 <span class="ox">H<sup>+</sup></span></span><span class="lab">déjà 2 e⁻ de chaque côté<br>rien à multiplier</span></div>
     </div>
-  </div>
+  </div><section id="multiples-exemple" aria-labelledby="multiples-titre"><h2 id="multiples-titre">Trouver le même total d’électrons</h2><p>Un <b>multiple</b> s’obtient en répétant un même nombre : les multiples de 2 sont 2, 4, 6, 8… Un multiple <b>commun</b> se trouve dans les deux listes.</p><div class="ex"><span class="k">Exemple expliqué · 2 électrons et 4 électrons</span><p>Liste de 2 : 2, <b>4</b>, 6, 8… Liste de 4 : <b>4</b>, 8, 12… Le premier nombre commun est 4.</p><p>Pour la première demi-équation : <span class="f">4 ÷ 2 = 2</span>, donc <b>× 2</b>.<br>Pour la seconde : <span class="f">4 ÷ 4 = 1</span>, donc <b>× 1</b> : on la laisse inchangée.</p><p>Contrôle : <span class="f">2 × 2 = 4 × 1 = 4</span>. Multiplier automatiquement l’une par 4 et l’autre par 2 donnerait aussi un total commun, mais deux fois trop grand : il faudrait simplifier ensuite.</p></div><div class="def" id="multiplier-toute-equation"><span class="k">Multiplier une demi-équation entière</span><p>« × 2 » signifie répéter <b>tous les termes des deux côtés</b> deux fois. Par exemple :</p><div class="eqs"><div class="row"><span class="e f">Cu<sup>2+</sup> + 2 e<sup>−</sup> = Cu</span><span class="lab">avant multiplication</span></div><div class="row"><span class="e f">2 Cu<sup>2+</sup> + 4 e<sup>−</sup> = 2 Cu</span><span class="lab">tous les coefficients × 2</span></div></div><p>On ne modifie ni les indices des formules, ni la charge d’un ion. <span class="f">2 Cu<sup>2+</sup></span> signifie deux ions Cu²⁺, pas un ion Cu⁴⁺. Multiplier seulement les électrons casserait le bilan des charges.</p></div></section>
+<form class="practice" id="multiples-essai" novalidate aria-labelledby="multiples-essai-title"><span class="k">À toi · entraînement guidé</span><h3 id="multiples-essai-title">Un total, puis deux multiplicateurs</h3><p>La première demi-équation consomme <b>2 électrons</b> et la seconde en fournit <b>6</b>. Cherche les plus petits coefficients entiers positifs.</p><fieldset data-answer="6" data-hint-one="Liste les multiples de 2, puis ceux de 6." data-hint-two="Le premier nombre de la liste de 6 est déjà dans celle de 2." data-success="Oui : on veut six électrons fournis et six électrons captés." data-errors="{&quot;12&quot;: &quot;12 conviendrait pour égaliser, mais il existe un total commun plus petit : cherche avant 12.&quot;}"><legend>Étape 1 sur 3</legend><label for="multiples-essai-0">Quel est le plus petit total commun d’électrons ?</label><input id="multiples-essai-0" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="multiples-essai-fb-0 multiples-essai-hint-0"><div class="practice-actions"><button class="go" type="submit">Vérifier cette étape</button><button type="button" class="practice-hint">Un indice</button></div><p class="practice-help" id="multiples-essai-hint-0" role="status" aria-live="polite" hidden></p><p class="practice-feedback" id="multiples-essai-fb-0" role="status" aria-live="polite" hidden></p></fieldset>
+<fieldset hidden disabled data-answer="3" data-hint-one="Divise le total choisi par son nombre d’électrons." data-hint-two="Cherche 6 ÷ 2." data-success="Oui : 2 × 3 = 6." data-errors="{&quot;2&quot;: &quot;Le nombre d’électrons de départ n’est pas le multiplicateur. Cherche combien de groupes de 2 font 6.&quot;}"><legend>Étape 2 sur 3</legend><label for="multiples-essai-1">Par combien multiplier la première demi-équation, celle à 2 électrons ?</label><input id="multiples-essai-1" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="multiples-essai-fb-1 multiples-essai-hint-1"><div class="practice-actions"><button class="go" type="submit">Vérifier cette étape</button><button type="button" class="practice-hint">Un indice</button></div><p class="practice-help" id="multiples-essai-hint-1" role="status" aria-live="polite" hidden></p><p class="practice-feedback" id="multiples-essai-fb-1" role="status" aria-live="polite" hidden></p></fieldset>
+<fieldset hidden disabled data-answer="1" data-hint-one="Son total est déjà égal au total commun." data-hint-two="Multiplier par 1 signifie ne rien changer." data-success="Oui : 6 × 1 = 6. Les électrons pourront se simplifier." data-errors="{}"><legend>Étape 3 sur 3</legend><label for="multiples-essai-2">Par combien multiplier la seconde, celle à 6 électrons ?</label><input id="multiples-essai-2" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="multiples-essai-fb-2 multiples-essai-hint-2"><div class="practice-actions"><button class="go" type="submit">Vérifier cette étape</button><button type="button" class="practice-hint">Un indice</button></div><p class="practice-help" id="multiples-essai-hint-2" role="status" aria-live="polite" hidden></p><p class="practice-feedback" id="multiples-essai-fb-2" role="status" aria-live="polite" hidden></p></fieldset>
+<p class="practice-finish" role="status" aria-live="polite" hidden>Entraînement terminé. Tu peux refaire cet essai ou poursuivre le parcours.</p><button type="button" class="practice-reset">Recommencer cet entraînement</button></form>
 
-  <div class="ex"><span class="k">Exercice 6 du cours — quand il faut multiplier</span>
+<form class="practice" id="coefficients-essai" novalidate aria-labelledby="coefficients-essai-title"><span class="k">À toi · entraînement guidé</span><h3 id="coefficients-essai-title">Ne pas multiplier seulement les électrons</h3><p>On multiplie <span class="f">Cu<sup>2+</sup> + 2 e<sup>−</sup> = Cu</span> par <b>3</b>.</p><fieldset data-answer="3" data-hint-one="Le coefficient 1, même non écrit, est multiplié par 3." data-hint-two="Répète trois fois l’ion Cu²⁺, sans modifier sa charge." data-success="Oui : 3 Cu²⁺." data-errors="{}"><legend>Étape 1 sur 3</legend><label for="coefficients-essai-0">Quel coefficient faut-il devant Cu²⁺ ?</label><input id="coefficients-essai-0" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="coefficients-essai-fb-0 coefficients-essai-hint-0"><div class="practice-actions"><button class="go" type="submit">Vérifier cette étape</button><button type="button" class="practice-hint">Un indice</button></div><p class="practice-help" id="coefficients-essai-hint-0" role="status" aria-live="polite" hidden></p><p class="practice-feedback" id="coefficients-essai-fb-0" role="status" aria-live="polite" hidden></p></fieldset>
+<fieldset hidden disabled data-answer="6" data-hint-one="Chaque exemplaire de la demi-équation en consomme deux." data-hint-two="Calcule 3 × 2." data-success="Oui : 6 e⁻." data-errors="{}"><legend>Étape 2 sur 3</legend><label for="coefficients-essai-1">Combien d’électrons faut-il écrire ?</label><input id="coefficients-essai-1" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="coefficients-essai-fb-1 coefficients-essai-hint-1"><div class="practice-actions"><button class="go" type="submit">Vérifier cette étape</button><button type="button" class="practice-hint">Un indice</button></div><p class="practice-help" id="coefficients-essai-hint-1" role="status" aria-live="polite" hidden></p><p class="practice-feedback" id="coefficients-essai-fb-1" role="status" aria-live="polite" hidden></p></fieldset>
+<fieldset hidden disabled data-answer="3" data-hint-one="On multiplie aussi les termes à droite." data-hint-two="Le coefficient 1 de Cu devient 1 × 3." data-success="Oui : 3 Cu²⁺ + 6 e⁻ = 3 Cu. Les trois coefficients ont été multipliés." data-errors="{}"><legend>Étape 3 sur 3</legend><label for="coefficients-essai-2">Quel coefficient faut-il devant Cu à droite ?</label><input id="coefficients-essai-2" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="coefficients-essai-fb-2 coefficients-essai-hint-2"><div class="practice-actions"><button class="go" type="submit">Vérifier cette étape</button><button type="button" class="practice-hint">Un indice</button></div><p class="practice-help" id="coefficients-essai-hint-2" role="status" aria-live="polite" hidden></p><p class="practice-feedback" id="coefficients-essai-fb-2" role="status" aria-live="polite" hidden></p></fieldset>
+<p class="practice-finish" role="status" aria-live="polite" hidden>Entraînement terminé. Tu peux refaire cet essai ou poursuivre le parcours.</p><button type="button" class="practice-reset">Recommencer cet entraînement</button></form>
+<div class="checkpoint-block"><p>À présent, choisis les coefficients sans les étapes intermédiaires.<button class="cp" type="button" data-cp="5-3" aria-expanded="false" aria-controls="q5-3">vérifier</button></p>
+<div class="q" id="q5-3" data-prerequisites="multiples-exemple multiples-essai coefficients-essai" data-forme="transfert" hidden>
+      <span class="k qk">Point de contrôle</span>
+      <p class="qq">La première demi-équation consomme <b>3</b> électrons, la seconde en fournit <b>2</b>. Quels sont les <b>plus petits multiplicateurs entiers positifs</b> pour les additionner sans électron dans le bilan ?</p>
+      <button class="opt" data-ok="1" data-fb="On cherche le plus petit nombre atteignable par les deux : <b>6</b>. La première y va en la doublant, la seconde en la triplant.">La première par 2, la seconde par 3</button>
+      <button class="opt" data-ok="0" data-fb="Avec ces facteurs, on aurait 3 × 3 = 9 électrons et 2 × 2 = 4. Repars d’un même total : 6, puis divise-le par 3 et par 2.">La première par 3, la seconde par 2</button>
+      <button class="opt" data-ok="0" data-fb="Cela donnerait 15 et 10 électrons : toujours pas le même nombre. Il faut un multiple <b>commun</b>.">Les deux par 5</button>
+      <button class="opt" data-ok="0" data-fb="Sans multiplication, il resterait un électron dans le bilan — et un électron qui survit est la marque d'une équation fausse.">Ni l'une ni l'autre, on additionne directement</button>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
+    </div></div><details class="worked-answer"><summary>Voir un bilan complet avec 3 et 2 électrons</summary><div class="ex"><span class="k">Exercice 6 du cours — quand il faut multiplier</span>
     <p class="en"><span class="f">Fe<sup>3+</sup> + H<sub>2</sub> → Fe + H<sup>+</sup></span>, en milieu acide.</p>
     <div class="eqs" style="margin-top:0">
       <div class="row"><span class="e f"><span class="ox">Fe<sup>3+</sup></span> + <span class="el">3 e<sup>−</sup></span> = <span class="rd">Fe</span></span><span class="lab">réduction · <b>3 e⁻</b></span></div>
@@ -1397,7 +1437,50 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
       <div class="row"><span class="e f">3 <span class="rd">H<sub>2</sub></span> = 6 <span class="ox">H<sup>+</sup></span> + <span class="el">6 e<sup>−</sup></span></span><span class="lab">× 3</span></div>
       <div class="row bilan"><span class="e f">2 <span class="ox">Fe<sup>3+</sup></span> + 3 <span class="rd">H<sub>2</sub></span> = 2 <span class="rd">Fe</span> + 6 <span class="ox">H<sup>+</sup></span></span><span class="lab">6 est le plus petit multiple<br>commun de 3 et 2</span></div>
     </div>
+  </div></details>
+<form class="practice" id="multiples-transfert" novalidate aria-labelledby="multiples-transfert-title"><span class="k">À toi · entraînement guidé</span><h3 id="multiples-transfert-title">Un autre cas : 4 et 6 électrons</h3><p>Cette fois, trouve seul le plus petit total puis les deux multiplicateurs. Les indices restent disponibles.</p><fieldset data-answer="12" data-hint-one="Liste quelques multiples de 4 et de 6." data-hint-two="4, 8, 12… et 6, 12…" data-success="Oui : le total est 12, pas nécessairement 4 × 6." data-errors="{&quot;24&quot;: &quot;24 est un total commun, donc l’égalité serait possible. Mais 12 permet des coefficients plus petits.&quot;}"><legend>Étape 1 sur 3</legend><label for="multiples-transfert-0">Quel est le plus petit total commun ?</label><input id="multiples-transfert-0" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="multiples-transfert-fb-0 multiples-transfert-hint-0"><div class="practice-actions"><button class="go" type="submit">Vérifier cette étape</button><button type="button" class="practice-hint">Un indice</button></div><p class="practice-help" id="multiples-transfert-hint-0" role="status" aria-live="polite" hidden></p><p class="practice-feedback" id="multiples-transfert-fb-0" role="status" aria-live="polite" hidden></p></fieldset>
+<fieldset hidden disabled data-answer="3" data-hint-one="Divise le total commun par 4." data-hint-two="12 ÷ 4." data-success="Oui : 4 × 3 = 12." data-errors="{}"><legend>Étape 2 sur 3</legend><label for="multiples-transfert-1">Par combien multiplier la demi-équation à 4 électrons ?</label><input id="multiples-transfert-1" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="multiples-transfert-fb-1 multiples-transfert-hint-1"><div class="practice-actions"><button class="go" type="submit">Vérifier cette étape</button><button type="button" class="practice-hint">Un indice</button></div><p class="practice-help" id="multiples-transfert-hint-1" role="status" aria-live="polite" hidden></p><p class="practice-feedback" id="multiples-transfert-fb-1" role="status" aria-live="polite" hidden></p></fieldset>
+<fieldset hidden disabled data-answer="2" data-hint-one="Divise le total commun par 6." data-hint-two="12 ÷ 6." data-success="Oui : 6 × 2 = 12. Il ne doit rester aucun électron après addition et simplification." data-errors="{}"><legend>Étape 3 sur 3</legend><label for="multiples-transfert-2">Par combien multiplier la demi-équation à 6 électrons ?</label><input id="multiples-transfert-2" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="multiples-transfert-fb-2 multiples-transfert-hint-2"><div class="practice-actions"><button class="go" type="submit">Vérifier cette étape</button><button type="button" class="practice-hint">Un indice</button></div><p class="practice-help" id="multiples-transfert-hint-2" role="status" aria-live="polite" hidden></p><p class="practice-feedback" id="multiples-transfert-fb-2" role="status" aria-live="polite" hidden></p></fieldset>
+<p class="practice-finish" role="status" aria-live="polite" hidden>Entraînement terminé. Tu peux refaire cet essai ou poursuivre le parcours.</p><button type="button" class="practice-reset">Recommencer cet entraînement</button></form>
+
+
+  <h2>Le passage en milieu basique</h2>
+  <p>Les quatre premiers temps se font <b>toujours en milieu acide</b>, avec des <span class="f">H<sup>+</sup></span> — c'est le milieu par défaut de la méthode. Le passage en milieu basique est une <b>opération de fin</b>, purement mécanique, qu'on applique sur l'équation déjà équilibrée.</p>
+    
+
+  <div class="formula">
+    <span class="k">Passer une équation en milieu basique</span>
+    <span class="e">ajouter autant de <span class="f">OH<sup>−</sup></span> que de <span class="f">H<sup>+</sup></span>, <b>des deux côtés</b></span>
+    <p class="note">Là où <span class="f">H<sup>+</sup></span> et <span class="f">OH<sup>−</sup></span> se rencontrent, ils se recombinent en <span class="f">H<sub>2</sub>O</span>. On simplifie ensuite les molécules d'eau présentes des deux côtés.</p>
   </div>
+<div class="ex" id="basique-exemple"><span class="k">Ajouter · recombiner · simplifier</span><p>Pour ne travailler qu’une difficulté à la fois, on suit seulement les termes H⁺, OH⁻ et H₂O d’une équation déjà équilibrée : <b>4 H⁺ à gauche</b> et <b>1 H₂O à droite</b>. Les autres espèces restent inchangées.</p><ol><li>Ajouter <b>4 OH⁻ des deux côtés</b> : les charges restent équilibrées.</li><li>À gauche, <span class="f">4 H<sup>+</sup> + 4 OH<sup>−</sup> = 4 H<sub>2</sub>O</span>. À droite, les 4 OH⁻ restent présents.</li><li>Il y a 4 H₂O à gauche et 1 à droite. Retirer <b>1 H₂O de chaque côté</b> laisse <b>3 H₂O à gauche</b> et <b>4 OH⁻ à droite</b>.</li></ol><p>À la fin : pas de H⁺, mais il faut encore vérifier <b>tous les atomes et les charges</b>. L’absence de H⁺ ne suffit pas, à elle seule, à prouver que l’équation est juste.</p></div>
+<form class="practice" id="basique-essai" novalidate aria-labelledby="basique-essai-title"><span class="k">À toi · entraînement guidé</span><h3 id="basique-essai-title">Décomposer le passage en milieu basique</h3><p>On suit seulement <b>8 H⁺ à gauche</b> et <b>3 H₂O à droite</b> d’une équation acide équilibrée. Les autres espèces restent inchangées.</p><fieldset data-answer="8" data-hint-one="Il faut un OH⁻ pour neutraliser chaque H⁺." data-hint-two="Compte les huit H⁺ de départ." data-success="Oui : huit OH⁻ à gauche et huit à droite." data-errors="{}"><legend>Étape 1 sur 3</legend><label for="basique-essai-0">Combien d’ions OH⁻ ajoutes-tu de chaque côté ?</label><input id="basique-essai-0" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="basique-essai-fb-0 basique-essai-hint-0"><div class="practice-actions"><button class="go" type="submit">Vérifier cette étape</button><button type="button" class="practice-hint">Un indice</button></div><p class="practice-help" id="basique-essai-hint-0" role="status" aria-live="polite" hidden></p><p class="practice-feedback" id="basique-essai-fb-0" role="status" aria-live="polite" hidden></p></fieldset>
+<fieldset hidden disabled data-answer="8" data-hint-one="Un H⁺ et un OH⁻ donnent une molécule d’eau." data-hint-two="Les huit paires donnent huit molécules." data-success="Oui : il y a maintenant 8 H₂O à gauche et 3 à droite." data-errors="{}"><legend>Étape 2 sur 3</legend><label for="basique-essai-1">Combien de molécules H₂O sont formées à gauche avant simplification ?</label><input id="basique-essai-1" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="basique-essai-fb-1 basique-essai-hint-1"><div class="practice-actions"><button class="go" type="submit">Vérifier cette étape</button><button type="button" class="practice-hint">Un indice</button></div><p class="practice-help" id="basique-essai-hint-1" role="status" aria-live="polite" hidden></p><p class="practice-feedback" id="basique-essai-fb-1" role="status" aria-live="polite" hidden></p></fieldset>
+<fieldset hidden disabled data-answer="5" data-hint-one="Retire les trois molécules communes des deux côtés." data-hint-two="À gauche : 8 − 3. À droite : 3 − 3." data-success="Oui : 5 H₂O à gauche et 8 OH⁻ à droite." data-errors="{&quot;8&quot;: &quot;La recombinaison est faite, mais pas la simplification avec les trois eaux de droite.&quot;}"><legend>Étape 3 sur 3</legend><label for="basique-essai-2">Combien de molécules H₂O reste-t-il à gauche après simplification ?</label><input id="basique-essai-2" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="basique-essai-fb-2 basique-essai-hint-2"><div class="practice-actions"><button class="go" type="submit">Vérifier cette étape</button><button type="button" class="practice-hint">Un indice</button></div><p class="practice-help" id="basique-essai-hint-2" role="status" aria-live="polite" hidden></p><p class="practice-feedback" id="basique-essai-fb-2" role="status" aria-live="polite" hidden></p></fieldset>
+<p class="practice-finish" role="status" aria-live="polite" hidden>Entraînement terminé. Tu peux refaire cet essai ou poursuivre le parcours.</p><button type="button" class="practice-reset">Recommencer cet entraînement</button></form>
+<div class="checkpoint-block"><p>Avec de nouvelles quantités, effectue les trois opérations.<button class="cp" type="button" data-cp="5-1" aria-expanded="false" aria-controls="q5-1">vérifier</button></p>
+<div class="q" id="q5-1" data-prerequisites="basique-exemple basique-essai" data-forme="prediction" hidden>
+      <span class="k qk">Point de contrôle</span>
+      <p class="qq">Une équation équilibrée en milieu acide contient <span class="f">6 H<sup>+</sup></span> à gauche et <span class="f">2 H<sub>2</sub>O</span> à droite. Après passage en milieu basique, que reste-t-il ?</p>
+      <button class="opt" data-ok="1" data-fb="Les 6 protons deviennent 6 <span class='f'>H<sub>2</sub>O</span> à gauche ; on simplifie avec les 2 de droite, il en reste 4.">4 <span class='f'>H<sub>2</sub>O</span> à gauche et 6 <span class='f'>OH<sup>−</sup></span> à droite</button>
+      <button class="opt" data-ok="0" data-fb="Il reste les 2 molécules d'eau de droite à simplifier : 6 − 2 = 4.">6 <span class='f'>H<sub>2</sub>O</span> à gauche et 6 <span class='f'>OH<sup>−</sup></span> à droite</button>
+      <button class="opt" data-ok="0" data-fb="Les <span class='f'>OH<sup>−</sup></span> vont du côté <b>opposé</b> aux protons après recombinaison.">6 <span class='f'>OH<sup>−</sup></span> à gauche et 2 <span class='f'>H<sub>2</sub>O</span> à droite</button>
+      <button class="opt" data-ok="0" data-fb="Le nombre de <span class='f'>OH<sup>−</sup></span> est celui des protons de départ, soit 6.">2 <span class='f'>H<sub>2</sub>O</span> à gauche et 4 <span class='f'>OH<sup>−</sup></span> à droite</button>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
+    </div></div><div class="checkpoint-block"><p>Contrôle ce qui peut encore signaler un travail incomplet.<button class="cp" type="button" data-cp="5-2" aria-expanded="false" aria-controls="q5-2">vérifier</button></p>
+<div class="q" id="q5-2" data-prerequisites="basique-exemple basique-essai" data-forme="discrimination" hidden>
+      <span class="k qk">Point de contrôle</span>
+      <p class="qq">Après passage en milieu basique, quelle condition doit être satisfaite, en plus de la conservation des atomes et des charges ?</p>
+      <button class="opt" data-ok="1" data-fb="Des H⁺ restants signalent une conversion incomplète. Leur absence est nécessaire ici, mais ne dispense pas de vérifier les atomes et les charges.">Il ne reste plus aucun <span class='f'>H<sup>+</sup></span></button>
+      <button class="opt" data-ok="0" data-fb="L'eau reste presque toujours : c'est elle qui naît de la recombinaison.">Il ne reste plus aucune molécule d'eau</button>
+      <button class="opt" data-ok="0" data-fb="Le nombre d'électrons ne change jamais : le milieu n'a rien à voir avec le transfert.">Le nombre d'électrons a changé</button>
+      <button class="opt" data-ok="0" data-fb="Elles doivent l'être avant <b>et</b> après. C'est le contrôle à refaire à la fin.">Les charges ne sont plus équilibrées</button>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
+    </div></div>
+
+  
+
+  
 
   <div class="chain">
     <div class="hd">Le cas qui tombe à l'examen<br><span class="yr">Exercice 6 du cours — <span class="f">ClO<sup>−</sup> + AsO<sub>2</sub><sup>−</sup> → Cl<sup>−</sup> + AsO<sub>4</sub><sup>3−</sup></span>, d'abord en milieu <b>acide</b>, puis en milieu <b>basique</b></span></div>
@@ -1450,7 +1533,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
   </div>
 
   <div class="ex"><span class="k">Exercice 6 du cours — le plus lourd</span>
-    <p class="en"><span class="f">SO<sub>2</sub> + Cr<sub>2</sub>O<sub>7</sub><sup>2−</sup> → Cr<sup>3+</sup> + HSO<sub>4</sub><sup>−</sup></span>, en milieu acide. C'est le couple <span class="f">HSO<sub>4</sub><sup>−</sup>/SO<sub>2</sub></span> du sujet 2024, déjà croisé à l'étape 12.</p>
+    <p class="en"><span class="f">SO<sub>2</sub> + Cr<sub>2</sub>O<sub>7</sub><sup>2−</sup> → Cr<sup>3+</sup> + HSO<sub>4</sub><sup>−</sup></span>, en milieu acide. C'est le couple <span class="f">HSO<sub>4</sub><sup>−</sup>/SO<sub>2</sub></span> du sujet 2024, que tu retrouveras à l’étape 12.</p>
     <div class="eqs" style="margin-top:0">
       <div class="row"><span class="e f"><span class="ox">Cr<sub>2</sub>O<sub>7</sub><sup>2−</sup></span> + 14 H<sup>+</sup> + <span class="el">6 e<sup>−</sup></span> = 2 <span class="rd">Cr<sup>3+</sup></span> + 7 H<sub>2</sub>O</span><span class="lab">Cr : +VI ⟶ +III<br>3 par atome, <b>× 2 atomes = 6 e⁻</b></span></div>
       <div class="row"><span class="e f"><span class="rd">SO<sub>2</sub></span> + 2 H<sub>2</sub>O = <span class="ox">HSO<sub>4</sub><sup>−</sup></span> + 3 H<sup>+</sup> + <span class="el">2 e<sup>−</sup></span></span><span class="lab">S : +IV ⟶ +VI<br><b>2 e⁻</b>, à multiplier par 3</span></div>
@@ -1480,18 +1563,10 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
   <div class="crumb">Chapitre 1 — diapositive 20</div>
   <h1><span class="num"></span><span class="t">La dismutation</span><span class="cnt"></span></h1>
   <div class="obj"><span class="k">En sortant de cette étape, tu sais</span>
-    <p>Reconnaître une <b>dismutation</b>, écrire celle de <span class="f">H<sub>2</sub>O<sub>2</sub></span>, et répondre à la question qui suit toujours : <em>ces deux espèces peuvent-elles réagir ?</em></p></div>
+    <p>Reconnaître une <b>dismutation</b> et écrire celle de <span class="f">H<sub>2</sub>O<sub>2</sub></span>. Tu distingueras l’écriture possible d’une réaction et son sens spontané à l’étape 13, avec les potentiels.</p></div>
 
-  <p>Un composé chimique peut intervenir dans <b>deux couples différents</b> : oxydant dans l'un, réducteur dans l'autre. L'eau oxygénée est le cas d'école, et c'est celui du programme.<button class="cp" type="button" data-cp="6-1" aria-expanded="false" aria-controls="q6-1">vérifier</button></p>
-    <div class="q" id="q6-1" data-forme="transfert" hidden>
-      <span class="k qk">Point de contrôle</span>
-      <p class="qq">Une espèce est l'oxydant d'un couple à <span class="f">0,15 V</span> et le réducteur d'un couple à <span class="f">0,90 V</span>. Se dismute-t-elle ?</p>
-      <button class="opt" data-ok="1" data-fb="La dismutation exige que le couple où l'espèce est <b>oxydant</b> soit le plus haut. Ici c'est l'inverse : le γ serait à l'envers.">Non — elle est stable</button>
-      <button class="opt" data-ok="0" data-fb="Être dans deux couples rend la dismutation <b>possible</b>, pas certaine. La comparaison des potentiels décide.">Oui — elle est dans deux couples, cela suffit</button>
-      <button class="opt" data-ok="0" data-fb="L'écart compte, mais son <b>sens</b> d'abord. Ici il joue contre la dismutation.">Oui — l'écart de 0,75 V est largement suffisant</button>
-      <button class="opt" data-ok="0" data-fb="Le nombre d'électrons intervient dans l'équilibrage, pas dans la décision.">On ne peut pas savoir sans le nombre d'électrons</button>
-      <div class="fb" hidden></div>
-    </div>
+  <p>Un composé chimique peut intervenir dans <b>deux couples différents</b> : oxydant dans l'un, réducteur dans l'autre. L'eau oxygénée est le cas d'école, et c'est celui du programme.</p>
+    
 
   <div class="eqs">
     <div class="row"><span class="e f"><span class="ox">H<sub>2</sub>O<sub>2</sub></span> / <span class="rd">H<sub>2</sub>O</span></span><span class="lab">ici <span class="f">H<sub>2</sub>O<sub>2</sub></span> est l'<b>oxydant</b><br>n.o.(O) : −I ⟶ −II</span></div>
@@ -1510,7 +1585,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
       <button class="opt" data-ok="0" data-fb="Descendre deux fois, ce sont deux réductions : il n'y a pas d'oxydation, donc pas de dismutation.">Oui, en descendant deux fois de manière différente</button>
       <button class="opt" data-ok="0" data-fb="Le cas typique est un n.o. <b>intermédiaire</b>, comme l'oxygène à −I dans l'eau oxygénée.">Oui, c'est justement le cas typique</button>
       <button class="opt" data-ok="0" data-fb="Le pH déplace les potentiels, il ne crée pas un degré d'oxydation qui n'existe pas.">Cela dépend du pH</button>
-      <div class="fb" hidden></div>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
     </div></div>
 
   <div class="chain">
@@ -1539,26 +1614,25 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
 
     <div class="res">
       <span class="v">2 H₂O₂ → 2 H₂O + O₂</span>
-      <span class="c">Un seul réactif, deux produits : la signature d'une dismutation.</span>
+      <span class="c">Une même espèce est oxydée et réduite : c’est une dismutation. Un seul réactif et deux produits ne suffiraient pas, sans ce changement de n.o., à le prouver.</span>
     </div>
   </div>
 
   <div class="def"><span class="k">La réaction inverse porte un nom</span>
     <p>Quand deux espèces d'un même élément, l'une plus oxydée et l'autre plus réduite, se rencontrent pour donner une espèce intermédiaire, on parle de <b>médiamutation</b>. C'est la dismutation lue à l'envers.</p></div>
 
-  <div class="geste" data-geste="1b" data-gt="Reconnaître et écrire une dismutation" data-yr="tombé en 2024 et 2025">
-    <span class="k">Geste 1 · cas particulier <span class="y">tombé en 2024 et 2025</span></span>
-    <h3>Reconnaître et écrire une dismutation</h3>
-    <ol>
-      <li><b>Repère l'espèce qui apparaît dans deux couples</b>, une fois comme oxydant, une fois comme réducteur.</li>
-      <li><b>Compare les deux E°</b> : la dismutation n'a lieu que si le couple où elle est <b>oxydant</b> est le plus haut.</li>
-      <li><b>Écris les deux demi-équations</b>, l'une dans le sens de la réduction, l'autre dans celui de l'oxydation.</li>
-      <li><b>Additionne</b> : les protons et les électrons s'annulent. Il ne doit rester qu'un seul réactif.</li>
-    </ol>
-    <div class="piege"><b>Le piège —</b> Un n.o. intermédiaire rend la dismutation <b>possible</b>, pas certaine. C'est la comparaison des deux <span class="f">E°</span> qui décide, et elle seule : <span class="f">Fe<sup>2+</sup></span> est dans deux couples et ne se dismute pourtant pas.</div>
-    <button class="go" data-entr="1b" type="button">S'entraîner — tirage au hasard</button>
-    <div class="entr" data-entr-for="1b" hidden></div>
-  </div>
+  
+
+  <div class="checkpoint-block"><p>Reconnais la transformation à partir des nombres d’oxydation.<button class="cp" type="button" data-cp="6-reconnaitre" aria-expanded="false" aria-controls="q6-reconnaitre">vérifier</button></p>
+<div class="q" id="q6-reconnaitre" data-forme="transfert" hidden>
+<span class="k qk">Point de contrôle</span>
+<p class="qq">Dans une réaction, un même élément passe de +III à +V pour certains atomes, et de +III à +I pour d’autres. Que décrit cette écriture ?</p>
+<button type="button" class="opt" data-ok="1" data-fb="Une partie s’oxyde (+III vers +V), l’autre se réduit (+III vers +I), à partir du même état initial. Cela décrit l’écriture, pas encore son caractère spontané.">Une dismutation</button>
+<button type="button" class="opt" data-ok="0" data-fb="Le passage de +III à +I est une réduction, car le n.o. diminue.">Deux oxydations</button>
+<button type="button" class="opt" data-ok="0" data-fb="Le passage de +III à +V est une oxydation, car le n.o. augmente.">Deux réductions</button>
+<button type="button" class="opt" data-ok="0" data-fb="Une médiamutation partirait de deux états différents pour arriver à un état intermédiaire.">Une médiamutation</button>
+<div class="fb" role="status" aria-live="polite" hidden></div>
+</div></div><p>Pour décider si une dismutation est favorisée, poursuis jusqu’à la <a href="#e13">comparaison des potentiels à l’étape 13</a>.</p>
 </article>
 
 <!-- ════════════════ ÉTAPE 7 ════════════════ -->
@@ -1579,7 +1653,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
       <button class="opt" data-ok="0" data-fb="À la cathode, des ions se déposent : l'électrode <b>gagne</b> de la masse.">Une réduction : c'est la cathode, pôle ⊕</button>
       <button class="opt" data-ok="0" data-fb="Dans une pile l'anode est le pôle ⊖. Le ⊕ n'est l'anode qu'en électrolyse.">Une oxydation : c'est l'anode, pôle ⊕</button>
       <button class="opt" data-ok="0" data-fb="Elle change, et c'est justement ce qu'on observe sur la pile Daniell.">Rien : la masse d'une électrode ne change pas</button>
-      <div class="fb" hidden></div>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
     </div>
 
   <p>La même cellule peut fonctionner de deux manières. En <b>générateur</b> d'énergie, c'est une cellule voltaïque — une pile ; c'est Alessandro Volta qui réalise la première en 1800. En <b>récepteur</b> d'énergie, c'est une cellule d'électrolyse.</p>
@@ -1666,7 +1740,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
       <button class="opt" data-ok="0" data-fb="Ce serait l'erreur classique. Le courant a été défini avant qu'on connaisse l'électron, et dans l'autre sens.">Vers la droite aussi</button>
       <button class="opt" data-ok="0" data-fb="Le sujet la demande explicitement, presque chaque année.">Il n'y a pas de flèche de courant sur un schéma de pile</button>
       <button class="opt" data-ok="0" data-fb="Non : la relation entre les deux sens est une convention, elle ne dépend d'aucun couple.">Cela dépend du couple choisi</button>
-      <div class="fb" hidden></div>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
     </div>
 
   <div class="def"><span class="k">Les deux mots, et comment ne plus les confondre</span>
@@ -1684,7 +1758,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
       <button class="opt" data-ok="0" data-fb="Le nom suit la réaction, pas la position. L'oxydation reste à l'anode.">la cathode, puisque tout s'inverse</button>
       <button class="opt" data-ok="0" data-fb="Le signe, lui, s'inverse : le générateur l'impose de l'extérieur.">toujours l'anode, et elle reste le pôle ⊖</button>
       <button class="opt" data-ok="0" data-fb="Les deux mots gardent exactement le même sens dans les deux cas.">cela n'a plus de nom en électrolyse</button>
-      <div class="fb" hidden></div>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
     </div></div>
 
   <h2>L'écriture symbolique de la pile</h2>
@@ -1725,7 +1799,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
       <button class="opt" data-ok="0" data-fb="Le fil ne transporte que les électrons. Sans conduction ionique, le circuit n'est pas fermé.">Rien, tant que le fil reste branché</button>
       <button class="opt" data-ok="0" data-fb="Il ne s'inverse pas, il cesse.">Le courant s'inverse</button>
       <button class="opt" data-ok="0" data-fb="Elle tombe à zéro en même temps que le courant.">La tension augmente</button>
-      <div class="fb" hidden></div>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
     </div>
 
   <p>Entre les deux compartiments, les solutions sont mises en relation par un <b>pont salin</b> contenant un sel — chlorure de potassium <span class="f">KCl</span> ou nitrate de potassium <span class="f">KNO<sub>3</sub></span>. Ses cations et ses anions peuvent migrer d'un compartiment à l'autre. En revanche les solutions ne se mélangent pas, ce qui évite des réactions rédox indésirables.</p>
@@ -1747,7 +1821,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
       <button class="opt" data-ok="0" data-fb="La cathode s'appauvrit en cations : il lui manque du positif, ce sont les <span class='f'>K<sup>+</sup></span> qui y vont.">Vers la cathode</button>
       <button class="opt" data-ok="0" data-fb="Chaque ion va d'un seul côté, celui qui a besoin de sa charge.">Vers les deux, en quantités égales</button>
       <button class="opt" data-ok="0" data-fb="S'ils restaient, le pont ne fermerait pas le circuit.">Ils ne migrent pas : ils restent dans le pont</button>
-      <div class="fb" hidden></div>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
     </div>
 
   <div class="ex"><span class="k">Exercice 8 du cours</span>
@@ -1782,7 +1856,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
       <button class="opt" data-ok="0" data-fb="Cela masquerait l'erreur au lieu de la corriger, et la suite du raisonnement resterait fausse.">Le signe : il suffit de l'enlever</button>
       <button class="opt" data-ok="0" data-fb="Les concentrations déplacent les potentiels, elles n'inversent pas l'ordre de deux couples éloignés.">Les concentrations, qui ne sont pas standard</button>
       <button class="opt" data-ok="0" data-fb="Jamais, pour une pile qui débite.">Rien : une fem peut être négative</button>
-      <div class="fb" hidden></div>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
     </div></div>
 
   <div class="formula">
@@ -1802,7 +1876,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
       <button class="opt" data-ok="0" data-fb="C'est la somme algébrique 0,80 + (−0,44). La fem est une <b>différence</b>.">0,36 V</button>
       <button class="opt" data-ok="0" data-fb="Une fem est toujours positive : c'est le couple le plus haut qui joue la cathode.">− 1,24 V</button>
       <button class="opt" data-ok="0" data-fb="Seul le potentiel de l'anode a été utilisé, sans celui de la cathode.">0,44 V</button>
-      <div class="fb" hidden></div>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
     </div>
 
   <div class="formula">
@@ -1843,7 +1917,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
       <button class="opt" data-ok="0" data-fb="À la cathode il y a réduction : l'électrode gagnerait de la masse.">C'est la cathode, reliée au pôle ⊖</button>
       <button class="opt" data-ok="0" data-fb="Ce serait le cas dans une <b>pile</b>. En électrolyse, le générateur impose l'inverse.">C'est l'anode, reliée au pôle ⊖</button>
       <button class="opt" data-ok="0" data-fb="Si : c'est exactement ce qui se passe du côté du cuivre.">Impossible : en électrolyse aucune électrode ne se consomme</button>
-      <div class="fb" hidden></div>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
     </div>
 
   <p>Le processus électrochimique est alors inversé. Dans le compartiment de gauche, la masse de l'électrode de zinc <b>augmente</b> et la concentration en <span class="f"><span class="ox">Zn<sup>2+</sup></span></span> diminue ; dans celui de droite, l'électrode de cuivre est <b>consommée</b> et la concentration en <span class="f"><span class="ox">Cu<sup>2+</sup></span></span> augmente.<button class="cp" type="button" data-cp="10-2" aria-expanded="false" aria-controls="q10-2">vérifier</button></p>
@@ -1854,7 +1928,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
       <button class="opt" data-ok="0" data-fb="Il s'inverse, parce que le générateur l'impose de l'extérieur.">Le signe de chaque électrode</button>
       <button class="opt" data-ok="0" data-fb="Il s'inverse aussi : c'est même le but de l'opération.">Le sens de circulation des électrons</button>
       <button class="opt" data-ok="0" data-fb="Il s'inverse : le zinc se dépose au lieu de se dissoudre.">Le sens de la réaction chimique</button>
-      <div class="fb" hidden></div>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
     </div>
 
   <div class="tw"><table class="tab">
@@ -1884,7 +1958,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
       <button class="opt" data-ok="0" data-fb="Un potentiel nul n'est pas un pouvoir nul : il est simplement l'origine choisie.">Qu'il n'a aucun pouvoir oxydant</button>
       <button class="opt" data-ok="0" data-fb="Il réagit avec tout ce qui est en dessous de lui, et c'est même le cas classique du fer dans l'acide.">Qu'il ne réagit avec rien</button>
       <button class="opt" data-ok="0" data-fb="Aucune mesure absolue n'est possible pour <b>aucun</b> couple : c'est bien pour ça qu'on choisit une référence.">Que sa mesure est impossible</button>
-      <div class="fb" hidden></div>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
     </div>
 
   <p>La parade est une convention. On mesure la différence de potentiel entre l'électrode dont on veut connaître le potentiel et une <b>électrode de référence</b>, à laquelle on assigne arbitrairement un potentiel <b>égal à zéro</b>. Cette référence est l'électrode à hydrogène.</p>
@@ -1907,7 +1981,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
       <button class="opt" data-ok="0" data-fb="Elle est établie <b>pour</b> les conditions standard, et pour elles seules.">Oui, la table est valable à toute concentration</button>
       <button class="opt" data-ok="0" data-fb="Le pH règle les protons, pas la concentration de l'oxydant.">Oui, si le pH vaut 0</button>
       <button class="opt" data-ok="0" data-fb="La restriction vaut pour <b>toute</b> concentration qui s'écarte de 1 mol·L⁻¹.">Non, mais seulement si le couple fait intervenir des protons</button>
-      <div class="fb" hidden></div>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
     </div>
 
   <h2>Les états physiques, à noter dès maintenant</h2>
@@ -1930,7 +2004,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
       <button class="opt" data-ok="0" data-fb="C'est un ion, forme <b>oxydée</b> : il capte des électrons, il n'en cède pas."><span class="f"><span class="ox">Ag<sup>+</sup></span></span></button>
       <button class="opt" data-ok="0" data-fb="L'argent est bien un réducteur, mais son couple est <b>plus haut</b> : il est donc moins bon que le zinc."><span class="f"><span class="rd">Ag</span></span></button>
       <button class="opt" data-ok="0" data-fb="C'est l'oxydant du couple le plus bas, donc le <b>plus faible</b> des oxydants."><span class="f"><span class="ox">Zn<sup>2+</sup></span></span></button>
-      <div class="fb" hidden></div>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
     </div>
 
   <div class="ech">
@@ -1987,7 +2061,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
     <button class="opt" data-ok="0" data-fb="Si, on peut : ces conditions <b>sont</b> les conditions standard. C'est le seul cas où on lit la réponse directement dans la table.">On ne peut pas savoir sans appliquer Nernst</button>
     <button class="opt" data-ok="0" data-fb="0 V, c'est le potentiel de l'électrode standard à hydrogène, pas celui de ce couple.">0 V, puisque pH = 0</button>
     <button class="opt" data-ok="0" data-fb="Cette correction en pH existe, mais elle vaut <b>0,096 × pH</b> : à pH = 0 elle vaut zéro. Il ne reste que E°.">1,51 − 0,096 V</button>
-    <div class="fb" hidden></div>
+    <div class="fb" role="status" aria-live="polite" hidden></div>
   </div>
 
   <p>Dès qu'on s'écarte de ces conditions — et c'est toujours le cas — le potentiel du couple change. La loi de Nernst dit exactement de combien.</p>
@@ -2004,10 +2078,18 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
     <button class="opt" data-ok="1" data-fb="Le cuivre métallique est un <b>solide</b>. Il compte pour 1, donc le log se réduit à <span class='f'>log[Cu<sup>2+</sup>]</span>.">Dans <span class="f">Cu<sup>2+</sup>/Cu</span></button>
     <button class="opt" data-ok="0" data-fb="Un seul des deux : il faut qu'il y ait un solide ou un liquide pur au dénominateur, et <span class='f'>Fe<sup>2+</sup></span> n'en est pas un.">Dans les deux</button>
     <button class="opt" data-ok="0" data-fb="Il y en a un : regarde l'état physique de chaque réducteur, pas seulement sa formule.">Dans aucun des deux</button>
-    <div class="fb" hidden></div>
+    <div class="fb" role="status" aria-live="polite" hidden></div>
   </div>
 
   <!-- ③ la chaîne du calcul -->
+  <section id="nernst-exemple"><h2>Un premier calcul, sans terme en pH</h2><p>Pour <span class="f">Fe<sup>3+</sup> + e<sup>−</sup> = Fe<sup>2+</sup></span> à 25 °C, on utilise l’approximation 0,06 V du cours. Avec <span class="f">E° = 0,77 V</span>, on écrit <span class="f">E = 0,77 + 0,06 × log<span class="fr"><span class="n">[Fe<sup>3+</sup>]</span><span class="d">[Fe<sup>2+</sup>]</span></span></span>.</p><p>Prends <span class="f">[Fe<sup>3+</sup>] = 10<sup>−3</sup></span> et <span class="f">[Fe<sup>2+</sup>] = 10<sup>−2</sup> mol·L⁻¹</span>. On calcule <b>quatre résultats distincts</b> :</p><ol><li>Rapport : <span class="f">10<sup>−3</sup> ÷ 10<sup>−2</sup> = 10<sup>−1</sup> = 0,1</span>.</li><li>Logarithme : <span class="f">log(0,1) = −1</span>.</li><li>Correction : <span class="f">0,06 × (−1) = −0,06 V</span>.</li><li>Potentiel : <span class="f">E = 0,77 − 0,06 = 0,71 V</span>.</li></ol><p>Le rapport est inférieur à 1 : son log est négatif et E est inférieur à E°. C’est un contrôle du signe, pas une nouvelle formule. Pour ces deux ions dissous, on assimile ici les activités aux concentrations rapportées à 1 mol·L⁻¹.</p></section>
+<form class="practice" id="nernst-essai" novalidate aria-labelledby="nernst-essai-title"><span class="k">À toi · entraînement guidé</span><h3 id="nernst-essai-title">Rejouer les quatre maillons</h3><p>Même couple : <span class="f">[Fe<sup>3+</sup>] = 10<sup>−4</sup></span> et <span class="f">[Fe<sup>2+</sup>] = 10<sup>−2</sup> mol·L⁻¹</span>, E° = 0,77 V. Pas de H⁺ dans la demi-équation.</p><fieldset data-answer="0.01" data-hint-one="Soustrais les exposants : −4 − (−2)." data-hint-two="Le résultat est 10⁻². Écris-le en décimal ou en notation 1e−2." data-success="Oui : le rapport vaut 0,01." data-errors="{}"><legend>Étape 1 sur 4</legend><label for="nernst-essai-0">Que vaut le rapport [Fe³⁺] divisé par [Fe²⁺] ?</label><input id="nernst-essai-0" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="nernst-essai-fb-0 nernst-essai-hint-0"><div class="practice-actions"><button class="go" type="submit">Vérifier cette étape</button><button type="button" class="practice-hint">Un indice</button></div><p class="practice-help" id="nernst-essai-hint-0" role="status" aria-live="polite" hidden></p><p class="practice-feedback" id="nernst-essai-fb-0" role="status" aria-live="polite" hidden></p></fieldset>
+<fieldset hidden disabled data-answer="-2" data-hint-one="0,01 s’écrit 10 à quelle puissance ?" data-hint-two="Le log d’une puissance de 10 est son exposant." data-success="Oui : log(0,01) = −2." data-errors="{&quot;2&quot;: &quot;Le rapport est inférieur à 1 : son logarithme est négatif.&quot;}"><legend>Étape 2 sur 4</legend><label for="nernst-essai-1">Que vaut le logarithme de ce rapport ?</label><input id="nernst-essai-1" type="text" inputmode="text" autocomplete="off" spellcheck="false" aria-describedby="nernst-essai-fb-1 nernst-essai-hint-1"><div class="practice-actions"><button class="go" type="submit">Vérifier cette étape</button><button type="button" class="practice-hint">Un indice</button></div><p class="practice-help" id="nernst-essai-hint-1" role="status" aria-live="polite" hidden></p><p class="practice-feedback" id="nernst-essai-fb-1" role="status" aria-live="polite" hidden></p></fieldset>
+<fieldset hidden disabled data-answer="-0.12" data-hint-one="Multiplie 0,06 par −2." data-hint-two="Deux fois 0,06 vaut 0,12 ; garde le signe négatif." data-success="Oui : la correction vaut −0,12 V." data-errors="{}"><legend>Étape 3 sur 4</legend><label for="nernst-essai-2">Que vaut la correction 0,06 × log(rapport), en volts ?</label><input id="nernst-essai-2" type="text" inputmode="text" autocomplete="off" spellcheck="false" aria-describedby="nernst-essai-fb-2 nernst-essai-hint-2"><div class="practice-actions"><button class="go" type="submit">Vérifier cette étape</button><button type="button" class="practice-hint">Un indice</button></div><p class="practice-help" id="nernst-essai-hint-2" role="status" aria-live="polite" hidden></p><p class="practice-feedback" id="nernst-essai-fb-2" role="status" aria-live="polite" hidden></p></fieldset>
+<fieldset hidden disabled data-answer="0.65" data-hint-one="Ajoute la correction à E°, et non au rapport." data-hint-two="0,77 + (−0,12)." data-success="Oui : E = 0,65 V, inférieur à E° comme prévu." data-errors="{}"><legend>Étape 4 sur 4</legend><label for="nernst-essai-3">Que vaut le potentiel E, en volts ?</label><input id="nernst-essai-3" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="nernst-essai-fb-3 nernst-essai-hint-3"><div class="practice-actions"><button class="go" type="submit">Vérifier cette étape</button><button type="button" class="practice-hint">Un indice</button></div><p class="practice-help" id="nernst-essai-hint-3" role="status" aria-live="polite" hidden></p><p class="practice-feedback" id="nernst-essai-fb-3" role="status" aria-live="polite" hidden></p></fieldset>
+<p class="practice-finish" role="status" aria-live="polite" hidden>Entraînement terminé. Tu peux refaire cet essai ou poursuivre le parcours.</p><button type="button" class="practice-reset">Recommencer cet entraînement</button></form>
+
+
   <div class="chain">
     <div class="hd">Faisons-le en entier<br><span class="yr">Sujet 2024, exercice 3 — couple <span class="f"><span class="ox">HSO<sub>4</sub><sup>−</sup></span>/<span class="rd">SO<sub>2</sub></span></span>, les deux à 10<sup>−2</sup> mol·L⁻¹, <span class="f">pH = 3</span>, <span class="f">E° = 0,16 V</span></span></div>
 
@@ -2064,20 +2146,23 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
     <div class="res">
       <span class="v">E = − 0,11 V</span>
       <span class="c">Contrôle : à pH = 3 on est loin des conditions standard, <span class="f">E</span> s'écarte de <span class="f">E°</span> de 0,27 V — cohérent.</span>
-      <button class="cp" type="button" data-cp="12-3" aria-expanded="false" aria-controls="q12-3">vérifier</button>
+      
     </div>
   </div>
-  <div class="q" id="q12-3" data-forme="prediction" hidden>
+  
+
+  <!-- ④ le bloc geste, posé dans le fil -->
+  <div class="checkpoint-block"><p>Prévois l’effet d’un changement de pH pour le permanganate.<button class="cp" type="button" data-cp="12-3" aria-expanded="false" aria-controls="q12-3">vérifier</button></p>
+<div class="q" id="q12-3" data-forme="prediction" hidden>
     <span class="k qk">Point de contrôle</span>
-    <p class="qq">Même couple, même énoncé, mais à <span class="f">pH = 1</span> au lieu de 3. Sans recalculer, que devient <span class="f">E</span> ?</p>
+    <p class="qq">Pour le couple MnO₄⁻/Mn²⁺, on garde les concentrations en MnO₄⁻ et Mn²⁺ constantes et on passe de <span class="f">pH = 3</span> à <span class="f">pH = 1</span>. Avec <span class="f">E = b − 0,096 × pH</span>, que devient E ?</p>
     <button class="opt" data-ok="1" data-fb="La pente est <b>négative</b> : quand le pH baisse, E monte. Ici <span class='f'>E = 0,16 − 0,09 × 1 = 0,07 V</span>, contre −0,11 V à pH 3.">Plus grand — E remonte</button>
     <button class="opt" data-ok="0" data-fb="C'est le réflexe inverse. Dans <span class='f'>E = 0,16 − 0,09 · pH</span>, le terme en pH est <b>soustrait</b> : moins de pH, moins de soustraction, donc E plus grand.">Plus petit — E descend encore</button>
     <button class="opt" data-ok="0" data-fb="Non : le pH est la seule variable qui reste dans l'expression. S'il change, E change.">Inchangé — les concentrations n'ont pas bougé</button>
     <button class="opt" data-ok="0" data-fb="Si : le maillon 5 a mis le calcul sous la forme <span class='f'>E = 0,16 − 0,09 · pH</span>. Il suffit d'y remplacer le pH.">On ne peut pas le dire sans refaire le calcul</button>
-    <div class="fb" hidden></div>
-  </div>
+    <div class="fb" role="status" aria-live="polite" hidden></div>
+  </div></div>
 
-  <!-- ④ le bloc geste, posé dans le fil -->
   <div class="geste" data-geste="4" data-gt="Appliquer la loi de Nernst" data-yr="tombé les quatre années">
     <span class="k">Geste 4 <span class="y">tombé les quatre années</span></span>
     <h3>Appliquer la loi de Nernst</h3>
@@ -2177,7 +2262,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
       <button class="opt" data-ok="0" data-fb="Il est plus proche de l'oxydant : l'écart est plus petit, donc la réaction moins favorisée.">Celui du couple à 0,70 V</button>
       <button class="opt" data-ok="0" data-fb="Les deux sont possibles, mais l'une l'emporte — c'est exactement la question posée en 2024.">Les deux en même temps</button>
       <button class="opt" data-ok="0" data-fb="Un écart de potentiel, même faible, suffit à rendre la réaction possible.">Aucun des deux, ils sont trop proches</button>
-      <div class="fb" hidden></div>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
     </div></div>
 
   <h2>Le tracé du γ</h2>
@@ -2189,7 +2274,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
       <button class="opt" data-ok="0" data-fb="Ce sont les <b>espèces</b> données qui décident, pas les couples.">Oui — deux couples différents réagissent toujours</button>
       <button class="opt" data-ok="0" data-fb="La règle du γ ne dit rien de la vitesse : elle dit possible ou impossible.">Oui, mais lentement</button>
       <button class="opt" data-ok="0" data-fb="L'écart dit laquelle de deux réactions <b>possibles</b> est la plus favorisée. Ici la question est en amont.">On ne peut pas le savoir sans l'écart des potentiels</button>
-      <div class="fb" hidden></div>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
     </div>
 
   <div class="fig">
@@ -2276,6 +2361,32 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
     <button class="go" data-entr="2d" type="button">S'entraîner — tirage au hasard</button>
     <div class="entr" data-entr-for="2d" hidden></div>
   </div>
+
+  <section id="dismutation-potentiels"><h2>Reprendre la dismutation avec les potentiels</h2><p>L’écriture de l’étape 6 montrait le même composé oxydé et réduit. Pour prévoir si cette réaction est favorisée <b>dans les conditions standard</b>, compare maintenant les deux potentiels : <span class="f">ΔE° = E°<sub>couple où l’espèce est oxydant</sub> − E°<sub>couple où elle est réducteur</sub></span>. Un résultat positif favorise la dismutation dans ces conditions. Il ne prédit pas sa vitesse.</p><div class="ex"><span class="k">Un exemple calculé</span><p>Pour H₂O₂ : oxydant dans H₂O₂/H₂O à 1,77 V ; réducteur dans O₂/H₂O₂ à 0,68 V. Donc <span class="f">ΔE° = 1,77 − 0,68 = 1,09 V</span>, positif. La dismutation est favorisée dans les conditions standard. Hors de ces conditions, on compare les potentiels E calculés avec Nernst.</p></div></section>
+<form class="practice" id="dismutation-essai" novalidate aria-labelledby="dismutation-essai-title"><span class="k">À toi · entraînement guidé</span><h3 id="dismutation-essai-title">Comparer dans le bon ordre</h3><p>Une espèce est oxydant dans un couple à 0,50 V et réducteur dans un couple à 0,20 V, en conditions standard.</p><fieldset data-answer="0.3" data-hint-one="Commence par le couple où l’espèce capte des électrons." data-hint-two="0,50 − 0,20." data-success="Oui : +0,30 V. La dismutation est favorisée dans ces conditions." data-errors="{&quot;-0.3&quot;: &quot;Tu as inversé la soustraction : potentiel du couple où elle est oxydant, moins celui où elle est réducteur.&quot;}"><legend>Étape 1 sur 1</legend><label for="dismutation-essai-0">Que vaut ΔE°, en volts ?</label><input id="dismutation-essai-0" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="dismutation-essai-fb-0 dismutation-essai-hint-0"><div class="practice-actions"><button class="go" type="submit">Vérifier cette étape</button><button type="button" class="practice-hint">Un indice</button></div><p class="practice-help" id="dismutation-essai-hint-0" role="status" aria-live="polite" hidden></p><p class="practice-feedback" id="dismutation-essai-fb-0" role="status" aria-live="polite" hidden></p></fieldset>
+<p class="practice-finish" role="status" aria-live="polite" hidden>Entraînement terminé. Tu peux refaire cet essai ou poursuivre le parcours.</p><button type="button" class="practice-reset">Recommencer cet entraînement</button></form>
+<div class="checkpoint-block"><p>Compare une autre paire de potentiels.<button class="cp" type="button" data-cp="13-dismutation" aria-expanded="false" aria-controls="q13-dismutation">vérifier</button></p>
+<div class="q" id="q13-dismutation" data-prerequisites="dismutation-potentiels dismutation-essai" data-forme="transfert" hidden>
+      <span class="k qk">Point de contrôle</span>
+      <p class="qq">Une espèce est l'oxydant d'un couple à <span class="f">0,15 V</span> et le réducteur d'un couple à <span class="f">0,90 V</span>. La dismutation est-elle favorisée dans les conditions standard ?</p>
+      <button class="opt" data-ok="1" data-fb="La dismutation exige que le couple où l'espèce est <b>oxydant</b> soit le plus haut. Ici c'est l'inverse : le γ serait à l'envers.">Non — la dismutation n’est pas favorisée dans ces conditions</button>
+      <button class="opt" data-ok="0" data-fb="Être dans deux couples rend la dismutation <b>possible</b>, pas certaine. La comparaison des potentiels décide.">Oui — elle est dans deux couples, cela suffit</button>
+      <button class="opt" data-ok="0" data-fb="L'écart compte, mais son <b>sens</b> d'abord. Ici il joue contre la dismutation.">Oui — l'écart de 0,75 V est largement suffisant</button>
+      <button class="opt" data-ok="0" data-fb="Le nombre d'électrons intervient dans l'équilibrage, pas dans la décision.">On ne peut pas savoir sans le nombre d'électrons</button>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
+    </div></div><div class="geste" data-geste="1b" data-gt="Prévoir une dismutation en conditions standard" data-yr="tombé en 2024 et 2025">
+    <span class="k">Geste 1 · cas particulier <span class="y">tombé en 2024 et 2025</span></span>
+    <h3>Prévoir une dismutation en conditions standard</h3>
+    <ol>
+      <li><b>Repère l'espèce qui apparaît dans deux couples</b>, une fois comme oxydant, une fois comme réducteur.</li>
+      <li><b>Compare les deux E°</b> : dans les conditions standard, la dismutation est favorisée si le couple où elle est oxydant est le plus haut.</li>
+      <li><b>Écris les deux demi-équations</b>, l'une dans le sens de la réduction, l'autre dans celui de l'oxydation.</li>
+      <li><b>Égalise les électrons, additionne et simplifie</b>. Une même espèce subit les deux transformations ; H⁺, OH⁻ ou H₂O peuvent aussi intervenir selon le milieu.</li>
+    </ol>
+    <div class="piege"><b>Le piège —</b> Un n.o. intermédiaire rend la dismutation <b>possible</b>, pas certaine. Les E° permettent de conclure pour les conditions standard. Hors de ces conditions, compare les E calculés avec Nernst. Un sens favorisé ne garantit pas une réaction rapide.</div>
+    <button class="go" data-entr="1b" type="button">S'entraîner — tirage au hasard</button>
+    <div class="entr" data-entr-for="1b" hidden></div>
+  </div>
 </article>
 
 <!-- ════════════════ ÉTAPE 14 ════════════════ -->
@@ -2285,7 +2396,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
   <div class="obj"><span class="k">En sortant de cette étape, tu sais</span>
     <p>Placer les espèces dans les <b>domaines</b>, <b>tracer une frontière</b> à partir de la loi de Nernst, et <b>lire</b> des coordonnées sur le diagramme.</p></div>
 
-  <p>Cette étape n'apporte aucun calcul nouveau. Elle apporte un <b>changement de regard</b> : le résultat de l'étape 12, laissé en fonction du pH, est une droite — et cette droite est une frontière.</p>
+  <p>Tu vas réutiliser Nernst pour tracer des droites, puis apprendre à limiter chaque frontière aux domaines concernés. Les frontières de précipitation demandent aussi de relier produit de solubilité, concentration en OH⁻ et pH ; chaque calcul est décomposé ci-dessous.</p>
 
   <div class="def"><span class="k">Définition</span>
     <p>Les diagrammes potentiel-pH, aussi appelés <b>diagrammes de Pourbaix</b>, indiquent l'évolution du potentiel <span class="f">E</span> des différents couples d'un élément <b>en fonction du pH</b>. Ils servent à prévoir des réactions rédox.</p></div>
@@ -2299,22 +2410,14 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
       <button class="opt" data-ok="0" data-fb="Les réactions se lisent entre domaines <b>disjoints</b>, pas à l'intérieur d'un domaine.">Qu'elle y réagit avec les autres espèces</button>
       <button class="opt" data-ok="0" data-fb="Dans son domaine, elle est stable : c'est la définition.">Qu'elle y est majoritaire mais instable</button>
       <button class="opt" data-ok="0" data-fb="La concentration est fixée par l'énoncé pour tout le diagramme, pas par le domaine.">Qu'elle y est à la concentration de 1 mol·L⁻¹</button>
-      <div class="fb" hidden></div>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
     </div>
 
   <p>Les espèces se rangent toujours de la même façon : les <b>plus oxydées en haut</b>, puisque l'axe vertical est celui du potentiel, et les <b>plus acides à gauche</b>, puisque l'axe horizontal est celui du pH. Le fer(III) est donc en haut à gauche, le fer métallique en bas.</p>
 
   <h2>Les trois sortes de frontière — et c'est tout</h2>
-  <p>Une frontière n'est rien d'autre qu'une équation <span class="f">E = f(pH)</span>. Sa forme se lit <b>directement sur la demi-équation</b>, sans aucun calcul : il suffit de compter les électrons et les protons.<button class="cp" type="button" data-cp="14-2" aria-expanded="false" aria-controls="q14-2">vérifier</button></p>
-    <div class="q" id="q14-2" data-forme="transfert" hidden>
-      <span class="k qk">Point de contrôle</span>
-      <p class="qq">Une demi-équation contient <span class="f">4 H<sup>+</sup></span>, <span class="f">2 e<sup>−</sup></span>, les protons du côté de l'oxydant. Que vaut la pente de la frontière ?</p>
-      <button class="opt" data-ok="1" data-fb="0,06 × 4 ÷ 2 = 0,12, et le signe est négatif puisque les protons sont du côté de l'oxydant.">− 0,12</button>
-      <button class="opt" data-ok="0" data-fb="C'est 0,06 × 4 sans diviser par le nombre d'électrons.">− 0,24</button>
-      <button class="opt" data-ok="0" data-fb="Le signe positif est réservé au cas où les protons sont du côté du <b>réducteur</b>.">+ 0,12</button>
-      <button class="opt" data-ok="0" data-fb="Ce serait le cas avec autant de protons que d'électrons.">− 0,06</button>
-      <div class="fb" hidden></div>
-    </div>
+  <p>Une frontière n'est rien d'autre qu'une équation <span class="f">E = f(pH)</span>. Sa forme se lit <b>directement sur la demi-équation</b>, sans aucun calcul : il suffit de compter les électrons et les protons.</p>
+    
 
   <div class="tw"><table class="tab">
     <tr><th>La demi-équation contient</th><th>La frontière est</th><th>Pourquoi</th></tr>
@@ -2332,6 +2435,20 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
   <div class="piege"><span class="k">Le signe suit le côté des protons</span>
     <p>Les <span class="f">H<sup>+</sup></span> sont <b>presque toujours du côté de l'oxydant</b> — à gauche de la demi-équation écrite dans le sens conventionnel. La pente est alors <b>négative</b> et la frontière descend.</p>
     <p>S'ils se trouvent du côté du <b>réducteur</b>, ils passent au dénominateur du log et la pente devient <b>positive</b>. C'est rare, mais ça tombe : le sujet 2022 demande le coefficient directeur de la frontière <span class="f"><span class="ox">Cu<sup>2+</sup></span>/Cu<sub>2</sub>O<span class="st">(s)</span></span>, dont la demi-équation s'écrit <span class="f">2 <span class="ox">Cu<sup>2+</sup></span> + H<sub>2</sub>O + 2 e<sup>−</sup> = Cu<sub>2</sub>O<span class="st">(s)</span> + 2 H<sup>+</sup></span> — et la réponse est <b>+ 0,06</b>.</p></div>
+<div class="ex" id="pente-exemple"><span class="k">Séparer le signe, le rapport et le produit</span><p>La demi-équation est écrite dans le sens de la réduction, à 25 °C. Avec <b>1 H⁺ à gauche</b> et <b>2 électrons</b> : les protons sont du côté de l’oxydant, donc la pente est <b>négative</b>. Le rapport vaut <span class="f">1 ÷ 2 = 0,5</span>, puis <span class="f">a = −0,06 × 0,5 = −0,03 V</span> par unité de pH. On utilise l’approximation 0,06 du cours.</p><p>Le coefficient de pH est la pente <b>signée</b> : dans <span class="f">E = b + a × pH</span>, une baisse donne a négatif. Un exemple numérique sert à comprendre la règle ; les données suivantes sont différentes.</p></div>
+<form class="practice" id="pente-essai" novalidate aria-labelledby="pente-essai-title"><span class="k">À toi · entraînement guidé</span><h3 id="pente-essai-title">Calculer une pente en deux temps</h3><p>Une demi-équation écrite dans le sens de la réduction contient <b>3 H⁺ à gauche</b> et <b>2 électrons</b>, à 25 °C.</p><fieldset data-answer="1.5" data-hint-one="Le nombre de protons est au numérateur." data-hint-two="Calcule 3 ÷ 2." data-success="Oui : le rapport vaut 1,5." data-errors="{}"><legend>Étape 1 sur 2</legend><label for="pente-essai-0">Que vaut le rapport nombre de H⁺ divisé par nombre d’électrons ?</label><input id="pente-essai-0" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="pente-essai-fb-0 pente-essai-hint-0"><div class="practice-actions"><button class="go" type="submit">Vérifier cette étape</button><button type="button" class="practice-hint">Un indice</button></div><p class="practice-help" id="pente-essai-hint-0" role="status" aria-live="polite" hidden></p><p class="practice-feedback" id="pente-essai-fb-0" role="status" aria-live="polite" hidden></p></fieldset>
+<fieldset hidden disabled data-answer="-0.09" data-hint-one="Les protons sont à gauche : signe moins. Multiplie ensuite 0,06 par le rapport." data-hint-two="−0,06 × 1,5." data-success="Oui : −0,09 V par unité de pH. Si le pH augmente de 1, E baisse de 0,09 V." data-errors="{&quot;0.09&quot;: &quot;La valeur absolue est juste, mais les protons à gauche imposent ici une pente négative.&quot;}"><legend>Étape 2 sur 2</legend><label for="pente-essai-1">Quelle est la pente signée, en V par unité de pH ?</label><input id="pente-essai-1" type="text" inputmode="text" autocomplete="off" spellcheck="false" aria-describedby="pente-essai-fb-1 pente-essai-hint-1"><div class="practice-actions"><button class="go" type="submit">Vérifier cette étape</button><button type="button" class="practice-hint">Un indice</button></div><p class="practice-help" id="pente-essai-hint-1" role="status" aria-live="polite" hidden></p><p class="practice-feedback" id="pente-essai-fb-1" role="status" aria-live="polite" hidden></p></fieldset>
+<p class="practice-finish" role="status" aria-live="polite" hidden>Entraînement terminé. Tu peux refaire cet essai ou poursuivre le parcours.</p><button type="button" class="practice-reset">Recommencer cet entraînement</button></form>
+<div class="checkpoint-block"><p>Calcule ensuite une pente avec de nouvelles quantités.<button class="cp" type="button" data-cp="14-2" aria-expanded="false" aria-controls="q14-2">vérifier</button></p>
+<div class="q" id="q14-2" data-prerequisites="pente-exemple pente-essai" data-forme="transfert" hidden>
+      <span class="k qk">Point de contrôle</span>
+      <p class="qq">À 25 °C, une demi-équation de réduction contient <span class="f">4 H<sup>+</sup></span> à gauche et <span class="f">2 e<sup>−</sup></span>. Avec l’approximation 0,06 du cours, quelle est la pente signée en V par unité de pH ?</p>
+      <button class="opt" data-ok="1" data-fb="0,06 × 4 ÷ 2 = 0,12, et le signe est négatif puisque les protons sont du côté de l'oxydant.">− 0,12</button>
+      <button class="opt" data-ok="0" data-fb="C'est 0,06 × 4 sans diviser par le nombre d'électrons.">− 0,24</button>
+      <button class="opt" data-ok="0" data-fb="Le signe positif est réservé au cas où les protons sont du côté du <b>réducteur</b>.">+ 0,12</button>
+      <button class="opt" data-ok="0" data-fb="Ce serait le cas avec autant de protons que d'électrons.">− 0,06</button>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
+    </div></div>
 
   <h2>Le diagramme du fer</h2>
   <p>C'est celui du dossier, tracé pour <span class="f">[Fe<sup>2+</sup>] = [Fe<sup>3+</sup>] = 10<sup>−2</sup> mol·L⁻¹</span> à 25 °C. <b>Cinq domaines</b> et <b>sept frontières</b>.</p>
@@ -2520,12 +2637,12 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
     <p>Les frontières <b>ne se prolongent pas</b> au-delà de leur domaine. La frontière 1 s'arrête à <span class="f">pH = 2</span> : au-delà, le fer(III) n'existe plus en solution, il a précipité. Une droite tracée sur toute la largeur du graphique est une droite fausse sur les trois quarts de sa longueur.<button class="cp" type="button" data-cp="14-3" aria-expanded="false" aria-controls="q14-3">vérifier</button></p>
     <div class="q" id="q14-3" data-forme="contre-exemple" hidden>
       <span class="k qk">Point de contrôle</span>
-      <p class="qq">Sur ta copie, tu as tracé une frontière d'un bord à l'autre du graphique. Pourquoi est-ce faux ?</p>
+      <p class="qq">Sur le diagramme du fer étudié ici, tu prolonges la frontière Fe³⁺/Fe²⁺ au-delà de pH = 2, là où le domaine Fe(OH)₃ la remplace. Pourquoi ce prolongement est-il faux ?</p>
       <button class="opt" data-ok="1" data-fb="Au-delà, l'une des deux espèces n'existe plus — elle a précipité ou s'est transformée. Le trait n'a plus rien à séparer.">Parce qu'elle n'existe qu'entre les deux domaines qu'elle sépare</button>
       <button class="opt" data-ok="0" data-fb="La pente d'une frontière donnée ne change pas ; c'est une <b>autre</b> frontière qui prend le relais.">Parce que la pente change au-delà d'un certain pH</button>
       <button class="opt" data-ok="0" data-fb="Certaines traversent la moitié du diagramme. C'est le domaine qui décide de la longueur, pas une règle générale.">Parce qu'une frontière est toujours un segment court</button>
       <button class="opt" data-ok="0" data-fb="C'est l'erreur qui coûte le plus de points à cet exercice.">Ce n'est pas faux, c'est même recommandé</button>
-      <div class="fb" hidden></div>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
     </div></div>
 
   <div class="geste" data-geste="5" data-gt="Tracer et lire un diagramme E-pH" data-yr="tombé en 2022, 2023 et 2024">
@@ -2567,7 +2684,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
       <button class="opt" data-ok="0" data-fb="La corrosion donne un ion <b>soluble</b> : le métal part en solution et s'use.">Une corrosion</button>
       <button class="opt" data-ok="0" data-fb="L'immunité, c'est ne pas réagir du tout. Ici il y a bien réaction.">Une immunité</button>
       <button class="opt" data-ok="0" data-fb="La dismutation concerne une espèce seule, qui s'oxyde et se réduit à la fois.">Une dismutation</button>
-      <div class="fb" hidden></div>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
     </div></div>
 
   <h2>Les deux droites de l'eau</h2>
@@ -2579,7 +2696,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
       <button class="opt" data-ok="0" data-fb="Il est <b>au-dessus</b> de la droite du proton, donc à l'abri. C'est le cas du cuivre, et c'est la réponse du sujet 2022.">Le second, à + 0,50 V</button>
       <button class="opt" data-ok="0" data-fb="Un seul des deux : leur position relative à la droite du proton n'est pas la même.">Les deux, à des vitesses différentes</button>
       <button class="opt" data-ok="0" data-fb="Le premier l'est bel et bien : à − 0,30 V il est en dessous de 0 V.">Aucun des deux</button>
-      <div class="fb" hidden></div>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
     </div>
 
   <div class="eqs">
@@ -2703,7 +2820,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
       <button class="opt" data-ok="0" data-fb="Trois années sur quatre : il manque au sujet 2025.">Le diagramme E-pH</button>
       <button class="opt" data-ok="0" data-fb="Trois années sur quatre : il manque au sujet 2024.">Le schéma de pile annoté</button>
       <button class="opt" data-ok="0" data-fb="Deux années seulement, 2024 et 2025.">La dismutation de l'eau oxygénée</button>
-      <div class="fb" hidden></div>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
     </div>
 
   <h2>Ce qui tombe vraiment, année par année</h2>
@@ -2715,7 +2832,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
       <button class="opt" data-ok="0" data-fb="Ce raisonnement ne vaut que si les <b>deux</b> espèces sont dissoutes et à la même concentration.">Oui, comme quand les deux concentrations sont égales</button>
       <button class="opt" data-ok="0" data-fb="Il n'annule que son propre facteur, pas celui de l'autre espèce.">Oui, parce qu'un solide annule tout le log</button>
       <button class="opt" data-ok="0" data-fb="En 2022 il apporte +0,12 V : loin d'être négligeable.">Non, mais le terme vaut toujours zéro en pratique</button>
-      <div class="fb" hidden></div>
+      <div class="fb" role="status" aria-live="polite" hidden></div>
     </div>
 
   <div class="tw"><table class="tab">
@@ -4511,7 +4628,8 @@ GEN['1'] = function(){
   var c = alea(COUPLES), envers = Math.random()<0.5;
   var g = envers ? c.rd : c.ox, d = envers ? c.ox : c.rd;
   return {
-    q: 'On écrit <span class="f" style="font-size:1.05em">'+g+' / '+d+'</span>.',
+    q: 'Voici la demi-équation dans le sens de la réduction : <span class="f">'+c.half+'</span>.<br>'
+      + 'On propose le couple <span class="f" style="font-size:1.05em">'+g+' / '+d+'</span>.',
     champs: [
       {k:'conv', lab:'cette écriture suit la convention Ox/Red ?', type:'sel',
        opts:[['oui','oui'],['non','non — les deux sont inversés']]},
@@ -4531,19 +4649,19 @@ GEN['1b'] = function(){
   return {
     q: 'L\'espèce <span class="f" style="font-size:1.05em">'+d.f+'</span> est l\'<b>oxydant</b> du couple '
       + '<span class="f">'+a.ox+'/'+a.rd+'</span> et le <b>réducteur</b> du couple '
-      + '<span class="f">'+b.ox+'/'+b.rd+'</span>.',
+      + '<span class="f">'+b.ox+'/'+b.rd+'</span>.<br>Dans les conditions standard : E° du premier couple = <b>'+fr(a.e0,2)+' V</b> ; E° du second = <b>'+fr(b.e0,2)+' V</b>.',
     champs: [
-      {k:'dis', lab:'se dismute-t-elle ?', type:'sel', opts:[['oui','oui'],['non','non, elle est stable']]},
+      {k:'dis', lab:'dismutation favorisée en conditions standard ?', type:'sel', opts:[['oui','oui'],['non','non dans ces conditions']]},
       {k:'eox', lab:'E° du couple où elle est oxydant', type:'num', unit:'V', tol:0.005}],
     sol: {dis: possible?'oui':'non', eox: a.e0},
-    corr: '<p>Elle se dismute <b>si et seulement si</b> le couple où elle est <b>oxydant</b> a le potentiel '
-      + 'le plus élevé : c\'est la règle du γ appliquée à une seule espèce.</p>'
+    corr: '<p>Dans les conditions standard, la dismutation est <b>favorisée</b> si le couple où elle est <b>oxydant</b> a le potentiel '
+      + 'le plus élevé. Cela ne prédit pas sa vitesse.</p>'
       + '<p style="font-family:var(--mono);font-size:12.5px">oxydant dans <span class="f">'+a.ox+'/'+a.rd+'</span> · E° = '+fr(a.e0,2)+' V'
       + '<br>réducteur dans <span class="f">'+b.ox+'/'+b.rd+'</span> · E° = '+fr(b.e0,2)+' V</p>'
       + '<p>'+(possible
-          ? fr(a.e0,2)+' > '+fr(b.e0,2)+' : le γ se trace sur elle-même, <b>la dismutation a lieu</b>.'
-          : fr(a.e0,2)+' < '+fr(b.e0,2)+' : le γ serait à l\'envers, <b>l\'espèce est stable</b>. '
-            + 'C\'est la réaction inverse qui se produit — une médiamutation.')+'</p>'
+          ? fr(a.e0,2)+' > '+fr(b.e0,2)+' : le γ se trace sur elle-même, <b>la dismutation est favorisée dans ces conditions</b>.'
+          : fr(a.e0,2)+' < '+fr(b.e0,2)+' : le γ serait à l\'envers, <b>la dismutation n’est pas favorisée dans ces conditions</b>. '
+            + 'Le sens inverse correspond à une médiamutation.')+'</p>'
   };
 };
 
@@ -4967,5 +5085,70 @@ show(start>=0 ? start : (S.step|0));
 })();
 </script>
 
+<script>
+
+/* Pratique formative : aucune réponse vide/indice ne valide un fait du parcours. */
+(function(){
+  'use strict';
+  function numberFrom(text){
+    var t=String(text).trim().replace(/−/g,'-').replace(/,/g,'.');
+    if(!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i.test(t)) return null;
+    var n=Number(t); return Number.isFinite(n)?n:null;
+  }
+  document.querySelectorAll('form.practice').forEach(function(form){
+    var fields=Array.from(form.querySelectorAll('fieldset'));
+    function feedback(field,text,good){
+      var p=field.querySelector('.practice-feedback');
+      p.textContent=text; p.dataset.state=good?'good':'bad'; p.hidden=false;
+    }
+    form.addEventListener('submit',function(ev){
+      ev.preventDefault();
+      var field=fields.find(function(f){return !f.hidden&&!f.disabled;});
+      if(!field) return;
+      var input=field.querySelector('input'), n=numberFrom(input.value);
+      if(n===null){
+        input.setAttribute('aria-invalid','true');
+        feedback(field,'Saisis un nombre pour essayer. Tu peux utiliser une virgule ou un point ; un indice reste disponible.',false);
+        return;
+      }
+      var target=Number(field.dataset.answer);
+      if(Math.abs(n-target)>1e-9){
+        var errors=JSON.parse(field.dataset.errors||'{}');
+        input.setAttribute('aria-invalid','true');
+        feedback(field,errors[String(n)]||'Pas encore. '+field.dataset.hintOne+' Corrige ta réponse, puis réessaie.',false);
+        return;
+      }
+      input.removeAttribute('aria-invalid');
+      feedback(field,field.dataset.success,true);
+      field.disabled=true;
+      var next=fields[fields.indexOf(field)+1];
+      if(next){next.hidden=false;next.disabled=false;next.querySelector('input').focus();}
+      else form.querySelector('.practice-finish').hidden=false;
+    });
+    form.addEventListener('click',function(ev){
+      var hint=ev.target.closest('.practice-hint');
+      if(hint){
+        var field=hint.closest('fieldset'), count=Number(hint.dataset.count||0);
+        var p=field.querySelector('.practice-help');
+        p.textContent=count===0?field.dataset.hintOne:field.dataset.hintTwo;
+        p.hidden=false;hint.dataset.count=String(Math.min(2,count+1));
+        hint.textContent=count===0?'Un indice plus précis':'Relire cet indice';
+      }
+      if(ev.target.closest('.practice-reset')){
+        form.reset();
+        fields.forEach(function(f,i){
+          f.disabled=i>0;f.hidden=i>0;
+          f.querySelector('input').removeAttribute('aria-invalid');
+          f.querySelectorAll('.practice-feedback,.practice-help').forEach(function(p){p.hidden=true;p.textContent='';delete p.dataset.state;});
+          var h=f.querySelector('.practice-hint');delete h.dataset.count;h.textContent='Un indice';
+        });
+        form.querySelector('.practice-finish').hidden=true;
+        fields[0].querySelector('input').focus();
+      }
+    });
+  });
+})();
+
+</script>
 </body>
 </html>
