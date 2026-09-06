@@ -360,3 +360,14 @@ test('aucune coulisse de fabrication ne subsiste dans le texte lu', async () => 
   assert.deepEqual(trouves, []);
   await ctx.close();
 });
+
+/* ── 16 · une seule apostrophe dans tout le fichier ────────────────── */
+/* Deux glyphes cohabitaient après la branche pédagogique : la liste d'un
+   geste écrivait « c’est », le piège juste dessous « c'est ». La différence
+   se voit dans une serif. Une seule forme, la droite, celle des 4 700
+   apostrophes déjà en place.                                              */
+test('la typographie des apostrophes est homogène', async () => {
+  const src = fs.readFileSync(path.join(ROOT, 'redox.html'), 'utf8');
+  const courbes = [...src.matchAll(/’/g)].map(m => src.slice(Math.max(0, m.index - 45), m.index + 25).replace(/\s+/g, ' '));
+  assert.deepEqual(courbes, []);
+});

@@ -479,16 +479,17 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 
 ## 10 bis. L'état des tests
 
-**75 tests**, répartis en six fichiers, tous branchés en `pre-commit` et en CI :
+**92 tests**, répartis en sept fichiers, tous branchés en `pre-commit` et en CI :
 
 | Fichier | Ce qu'il garde |
 |---|---|
-| `squelette.test.mjs` | le fil, le thème, l'impression, la casse chimique, les débordements de 375 à 1280 px, le contraste sur fond accent, l'intégrité des figures, l'absence de CSS mort, l'absence de coulisses dans le texte lu |
+| `squelette.test.mjs` | le fil, le thème, l'impression, la casse chimique, les débordements de 375 à 1280 px, le contraste sur fond accent, l'intégrité des figures, l'absence de CSS mort, l'absence de coulisses dans le texte lu, l'homogénéité des apostrophes |
 | `paillasse.test.mjs` | les quatre outils, avec les valeurs de contrôle des exercices 12 et 13 et du sujet 2024 |
 | `gestes.test.mjs` | les dix entraîneurs, plus les bilans de charge, d'oxygène et d'hydrogène des douze demi-équations et les vingt n.o., recopiés d'une vérification à la main |
 | `equilibre.test.mjs` | le moteur d'équilibrage sur 28 équations de référence, l'outil de la paillasse, et le mode « équation entière » du geste 2b |
 | `annales.test.mjs` | les quatre annales, le chronomètre, et les valeurs des quatre corrigés officiels |
 | `controle.test.mjs` | la couverture, les formes déclarées, **la garde de la convention 6**, et la garde de la garde |
+| `pedagogie.test.mjs` | l'ordre exemple → essai → contrôle, les 26 réponses des onze essais recalculées par des oracles indépendants, les indices, la réinitialisation, l'apparence des commandes, et le fait qu'un entraîneur ne livre pas sa propre réponse |
 
 `npm run captures` rend 33 vues clair/sombre pour la relecture à l'œil.
 
@@ -497,7 +498,7 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 ## 11. Pour reprendre
 
 > **L'ordre des travaux est terminé.** Les sept points sont faits, le site
-> couvre tout le dossier, et 63 tests le gardent.
+> couvre tout le dossier, et 92 tests le gardent.
 >
 > S'il faut y revenir, trois choses valent d'être sues avant de toucher au
 > fichier :
@@ -510,10 +511,17 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 >   `plainF`) : c'est par là que les tests vérifient la chimie sans passer par
 >   l'interface. Rien du site ne s'en sert.
 > - **Le site parle à un étudiant, pas au constructeur.** Les bandeaux des
-  gestes ont porté neuf mois durant « posé ici, dès que le cours l'a rendu
-  exécutable » — ma justification de placement, héritée des maquettes, affichée
-  à l'étudiant. Un test refuse maintenant ce vocabulaire dans le texte lu.
-- **`npm run captures` avant de conclure.** Les tests vérifient la mécanique,
+>   gestes ont porté « posé ici, dès que le cours l'a rendu exécutable » — ma
+>   justification de placement, héritée des maquettes, affichée à l'étudiant.
+>   Un test refuse maintenant ce vocabulaire dans le texte lu.
+> - **La CI verte ne prouve rien sur la mise en page.** Le runner tourne sous
+>   Linux : `ui-serif`, `-apple-system` et `ui-mono` n'y existent pas et
+>   retombent sur les polices génériques, plus étroites. Une formule qui
+>   débordait de 18 px à 375 px sur macOS passait au vert sur le runner
+>   (372 px contre 347 px pour le même texte). **Les gardes de débordement ne
+>   valent que lancées ici.** C'est ce qui a laissé passer la branche
+>   `pedagogie/progression-guidee`.
+> - **`npm run captures` avant de conclure.** Les tests vérifient la mécanique,
 >   pas l'allure. Trois bugs de ce projet — le γ qui ne se dessinait pas, le
 >   proton compté deux fois, les étiquettes superposées — n'ont été trouvés
 >   qu'à l'œil.

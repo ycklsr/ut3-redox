@@ -38,7 +38,7 @@ réviser directement une étape sans réussir tous les essais précédents.
 | 3 — Nombres d'oxydation | Règles et exemple d'équation à une inconnue avant le transfert au soufre. Essai guidé sur le carbonate. Distinction entre « plus oxydé » et « oxydant plus fort ». |
 | 4 — Demi-équations | Variation de n.o. par atome, puis multiplication par le nombre d'atomes concernés. Exemple Cl₂, essai O₂, transfert au dichromate. Contrôle ambigu remplacé. |
 | 5 — Équations | Définition d'un multiple commun, cas 2/4 expliqué, cas 2/6 guidé, multiplication de tous les coefficients sur Cu²⁺/Cu, contrôle autonome 3/2, puis essai 4/6. Conversion basique décomposée en ajout, recombinaison, simplification avant les contrôles. |
-| 6 et 13 — Dismutation | Reconnaissance et équilibrage à l'étape 6 ; prévision thermodynamique déplacée à l'étape 13. Les E° sont donnés dans l'entraîneur ; conditions standard et absence de conclusion sur la vitesse sont explicites. |
+| 6 et 13 — Dismutation | Reconnaissance et équilibrage à l'étape 6 ; prévision thermodynamique déplacée à l'étape 13. Les E° sont donnés dans l'entraîneur, qui demande l'écart ΔE° et non le recopiage d'un potentiel affiché ; conditions standard et absence de conclusion sur la vitesse sont explicites. Le geste, devenu voisin du geste 2d, passe de `1b` à `2e`. |
 | 12 — Nernst | Premier calcul sans H⁺ sur Fe³⁺/Fe²⁺ : rapport, logarithme, correction, potentiel. Quatre réponses guidées avant le calcul plus chargé du permanganate. Le contrôle sur le pH nomme explicitement le couple et les données fixes. |
 | 14 — E-pH | Signe, rapport protons/électrons et multiplication séparés avant le contrôle de pente. Question sur le domaine de validité d'une frontière précisée. |
 
@@ -74,13 +74,26 @@ npx playwright install --with-deps chromium
 npm test
 ```
 
-`tests/pedagogie.test.mjs` ajoute 15 tests aux 75 existants : ordre effectif
+`tests/pedagogie.test.mjs` ajoute 16 tests aux 76 autres — 92 en tout : ordre effectif
 exemples/essais/contrôles, emplacement des activités, résultats recalculés
 indépendamment, réponses vides et mal formées, indices, nouvel essai,
 réinitialisation, indépendance du compteur, conservation des charges et
 atomes, données fournies aux entraîneurs et anciennes validations. Les
 nouveaux blocs sont exercés à 320, 375 et 1280 pixels en clair et en sombre.
 L'ouverture directe du fichier est testée sans requête HTTP externe.
+
+## Corrections apportées à la relecture
+
+La première version de cette branche a été relue sur macOS, où le site est lu.
+Onze défauts y ont été corrigés — le détail est dans le commit de relecture.
+Le plus important : la formule de ΔE° tenait dans un `span.f` insécable et
+débordait de 18 px à 375 px, ce que la CI n'a pas vu parce que le runner Linux
+n'a pas les polices Apple et rend le même texte 25 px plus étroit. Le bouton
+primaire des onze essais n'avait aucun style de bouton — le site remet tous ses
+boutons à zéro et les rhabille par une règle dédiée, que `.practice` n'avait
+pas. Les deux entraîneurs de gestes touchés livraient leur propre réponse. Rien
+n'était prévu pour l'impression, et 87 apostrophes courbes cohabitaient avec les
+4 700 droites du fichier.
 
 Ces vérifications protègent la cohérence et le fonctionnement de la
 proposition. Elles ne mesurent pas un gain d'apprentissage. Une validation

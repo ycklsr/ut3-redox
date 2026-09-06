@@ -38,7 +38,7 @@ async function open() {
   return { ctx, page, errors };
 }
 
-const IDS = ['1', '1b', '2a', '2b', '2c', '2d', '3a', '3b', '4', '5'];
+const IDS = ['1', '2a', '2b', '2c', '2d', '2e', '3a', '3b', '4', '5'];
 
 /* ── 1 · les dix gestes sont armés ────────────────────────────────── */
 test('les dix gestes ont leur recette, leur piège et leur entraîneur', async () => {

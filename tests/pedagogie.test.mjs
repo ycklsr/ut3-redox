@@ -58,8 +58,8 @@ test('les contrôles de transfert viennent après leurs exemples et essais guid�
     assert.equal(await page.locator('#e2 #q2-3').count(), 0);
     assert.equal(await page.locator('#e5 #q5-3').count(), 1);
     assert.equal(await page.locator('#e13 #q13-dismutation').count(), 1);
-    assert.equal(await page.locator('#e13 [data-geste="1b"]').count(), 1);
-    assert.equal(await page.locator('#e6 [data-geste="1b"]').count(), 0);
+    assert.equal(await page.locator('#e13 [data-geste="2e"]').count(), 1);
+    assert.equal(await page.locator('#e6 [data-geste="2e"]').count(), 0);
   } finally { await ctx.close(); }
 });
 
@@ -184,17 +184,66 @@ test('coefficients, charges et formule de la droite sont cohérents', async () =
   } finally { await ctx.close(); }
 });
 
-test('le tirage de couple donne sa demi-équation et celui de dismutation donne les potentiels', async () => {
+test('les deux entraîneurs fournissent leurs données sans livrer la réponse attendue', async () => {
   const { ctx, page } = await open();
   try {
-    const samples = await page.evaluate(() => Array.from({length: 25}, () => [window.__redox.GEN['1']().q, window.__redox.GEN['1b']().q]));
+    const samples = await page.evaluate(() => Array.from({length: 40}, () => [window.__redox.GEN['1'](), window.__redox.GEN['2e']()]));
+    const vus = { subit: new Set(), dis: new Set() };
     for (const [couple, dismutation] of samples) {
-      assert.match(couple, /demi-équation dans le sens de la réduction/);
-      assert.match(couple, /e<sup>−<\/sup>/);
-      assert.match(dismutation, /conditions standard/);
-      assert.match(dismutation, /E° du premier couple/);
-      assert.match(dismutation, /E° du second/);
+      assert.match(couple.q, /demi-équation dans le sens de la réduction/);
+      assert.match(couple.q, /e<sup>−<\/sup>/);
+      /* le second champ porte sur ce que subit une espèce : la demi-équation
+         affichée ne contient ni « se réduit » ni « s'oxyde », donc il faut
+         appliquer la définition plutôt que recopier l'énoncé */
+      const subit = couple.champs.find(c => c.k === 'subit');
+      assert.ok(subit, 'geste 1 : champ « subit » absent');
+      assert.deepEqual(subit.opts.map(o => o[0]).sort(), ['ox', 'red']);
+      assert.ok(!/se réduit|s'oxyde/.test(couple.q), 'geste 1 : la réponse est écrite dans l\'énoncé');
+      vus.subit.add(couple.sol.subit);
+
+      assert.match(dismutation.q, /conditions standard/);
+      assert.match(dismutation.q, /E° du premier couple/);
+      assert.match(dismutation.q, /E° du second/);
+      /* oracle indépendant : ΔE° attendu = les deux potentiels lus dans l'énoncé */
+      const lus = [...dismutation.q.matchAll(/<b>(−?\d+,\d+) V<\/b>/g)].map(m => Number(m[1].replace(',', '.').replace('−', '-')));
+      assert.equal(lus.length, 2, 'geste 2e : deux E° attendus dans l\'énoncé');
+      const champ = dismutation.champs.find(c => c.k === 'dE');
+      assert.ok(champ, 'geste 2e : champ ΔE° absent');
+      assert.ok(Math.abs(dismutation.sol.dE - (lus[0] - lus[1])) < 1e-9, 'geste 2e : ΔE° ≠ E°ox − E°réd');
+      /* et le nombre demandé n'est aucun de ceux qui sont affichés */
+      assert.ok(!lus.some(v => Math.abs(v - dismutation.sol.dE) < 1e-9), 'geste 2e : la réponse est déjà affichée');
+      assert.equal(dismutation.sol.dis, dismutation.sol.dE > 0 ? 'oui' : 'non');
+      vus.dis.add(dismutation.sol.dis);
     }
+    /* les deux réponses possibles sortent : aucun champ n'a de réponse constante */
+    assert.deepEqual([...vus.subit].sort(), ['ox', 'red']);
+    assert.deepEqual([...vus.dis].sort(), ['non', 'oui']);
+  } finally { await ctx.close(); }
+});
+
+test('les commandes des essais ont une apparence de bouton et disparaissent à l\'impression', async () => {
+  const { ctx, page } = await open();
+  try {
+    const bilan = await page.evaluate(() => {
+      const b = document.querySelector('form.practice button.go');
+      const s = getComputedStyle(b);
+      return { fond: s.backgroundColor, marge: parseFloat(s.paddingLeft), police: s.fontFamily };
+    });
+    assert.notEqual(bilan.fond, 'rgba(0, 0, 0, 0)', 'le bouton primaire n\'a aucun fond');
+    assert.ok(bilan.marge > 4, 'le bouton primaire n\'a pas de rembourrage');
+    await page.emulateMedia({ media: 'print' });
+    const impr = await page.evaluate(() => {
+      const out = [];
+      for (const el of document.querySelectorAll('form.practice .practice-actions, form.practice .practice-reset'))
+        if (el.getClientRects().length) out.push(el.className);
+      return { visibles: out, fond: getComputedStyle(document.querySelector('form.practice')).backgroundColor };
+    });
+    assert.deepEqual(impr.visibles, [], 'des commandes restent à l\'impression');
+    /* le bloc .practice doit être déclaré AVANT @media print : à spécificité
+       égale, une règle d'écran placée après annule silencieusement la règle
+       d'impression — c'est arrivé une fois */
+    assert.equal(impr.fond, 'rgba(0, 0, 0, 0)', 'le fond des essais est encré à l\'impression');
+    await page.emulateMedia({ media: null });
   } finally { await ctx.close(); }
 });
 
