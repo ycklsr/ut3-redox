@@ -1,0 +1,52 @@
+name: Vérification pédagogique isolée
+
+on:
+  push:
+    branches: [pedagogie/progression-guidee]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pedagogie-progression-guidee
+  cancel-in-progress: false
+
+jobs:
+  verifier:
+    if: github.ref == 'refs/heads/pedagogie/progression-guidee'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Appliquer la proposition, si présente
+        run: |
+          if [ -f scripts/apply-pedagogy.mjs ]; then
+            node scripts/apply-pedagogy.mjs
+          fi
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm test
+      - name: Enregistrer uniquement le HTML vérifié sur la branche de proposition
+        if: success()
+        run: |
+          if [ -f scripts/apply-pedagogy.mjs ] && ! git diff --quiet -- redox.html; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add -- redox.html
+            git -c core.hooksPath=/dev/null commit -m 'feat: intégrer la progression pédagogique guidée'
+            git push origin HEAD:refs/heads/pedagogie/progression-guidee
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pedagogie-verification
+          retention-days: 1
+          path: |
+            redox.html
+            PLAN.md
+            package.json
+            package-lock.json
+            tests/
+            scripts/
