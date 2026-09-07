@@ -1,8 +1,8 @@
 # Proposition pédagogique — progression guidée
 
-Branche de proposition : `pedagogie/progression-guidee`, issue de `main` au
-commit `05f579815739f77c112fd8c542864c8a44ebab56`. Aucune fusion n'est prévue
-par cette proposition.
+Écrite sur la branche `pedagogie/progression-guidee`, issue de `main` au commit
+`05f579815739f77c112fd8c542864c8a44ebab56`, relue sur macOS, puis fusionnée
+dans `main`. La branche a été supprimée après fusion : tout est dans `main`.
 
 ## Le problème observé
 
