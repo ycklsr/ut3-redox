@@ -591,6 +591,13 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
 .lg-part{border-radius:3px;padding:0 .12em;transition:background .25s,box-shadow .25s}
 .lg-part[data-on]{background:var(--soft);box-shadow:0 0 0 1.5px var(--acc)}
 .lg-cap{font-family:var(--sans);font-size:12px;color:var(--mut);line-height:1.5;margin:10px 0 0;text-align:center}
+.lg-eq .lgl{font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--mut);white-space:nowrap}
+.lg-cnt{margin:10px auto 0;max-width:22em;font-family:var(--mono);font-size:11.5px}
+.lg-cnt-h,.lg-cnt-r{display:grid;grid-template-columns:minmax(0,1.6fr) 1fr 1fr;gap:8px;padding:3px 6px;text-align:right}
+.lg-cnt-h{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);border-bottom:1px solid var(--line)}
+.lg-cnt-h span:first-child,.lg-cnt-r span:first-child{text-align:left;font-family:var(--sans);color:var(--ink)}
+.lg-cnt-r.ok span:not(:first-child){color:var(--ok)}
+.lg-cnt-r.ko span:not(:first-child){color:var(--mark);font-weight:600}
 .lg-ask{padding:16px 18px 18px;min-width:0}
 .lg-kick{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin:0 0 6px}
 .lg-ask h4{font-family:var(--serif);font-size:1.02rem;font-weight:600;margin:0 0 8px;letter-spacing:-.008em}
@@ -1206,6 +1213,8 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
     <p><b>C'est le dichlore qui s'est réduit</b> : il a capté les deux électrons cédés par le zinc. Il joue donc le rôle d'oxydant.</p>
   </div>
 
+  <section class="lecture" data-lecture="couple" aria-labelledby="lg-couple-t"></section>
+
   <div class="geste" data-geste="1" data-gt="Lire un couple et écrire sa demi-équation" data-yr="tombé en 2024 et 2025">
     <span class="k">Geste 1 <span class="y">tombé en 2024 et 2025</span></span>
     <h3>Lire un couple et écrire sa demi-équation</h3>
@@ -1308,6 +1317,8 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
       <button class="opt" data-ok="0" data-fb="Recompte : trois oxygènes à −II font −6, et deux hydrogènes à +I font +2.">+ II</button>
       <div class="fb" role="status" aria-live="polite" hidden></div>
     </div></div>
+
+  <section class="lecture" data-lecture="nox" aria-labelledby="lg-nox-t"></section>
 
   <div class="geste" data-geste="2a" data-gt="Poser les nombres d'oxydation" data-yr="tombé les quatre années">
     <span class="k">Geste 2a <span class="y">tombé les quatre années</span></span>
@@ -1459,6 +1470,8 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
 <button type="button" class="opt" data-ok="0" data-fb="Pour ces mêmes transformations, le transfert reste de quatre électrons ; le milieu change l'écriture de H⁺, OH⁻ et H₂O.">Cela dépend du milieu acide ou basique</button>
 <div class="fb" role="status" aria-live="polite" hidden></div>
 </div></div>
+
+  <section class="lecture" data-lecture="demi" aria-labelledby="lg-demi-t"></section>
 
   <div class="geste" data-geste="2b" data-gt="Équilibrer une demi-équation en milieu acide" data-yr="tombé les quatre années">
     <span class="k">Geste 2b <span class="y">tombé les quatre années</span></span>
@@ -1637,6 +1650,8 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
     </div>
     <p style="font-size:14px;color:var(--mut)">Contrôle : charges <span class="f">−2 + 5 = +3</span> à gauche, <span class="f">+6 − 3 = +3</span> à droite. Oxygènes : <span class="f">7 + 6 = 13</span> et <span class="f">1 + 12 = 13</span>. Hydrogènes : <span class="f">5</span> et <span class="f">2 + 3 = 5</span>.</p>
   </div>
+
+  <section class="lecture" data-lecture="bilan" aria-labelledby="lg-bilan-t"></section>
 
   <div class="geste" data-geste="2c" data-gt="Passer une équation en milieu basique" data-yr="tombé les quatre années">
     <span class="k">Geste 2c <span class="y">tombé les quatre années</span></span>
@@ -5357,6 +5372,576 @@ function lgDroite(o){
   return s+'</svg>';
 }
 
+/* flèche sans <marker> : les identifiants de marqueurs se télescopent d'une
+   figure à l'autre, une tête dessinée à la main ne dépend de rien          */
+function lgArrow(x1,y1,x2,y2,col,w){
+  var dx=x2-x1, dy=y2-y1, L=Math.sqrt(dx*dx+dy*dy)||1, ux=dx/L, uy=dy/L, h=7, hw=3.6;
+  var bx=x2-ux*h, by=y2-uy*h;
+  return '<line x1="'+x1.toFixed(1)+'" y1="'+y1.toFixed(1)+'" x2="'+bx.toFixed(1)+'" y2="'+by.toFixed(1)+'" style="stroke:var(--'+(col||'el')+');stroke-width:'+(w||1.6)+';fill:none"/>'
+    +'<path d="M'+x2.toFixed(1)+' '+y2.toFixed(1)+' L'+(bx-uy*hw).toFixed(1)+' '+(by+ux*hw).toFixed(1)+' L'+(bx+uy*hw).toFixed(1)+' '+(by-ux*hw).toFixed(1)+' Z" style="fill:var(--'+(col||'el')+')"/>';
+}
+/* une espèce dans un rond : lgSp(x,y,'Fe³⁺','ox') */
+function lgSp(x,y,txt,col,r){
+  r=r||20;
+  return '<circle cx="'+x+'" cy="'+y+'" r="'+r+'" style="fill:var(--paper);stroke:var(--'+(col||'ink')+');stroke-width:1.6"/>'
+    +'<text class="sp" x="'+x+'" y="'+(y+4.5)+'" text-anchor="middle" style="fill:var(--'+(col||'ink')+')">'+lgEsc(txt)+'</text>';
+}
+function lgTxt(x,y,txt,cls,anchor,style){
+  return '<text class="'+(cls||'lbs')+'" x="'+x+'" y="'+y+'"'+(anchor?' text-anchor="'+anchor+'"':'')+(style?' style="'+style+'"':'')+'>'+lgEsc(txt)+'</text>';
+}
+function lgSvg(h,aria,inner){ return '<svg viewBox="0 0 320 '+h+'" role="img" aria-label="'+lgEsc(aria)+'">'+inner+'</svg>'; }
+/* un compte d'atomes et de charges, à gauche et à droite */
+function lgCompte(rows){
+  var h='<div class="lg-cnt"><div class="lg-cnt-h"><span></span><span>gauche</span><span>droite</span></div>';
+  rows.forEach(function(r){ var ok=(r[1]===r[2]);
+    h+='<div class="lg-cnt-r'+(ok?' ok':' ko')+'"><span>'+r[0]+'</span><span>'+r[1]+'</span><span>'+r[2]+'</span></div>'; });
+  return h+'</div>';
+}
+
+/* ── lecture · qui capte, qui cède — étape 2 ─────────────────────── */
+(function(){
+  var EQ='<div class="lg-eq f" style="font-size:16px"><span class="rd">Zn</span> + <span class="ox">Cu<sup>2+</sup></span> = <span class="ox">Zn<sup>2+</sup></span> + <span class="rd">Cu</span></div>';
+  function transfert(lg,ld,lm){
+    return lgSvg(150,'Un morceau de zinc et un ion cuivre : deux électrons passent de l\'un à l\'autre',
+      lgSp(70,62,'Zn','rd',24)+lgSp(250,62,'Cu²⁺','ox',24)
+      +lgArrow(100,52,218,52,'el',1.8)+lgArrow(100,72,218,72,'el',1.8)
+      +lgTxt(160,42,'2 e⁻','lb','middle','fill:var(--el);font-weight:600')
+      +(lg?lgTxt(70,112,lg,'lbs','middle'):'')+(ld?lgTxt(250,112,ld,'lbs','middle'):'')
+      +(lm?lgTxt(160,138,lm,'lbs','middle'):''));
+  }
+  LECTURES['couple'] = {
+    titre: 'Qui capte, qui cède',
+    intro: {t:'Ce qu\'on va apprendre à lire',
+      setup:'<p>Six questions sur une seule réaction, celle du zinc et du cuivre. À la fin, tu sauras dire qui donne les électrons, qui les prend, comment on nomme chacun — et pourquoi un même ion peut être tantôt l\'un, tantôt l\'autre.</p><p>Chaque bonne réponse ajoute une ligne à <b>ce qui est établi</b>. Tout le reste du module s\'appuiera dessus.</p>',
+      cta:'Première question'},
+    beats: [
+      {t:'Deux verbes, un seul mouvement',
+       setup:'<p>Un morceau de zinc trempe dans une solution bleue d\'ions cuivre. Le zinc se couvre de cuivre rouge, la solution pâlit. Des électrons sont passés du zinc aux ions cuivre.</p>',
+       q:'Qu\'a subi le zinc ?',
+       opts:[
+         {t:'Une oxydation : il a cédé des électrons', ok:true},
+         {t:'Une réduction : il a perdu de la matière', why:'Perdre de la matière n\'est pas un verbe de la chimie rédox. Ce qui compte, c\'est le sens des électrons — et le zinc les a donnés.'},
+         {t:'Rien : c\'est l\'ion cuivre qui a réagi', why:'Les deux ont réagi. Les électrons ont un point de départ, et c\'est le zinc : il n\'est pas resté spectateur.'},
+         {t:'Une oxydation, parce qu\'il y avait de l\'oxygène', why:'Aucun oxygène dans l\'histoire. Le mot a gardé le souvenir de l\'oxygène ; la définition, elle, s\'en est débarrassée.'}],
+       ok:'<b>Céder des électrons, c\'est s\'oxyder. En recevoir, c\'est se réduire.</b> Un seul transfert, deux verbes : l\'un pour celui qui donne, l\'autre pour celui qui reçoit. Tout le vocabulaire du module tient dans ce sens de passage.',
+       note:'Céder des électrons, c\'est s\'oxyder ; en capter, c\'est se réduire. Un transfert, deux verbes.'},
+
+      {t:'Le mot qui trompe',
+       setup:'<p>L\'ion cuivre a reçu les deux électrons du zinc. Le cours donne un nom à chaque partenaire : <b>oxydant</b> ou <b>réducteur</b>.</p>',
+       uses:['couple:1'],
+       q:'Comment nommer l\'ion cuivre dans cette réaction ?',
+       opts:[
+         {t:'L\'oxydant : il prend les électrons, donc il se réduit', ok:true},
+         {t:'Le réducteur : il se réduit', why:'Se réduire n\'est pas être réducteur. Le réducteur, c\'est celui qui <b>réduit l\'autre</b> — en lui donnant des électrons. L\'ion cuivre n\'a rien donné.'},
+         {t:'L\'oxydant : il s\'oxyde', why:'L\'oxydant ne s\'oxyde pas, il <b>oxyde</b> l\'autre. Lui-même, en prenant des électrons, se réduit.'},
+         {t:'Ni l\'un ni l\'autre : c\'est un ion', why:'Ion ou métal, ce qui compte est le sens des électrons. Un ion peut être oxydant, réducteur, ou les deux selon le couple.'}],
+       ok:'<b>L\'oxydant est celui qui prend — et qui donc se réduit. Le réducteur est celui qui donne — et qui donc s\'oxyde.</b> Chaque espèce fait à l\'autre l\'inverse de ce qu\'elle subit. C\'est le contresens le plus fréquent du module, et il coûte des points à chaque sujet.',
+       note:'L\'oxydant prend les électrons et se réduit ; le réducteur les donne et s\'oxyde.'},
+
+      {t:'Un couple, deux formes',
+       setup:'<p>Le zinc métal et l\'ion zinc sont le même élément, à deux électrons près. L\'un devient l\'autre en donnant ou en prenant ces deux électrons. Ils forment un <b>couple</b>, que le cours écrit toujours dans le même ordre.</p>',
+       uses:['couple:2'],
+       q:'Comment s\'écrit ce couple ?',
+       opts:[
+         {t:'<span class="f">Zn<sup>2+</sup>/Zn</span> : la forme qui peut prendre des électrons d\'abord', ok:true},
+         {t:'<span class="f">Zn/Zn<sup>2+</sup></span> : le métal d\'abord', why:'La convention ne dit pas « le métal d\'abord », elle dit « l\'oxydant d\'abord ». Et l\'oxydant du couple est la forme qui peut encore prendre des électrons : l\'ion.'},
+         {t:'<span class="f">Zn<sup>2+</sup> + 2 e<sup>−</sup> / Zn</span>', why:'Les électrons n\'apparaissent pas dans l\'écriture du couple — seulement dans sa demi-équation.'},
+         {t:'Peu importe l\'ordre, ce sont les mêmes espèces', why:'L\'ordre porte l\'information : à gauche, celui qui prend. Une copie qui l\'inverse perd les points de la question.'}],
+       ok:'<b>Ox / Red</b>, l\'oxydant à gauche. L\'oxydant d\'un couple est la forme qui peut encore prendre des électrons — ici la plus pauvre en électrons, donc l\'ion positif. Le réducteur est la forme qui peut en donner.',
+       note:'Un couple s\'écrit Ox/Red : la forme qui prend les électrons à gauche, celle qui les donne à droite.'},
+
+      {t:'La demi-équation, dans un sens convenu',
+       setup:'<p>Le couple <span class="f"><span class="ox">Zn<sup>2+</sup></span>/<span class="rd">Zn</span></span> a une demi-équation : elle montre le passage d\'une forme à l\'autre, électrons compris. Le cours l\'écrit toujours dans le sens de la <b>réduction</b>.</p>',
+       uses:['couple:3'],
+       q:'Laquelle est écrite dans le sens conventionnel ?',
+       opts:[
+         {t:'<span class="f">Zn<sup>2+</sup> + 2 e<sup>−</sup> = Zn</span>', ok:true},
+         {t:'<span class="f">Zn = Zn<sup>2+</sup> + 2 e<sup>−</sup></span>', why:'C\'est le sens de l\'oxydation. Elle n\'est pas fausse, mais ce n\'est pas la convention — et une copie est corrigée sur la convention.'},
+         {t:'<span class="f">Zn<sup>2+</sup> = Zn + 2 e<sup>−</sup></span>', why:'Charges : +2 à gauche, −2 à droite. Ce n\'est pas une demi-équation, c\'est une erreur de bilan.'},
+         {t:'<span class="f">Zn + 2 e<sup>−</sup> = Zn<sup>2+</sup></span>', why:'Le métal ne prend pas d\'électrons pour devenir un ion positif — il en donne. Charges : −2 à gauche, +2 à droite.'}],
+       ok:'<b>Ox + n e⁻ = Red</b> : l\'oxydant prend, on écrit le réducteur formé. C\'est le même ordre que le couple. Écrire un couple et écrire sa demi-équation, c\'est le même geste.',
+       note:'La demi-équation s\'écrit dans le sens de la réduction, Ox + n e⁻ = Red : le même ordre que le couple.'},
+
+      {t:'Une même espèce, deux rôles',
+       setup:'<p>L\'ion <span class="f">Fe<sup>2+</sup></span> figure dans deux couples de la table : <span class="f"><span class="ox">Fe<sup>3+</sup></span>/<span class="rd">Fe<sup>2+</sup></span></span> et <span class="f"><span class="ox">Fe<sup>2+</sup></span>/<span class="rd">Fe</span></span>.</p>',
+       uses:['couple:3'],
+       q:'<span class="f">Fe<sup>2+</sup></span> est-il un oxydant ou un réducteur ?',
+       opts:[
+         {t:'Les deux, selon le couple : il donne face à Fe³⁺, il prend face à Fe', ok:true},
+         {t:'Un réducteur, parce que c\'est un ion positif', why:'La charge ne fait pas le rôle. Fe²⁺ peut prendre deux électrons — et devenir Fe — comme il peut en donner un.'},
+         {t:'Un oxydant, parce qu\'il peut prendre des électrons', why:'Il le peut. Et il peut aussi en donner un pour devenir Fe³⁺. Un seul des deux rôles ne suffit pas à le décrire.'},
+         {t:'Ni l\'un ni l\'autre : il est stable', why:'Stable ou non n\'est pas la question. Il figure dans deux couples, donc il a deux rôles possibles.'}],
+       ok:'<b>Oxydant et réducteur ne sont pas des propriétés d\'une espèce : ce sont des rôles dans un couple.</b> À gauche de sa barre, Fe²⁺ est l\'oxydant ; à droite de l\'autre barre, il est le réducteur. C\'est ce qui rend possible la dismutation, à l\'étape 6 — et c\'est ce que la règle du γ demandera de lire, à l\'étape 13.',
+       note:'Oxydant ou réducteur est un rôle dans un couple, pas une propriété : Fe²⁺ est l\'un ou l\'autre selon le couple.'},
+
+      {t:'Pourquoi il faut deux couples',
+       setup:'<p>On te propose la « réaction » <span class="f">Zn = Zn<sup>2+</sup> + 2 e<sup>−</sup></span>, toute seule, dans un bécher.</p>',
+       uses:['couple:1'],
+       q:'Peut-elle se produire ainsi ?',
+       opts:[
+         {t:'Non : des électrons donnés doivent être pris par quelqu\'un', ok:true},
+         {t:'Oui : le zinc s\'oxyde spontanément', why:'S\'oxyder, c\'est donner des électrons — à qui ? Des électrons libres qui flottent dans l\'eau, ça n\'existe pas.'},
+         {t:'Oui, si le bécher est fermé', why:'Ouvert ou fermé, il manque un partenaire pour prendre les électrons. Le couvercle n\'y change rien.'},
+         {t:'Non, parce qu\'il manque de l\'oxygène', why:'L\'oxygène est un partenaire possible, pas le seul : n\'importe quel oxydant ferait l\'affaire, un ion cuivre par exemple.'}],
+       ok:'<b>Une réaction rédox oppose toujours deux couples</b> : le réducteur de l\'un donne, l\'oxydant de l\'autre prend. Et les électrons donnés sont exactement ceux pris — c\'est pourquoi aucun électron ne reste dans l\'équation-bilan. Un électron qui survit signe une équation fausse.',
+       note:'Une réaction rédox oppose deux couples ; les électrons donnés par l\'un sont pris par l\'autre, aucun ne reste.'}
+    ],
+    final: {t:'Lis maintenant la réaction à voix haute',
+      html:EQ+'<ol>'
+        +'<li><b>Zn donne deux électrons</b> : il s\'oxyde, il est le réducteur — du couple Zn²⁺/Zn.</li>'
+        +'<li><b>Cu²⁺ les prend</b> : il se réduit, il est l\'oxydant — du couple Cu²⁺/Cu.</li>'
+        +'<li>Deux couples, deux demi-équations : <span class="f">Cu<sup>2+</sup> + 2 e<sup>−</sup> = Cu</span> dans le sens conventionnel, et Zn lue à l\'envers.</li>'
+        +'<li>Les deux électrons donnés sont les deux électrons pris : <b>ils s\'annulent</b>, et l\'équation-bilan n\'en contient aucun.</li>'
+        +'<li>Chaque rôle est relatif à un couple : le même ion peut prendre ici et donner là.</li>'
+        +'</ol><p>Le cours dit tout cela en trois définitions. Toi, tu peux maintenant les retrouver à partir d\'un seul transfert.</p>'},
+    fig: function(i){
+      var body='', cap='';
+      switch(i){
+        case 0: body=transfert('','',''); cap='Un morceau de zinc, un ion cuivre, et deux électrons qui changent de main.'; break;
+        case 1: body=transfert('donne','reçoit','un seul transfert, deux verbes'); cap='Le zinc donne. L\'ion cuivre reçoit.'; break;
+        case 2: body=transfert('réducteur · s\'oxyde','oxydant · se réduit','chacun fait à l\'autre l\'inverse de ce qu\'il subit'); cap='Les noms suivent le sens des électrons, pas l\'inverse.'; break;
+        case 3: body=lgSvg(150,'Le couple zinc : la forme oxydée et la forme réduite, à deux électrons près',
+                  lgSp(90,70,'Zn²⁺','ox',26)+lgSp(230,70,'Zn','rd',26)
+                  +lgTxt(160,74,'/','lb','middle','font-size:22px;fill:var(--mut)')
+                  +lgTxt(90,116,'peut prendre 2 e⁻','lbs','middle')+lgTxt(230,116,'peut donner 2 e⁻','lbs','middle')
+                  +lgTxt(90,132,'oxydant','lb','middle','fill:var(--ox);font-weight:600')+lgTxt(230,132,'réducteur','lb','middle','fill:var(--rd);font-weight:600'));
+                cap='Le couple : Ox à gauche, Red à droite.'; break;
+        case 4: body=lgSvg(150,'La demi-équation du couple zinc, dans le sens de la réduction',
+                  lgSp(60,70,'Zn²⁺','ox',24)+lgTxt(112,75,'+ 2 e⁻','lb','middle','fill:var(--el);font-weight:600')
+                  +lgArrow(146,70,196,70,'ink',1.4)+lgSp(240,70,'Zn','rd',24)
+                  +lgTxt(160,120,'sens de la réduction : Ox + n e⁻ = Red','lbs','middle'));
+                cap='L\'oxydant prend, on écrit le réducteur formé.'; break;
+        case 5: body=lgSvg(160,'Le fer(II) entre ses deux voisins : oxydant du couple de droite, réducteur du couple de gauche',
+                  lgSp(50,64,'Fe³⁺','ox',22)+lgSp(160,64,'Fe²⁺','acc',24)+lgSp(270,64,'Fe','rd',22)
+                  +lgTxt(105,50,'+ 1 e⁻','lbs','middle','fill:var(--el)')+lgArrow(76,64,132,64,'el',1.4)
+                  +lgTxt(215,50,'+ 2 e⁻','lbs','middle','fill:var(--el)')+lgArrow(188,64,244,64,'el',1.4)
+                  +lgTxt(105,104,'Fe³⁺/Fe²⁺','mt','middle')+lgTxt(105,118,'ici Fe²⁺ est à droite :','lbs','middle')+lgTxt(105,131,'le réducteur','lb','middle','fill:var(--rd);font-weight:600')
+                  +lgTxt(215,104,'Fe²⁺/Fe','mt','middle')+lgTxt(215,118,'là il est à gauche :','lbs','middle')+lgTxt(215,131,'l\'oxydant','lb','middle','fill:var(--ox);font-weight:600'));
+                cap='Le même ion, deux couples, deux rôles.'; break;
+        case 6: body=lgSvg(150,'Le zinc seul : ses deux électrons n\'ont personne pour les prendre',
+                  lgSp(80,62,'Zn','rd',24)+lgArrow(110,62,200,62,'el',1.8)+lgTxt(155,50,'2 e⁻','lb','middle','fill:var(--el);font-weight:600')
+                  +lgTxt(232,68,'?','lb','middle','font-size:26px;fill:var(--mark);font-weight:600')
+                  +lgTxt(160,122,'sans oxydant en face, rien ne part','lbs','middle'));
+                cap='Des électrons donnés doivent être pris : il faut un second couple.'; break;
+        default: body=transfert('réducteur · s\'oxyde','oxydant · se réduit','Zn²⁺/Zn face à Cu²⁺/Cu'); cap='Deux couples face à face, et aucun électron qui reste.';
+      }
+      return {html:body, cap:cap};
+    }
+  };
+})();
+
+/* ── lecture · le nombre d'oxydation, un compteur d'électrons — étape 3 ── */
+(function(){
+  /* une molécule : atomes en ronds, liaisons en traits, et les électrons de
+     liaison rangés du côté de l'atome qui les attire                      */
+  function mol(atoms,bonds,labels,aria,h){
+    var s='';
+    bonds.forEach(function(b){ var a=atoms[b[0]], c=atoms[b[1]];
+      s+='<line x1="'+a.x+'" y1="'+a.y+'" x2="'+c.x+'" y2="'+c.y+'" style="stroke:var(--mut);stroke-width:1.4"/>';
+      /* les deux électrons de la liaison, tirés vers le gagnant (b[2] = indice du gagnant, -1 = match nul) */
+      var mx=(a.x+c.x)/2, my=(a.y+c.y)/2, dx=c.x-a.x, dy=c.y-a.y, L=Math.sqrt(dx*dx+dy*dy)||1;
+      var t = b[2]===b[0] ? -0.22 : (b[2]===b[1] ? 0.22 : 0);
+      var ex=mx+dx*t, ey=my+dy*t, nx=-dy/L*4, ny=dx/L*4;
+      s+='<circle cx="'+(ex+nx).toFixed(1)+'" cy="'+(ey+ny).toFixed(1)+'" r="2.6" style="fill:var(--el)"/><circle cx="'+(ex-nx).toFixed(1)+'" cy="'+(ey-ny).toFixed(1)+'" r="2.6" style="fill:var(--el)"/>';
+      if(b[2]===-1) s+=lgTxt(mx,my-13,'match nul','mt','middle');
+    });
+    atoms.forEach(function(a){ s+=lgSp(a.x,a.y,a.t,a.c||'ink',a.r||17); if(a.no) s+=lgTxt(a.x,a.y+(a.r||17)+13,a.no,'lb','middle','font-weight:600;fill:var(--'+(a.c||'ink')+')'); });
+    (labels||[]).forEach(function(l){ s+=lgTxt(l[0],l[1],l[2],l[3]||'lbs',l[4]||'middle'); });
+    return lgSvg(h||160,aria,s);
+  }
+  LECTURES['nox'] = {
+    titre: 'Le nombre d\'oxydation, un compteur d\'électrons',
+    intro: {t:'Ce qu\'on va apprendre à lire',
+      setup:'<p>Le cours donne quatre règles et une somme. Elles marchent, mais elles tombent du ciel. Sept questions pour voir ce que le nombre d\'oxydation <b>compte</b> — des électrons — et retrouver chaque règle, exceptions comprises, au lieu de la retenir.</p>',
+      cta:'Première question'},
+    beats: [
+      {t:'Un ion seul, une vraie charge',
+       setup:'<p><span class="f">Fe<sup>3+</sup></span> est un atome de fer qui a perdu trois électrons. <span class="f">Cu<sup>2+</sup></span> en a perdu deux. <span class="f">Cl<sup>−</sup></span> en a gagné un.</p>',
+       q:'Que vaut le nombre d\'oxydation du fer dans <span class="f">Fe<sup>3+</sup></span> ?',
+       opts:[
+         {t:'+III : le compte des électrons perdus, en chiffres romains', ok:true},
+         {t:'−III : il a perdu trois électrons', why:'Perdre trois électrons — trois charges négatives — laisse une charge +3, pas −3.'},
+         {t:'+3, mais ce n\'est pas un n.o., c\'est une charge', why:'Pour un ion seul, le n.o. <b>est</b> la charge. Il ne s\'en distingue que dans les molécules, à la question suivante.'},
+         {t:'0 : le fer est un élément', why:'Le fer <b>métal</b> est à 0. L\'ion, lui, a perdu trois électrons — et le n.o. le note.'}],
+       ok:'Pour un ion seul, <b>le n.o. est la charge réelle</b> : le nombre d\'électrons perdus, en positif ; gagnés, en négatif. C\'est le cas le plus simple, et il fixe l\'idée : le nombre d\'oxydation compte des électrons.',
+       note:'Pour un ion seul, le n.o. est sa charge : le compte des électrons perdus (+) ou gagnés (−).'},
+
+      {t:'Dans une molécule, on fait semblant',
+       setup:'<p>Dans <span class="f">H<sub>2</sub>O</span>, personne n\'a vraiment perdu ni gagné d\'électron : les atomes les <b>partagent</b> dans des liaisons. Pourtant le cours donne −II à l\'oxygène et +I à chaque hydrogène.</p>',
+       uses:['nox:1'],
+       q:'D\'où sortent ces nombres ?',
+       opts:[
+         {t:'On attribue chaque électron de liaison à l\'atome qui l\'attire le plus, comme s\'il l\'avait gagné', ok:true},
+         {t:'On coupe chaque liaison en deux parts égales', why:'À parts égales, tout le monde resterait à zéro. Le n.o. suppose au contraire un gagnant par liaison.'},
+         {t:'Ce sont des mesures faites au laboratoire', why:'Rien n\'est mesuré : c\'est une convention de comptage, appliquée sur le papier. D\'où le mot « formelle » dans « charge formelle ».'},
+         {t:'On les lit dans le tableau périodique', why:'Le tableau dit qui attire fort. Il ne donne pas le n.o. dans une molécule donnée : il faut faire le compte.'}],
+       ok:'Le n.o. est une <b>charge fictive</b> : on fait comme si chaque électron de liaison appartenait tout entier à l\'atome qui l\'attire le plus. L\'oxygène attire fort : il « gagne » les deux électrons de ses deux liaisons, d\'où −II. Chaque hydrogène « perd » le sien, d\'où +I. C\'est ce que le cours appelle la charge formelle.',
+       note:'Dans une molécule, le n.o. est une charge fictive : chaque électron de liaison est attribué à l\'atome qui l\'attire le plus.'},
+
+      {t:'Pourquoi l\'oxygène gagne presque toujours',
+       setup:'<p>Dans l\'eau, le dioxyde de carbone, le permanganate, le sulfate, l\'oxygène est à −II : il attire les électrons plus fort que presque tout ce qu\'on lui associe.</p><p>Dans l\'eau oxygénée <span class="f">H<sub>2</sub>O<sub>2</sub></span>, chaque oxygène est lié à un hydrogène et à <b>l\'autre oxygène</b>.</p>',
+       uses:['nox:2'],
+       q:'Que vaut le n.o. de chaque oxygène dans l\'eau oxygénée ?',
+       opts:[
+         {t:'−I : il gagne l\'électron de son hydrogène, mais la liaison O–O est un match nul', ok:true},
+         {t:'−II : l\'oxygène est toujours à −II', why:'« Presque » toujours. Face à un autre oxygène, il n\'y a pas de gagnant : cette liaison-là ne rapporte rien à personne.'},
+         {t:'0 : les deux oxygènes s\'annulent', why:'La liaison O–O ne rapporte rien, mais chaque oxygène gagne encore l\'électron de son hydrogène : un électron, −I.'},
+         {t:'−II pour l\'un, 0 pour l\'autre', why:'La molécule est symétrique : les deux oxygènes sont dans la même situation, ils ont le même n.o.'}],
+       ok:'La règle « oxygène à −II » n\'est pas un décret : c\'est le résultat du comptage quand l\'oxygène gagne ses deux liaisons. Dans un <b>peroxyde</b>, l\'une des deux est une liaison O–O — match nul — et il ne reste qu\'un électron gagné : <b>−I</b>. L\'exception se déduit, elle ne se retient pas.',
+       note:'O est à −II parce qu\'il gagne ses deux liaisons ; dans un peroxyde, la liaison O–O est un match nul, d\'où −I.'},
+
+      {t:'L\'hydrogène, et son exception',
+       setup:'<p>L\'hydrogène attire faiblement. Lié à O, N, C, S ou Cl, il perd son électron : +I. Dans l\'hydrure de sodium <span class="f">NaH</span>, il est lié au sodium, un métal qui retient ses électrons encore moins que lui.</p>',
+       uses:['nox:2'],
+       q:'Que vaut le n.o. de l\'hydrogène dans <span class="f">NaH</span> ?',
+       opts:[
+         {t:'−I : cette fois, c\'est lui qui gagne', ok:true},
+         {t:'+I : l\'hydrogène est toujours à +I', why:'La règle 3 du cours dit « dans tout composé <b>ne contenant pas d\'élément métallique</b> ». Face à un métal, l\'hydrogène est le plus attirant des deux.'},
+         {t:'0 : il est seul', why:'Il n\'est pas seul, il est lié au sodium. Un hydrogène à zéro, c\'est H₂, le corps simple.'},
+         {t:'+I pour H, et le sodium s\'adapte', why:'C\'est le sodium, le métal, qui cède ; l\'hydrogène gagne. Na est à +I, H à −I, la somme fait bien zéro.'}],
+       ok:'Même logique : le n.o. suit <b>celui qui attire le plus</b>. Face à un métal, l\'hydrogène gagne : −I. C\'est exactement la restriction que porte la règle 3 du cours — et maintenant tu sais pourquoi elle est là.',
+       note:'H est à +I face aux non-métaux, à −I face aux métaux : le n.o. suit celui qui attire le plus.'},
+
+      {t:'La somme, et l\'inconnue',
+       setup:'<p>Dans une espèce, les électrons attribués ne se créent pas : ce qu\'un atome « gagne », un autre l\'a « perdu ». Le total des n.o. retombe donc sur la charge réelle de l\'espèce.</p><p>Dans <span class="f">MnO<sub>4</sub><sup>−</sup></span>, les quatre oxygènes sont à −II.</p>',
+       uses:['nox:2'],
+       q:'Que vaut le n.o. du manganèse ?',
+       opts:[
+         {t:'+VII : x − 8 = −1, donc x = +7', ok:true},
+         {t:'+VIII : x − 8 = 0', why:'L\'ion porte une charge −1, pas zéro. La somme doit retomber sur −1.'},
+         {t:'−VII : il compense les oxygènes', why:'Pour compenser −8 et arriver à −1, il faut être <b>positif</b> : +7. Un n.o. négatif creuserait l\'écart.'},
+         {t:'+II : comme dans Mn²⁺', why:'Dans Mn²⁺, le manganèse a perdu deux électrons. Dans MnO₄⁻, entouré de quatre oxygènes qui gagnent tout, il en a « perdu » sept.'}],
+       ok:'<b>La somme des n.o. vaut la charge de l\'espèce</b> — nulle pour une molécule, égale à la charge pour un ion. C\'est une équation à une inconnue, et elle livre tous les n.o. que les règles ne donnent pas directement.',
+       note:'La somme des n.o. vaut la charge de l\'espèce : une équation à une inconnue livre le n.o. manquant.'},
+
+      {t:'Ce que le n.o. mesure vraiment',
+       setup:'<p>Le manganèse passe de +VII dans <span class="f">MnO<sub>4</sub><sup>−</sup></span> à +II dans <span class="f">Mn<sup>2+</sup></span>.</p>',
+       uses:['nox:1','nox:5'],
+       q:'Combien d\'électrons a-t-il gagnés ?',
+       opts:[
+         {t:'Cinq : le n.o. a baissé de 5, un électron par unité', ok:true},
+         {t:'Deux : il finit à +II', why:'+II est l\'état d\'arrivée, pas le chemin parcouru. Le chemin, c\'est +VII → +II.'},
+         {t:'Sept : il en avait perdu sept', why:'Il en récupère cinq, pas sept : il reste à +II, il lui en manque encore deux.'},
+         {t:'On ne peut pas le dire sans la demi-équation', why:'La demi-équation confirmera. Mais le n.o. suffit : c\'est précisément un compteur d\'électrons.'}],
+       ok:'<b>Chaque unité de n.o. est un électron.</b> Une baisse de 5, c\'est 5 électrons gagnés — une réduction à 5 électrons. C\'est le pont vers l\'étape suivante : la variation du n.o. donne le nombre d\'électrons d\'une demi-équation, et sert à la vérifier.',
+       note:'Une unité de n.o. = un électron : la variation du n.o. compte les électrons échangés.'},
+
+      {t:'Plus oxydé, plus réduit',
+       setup:'<p>Le chlore est à −I dans <span class="f">Cl<sup>−</sup></span>, 0 dans <span class="f">Cl<sub>2</sub></span>, +I dans <span class="f">ClO<sup>−</sup></span>, +VII dans <span class="f">ClO<sub>4</sub><sup>−</sup></span>.</p>',
+       uses:['nox:6'],
+       q:'Dans quelle espèce le chlore a-t-il « perdu » le plus d\'électrons ?',
+       opts:[
+         {t:'<span class="f">ClO<sub>4</sub><sup>−</sup></span> : à +VII, sept électrons attribués à d\'autres', ok:true},
+         {t:'<span class="f">Cl<sup>−</sup></span> : c\'est le plus chargé', why:'Chargé négativement : il en a <b>gagné</b> un. C\'est l\'état le plus réduit des quatre.'},
+         {t:'<span class="f">Cl<sub>2</sub></span> : c\'est le corps simple', why:'À zéro, il n\'a ni perdu ni gagné : c\'est le point de départ de l\'échelle.'},
+         {t:'Aucune : le chlore ne perd pas d\'électrons', why:'Il en « perd » au sens du comptage dès qu\'il est lié à de l\'oxygène, qui attire plus fort que lui.'}],
+       ok:'<b>Plus le n.o. est haut, plus l\'élément est oxydé</b> — plus d\'électrons lui ont été retirés, au sens du comptage. Monter le n.o., c\'est s\'oxyder ; le descendre, c\'est se réduire. Le nombre d\'oxydation porte bien son nom.',
+       note:'Un n.o. plus haut, c\'est un état plus oxydé : monter = s\'oxyder, descendre = se réduire.'}
+    ],
+    final: {t:'Lis un nombre d\'oxydation comme un compte d\'électrons',
+      html:'<ol>'
+        +'<li>Un <b>ion seul</b> : le n.o. est sa charge, le compte réel des électrons perdus ou gagnés.</li>'
+        +'<li>Une <b>molécule</b> : on fait comme si chaque électron de liaison allait à l\'atome qui l\'attire le plus — une charge fictive.</li>'
+        +'<li><b>O gagne presque toujours</b> ses deux liaisons : −II. Sauf face à un autre O : −I, le peroxyde.</li>'
+        +'<li><b>H perd presque toujours</b> son électron : +I. Sauf face à un métal : −I.</li>'
+        +'<li>La <b>somme</b> des n.o. retombe sur la charge de l\'espèce : une inconnue, une équation.</li>'
+        +'<li><b>Une unité = un électron</b> : la variation du n.o. compte les électrons d\'une demi-équation.</li>'
+        +'<li>Plus haut, plus oxydé. Monter, c\'est s\'oxyder.</li>'
+        +'</ol><p>Les quatre règles du cours sont les quatre lignes 1 à 4. Tu ne les retiens plus, tu les retrouves.</p>'},
+    fig: function(i){
+      var body='', cap='';
+      switch(i){
+        case 0: case 1:
+          body=lgSvg(150,'Un ion fer trois plus : trois électrons partis, charge plus trois',
+            lgSp(110,70,'Fe³⁺','ox',28)
+            +[0,1,2].map(function(k){ var y=46+k*24; return '<circle cx="'+(200+k*4)+'" cy="'+y+'" r="3.2" style="fill:var(--el)"/>'+lgArrow(142,70,190+k*4,y,'el',1.2); }).join('')
+            +lgTxt(240,58,'3 e⁻ partis','lbs','start')+lgTxt(240,84,'n.o. = +III','lb','start','font-weight:600;fill:var(--ox)')
+            +lgTxt(160,130,'pour un ion seul, le n.o. est la charge','lbs','middle'));
+          cap=i===0?'Le nombre d\'oxydation compte des électrons. Le cas le plus simple : un ion.':'Trois électrons partis, charge +3, n.o. +III.'; break;
+        case 2:
+          body=mol([{x:160,y:60,t:'O',c:'ox',r:20,no:'−II'},{x:70,y:100,t:'H',c:'rd',r:15,no:'+I'},{x:250,y:100,t:'H',c:'rd',r:15,no:'+I'}],
+                   [[0,1,0],[0,2,0]],[[160,150,'les électrons de liaison sont attribués à O, qui attire le plus']],'La molécule d\'eau : les deux paires de liaison attribuées à l\'oxygène',165);
+          cap='H₂O : l\'oxygène « gagne » deux électrons, chaque hydrogène en « perd » un.'; break;
+        case 3:
+          body=mol([{x:104,y:64,t:'O',c:'ox',r:19,no:'−I'},{x:216,y:64,t:'O',c:'ox',r:19,no:'−I'},{x:36,y:104,t:'H',c:'rd',r:14,no:'+I'},{x:284,y:104,t:'H',c:'rd',r:14,no:'+I'}],
+                   [[0,1,-1],[0,2,0],[1,3,1]],[[160,150,'une liaison gagnée, une liaison nulle : −I']],'L\'eau oxygénée : chaque oxygène gagne une liaison et partage l\'autre à égalité',165);
+          cap='H₂O₂ : la liaison O–O n\'a pas de gagnant.'; break;
+        case 4:
+          body=mol([{x:110,y:70,t:'Na',c:'mut',r:20,no:'+I'},{x:210,y:70,t:'H',c:'rd',r:16,no:'−I'}],
+                   [[0,1,1]],[[160,140,'face à un métal, c\'est l\'hydrogène qui attire le plus']],'L\'hydrure de sodium : l\'électron de liaison va à l\'hydrogène',160);
+          cap='NaH : l\'hydrogène gagne, pour une fois.'; break;
+        case 5:
+          body=mol([{x:160,y:78,t:'Mn',c:'acc',r:20,no:''},{x:160,y:28,t:'O',c:'ox',r:14},{x:160,y:128,t:'O',c:'ox',r:14},{x:100,y:78,t:'O',c:'ox',r:14},{x:220,y:78,t:'O',c:'ox',r:14}],
+                   [[0,1,1],[0,2,2],[0,3,3],[0,4,4]],[[272,60,'4 × (−II) = −8','lbs','middle'],[272,78,'x − 8 = −1','lbs','middle'],[272,98,'x = +7','lb','middle']],'L\'ion permanganate : quatre oxygènes à moins deux, le manganèse à plus sept',160);
+          cap='MnO₄⁻ : la somme doit retomber sur −1.'; break;
+        case 6:
+          body=lgSvg(150,'Le manganèse passe de plus sept à plus deux en gagnant cinq électrons',
+            lgSp(70,66,'Mn','acc',24)+lgTxt(70,106,'+VII','lb','middle','font-weight:600;fill:var(--ox)')
+            +lgArrow(104,66,216,66,'el',2)+lgTxt(160,52,'+ 5 e⁻','lb','middle','fill:var(--el);font-weight:600')
+            +lgSp(250,66,'Mn','acc',24)+lgTxt(250,106,'+II','lb','middle','font-weight:600;fill:var(--rd)')
+            +lgTxt(160,134,'une unité de n.o. par électron','lbs','middle'));
+          cap='De +VII à +II : cinq unités, cinq électrons.'; break;
+        case 7: default:
+          body=lgEchelle({lo:-1,hi:7,step:1,h:170,marks:[{v:-1,lab:'Cl⁻ · le plus réduit',cls:'rd'},{v:0,lab:'Cl₂',cls:'mut'},{v:1,lab:'ClO⁻',cls:'mut'},{v:7,lab:'ClO₄⁻ · le plus oxydé',cls:'ox',big:true}],aria:'Les états d\'oxydation du chlore, de moins un à plus sept'})
+               .replace('E en volts','n.o.');
+          cap=i===7?'Monter l\'échelle, c\'est s\'oxyder.':'Le nombre d\'oxydation : un compteur d\'électrons, une échelle d\'oxydation.';
+      }
+      return {html:body, cap:cap};
+    }
+  };
+})();
+
+/* ── lecture · pourquoi la méthode marche — étape 4 ──────────────── */
+(function(){
+  var OX='<span class="ox">', RD='<span class="rd">', EL='<span class="el">', C='</span>';
+  function eq(g,d){ return '<div class="lg-eq f" style="font-size:16px">'+g+' = '+d+'</div>'; }
+  var L0=OX+'MnO<sub>4</sub><sup>−</sup>'+C, R0=RD+'Mn<sup>2+</sup>'+C;
+  var E=[
+    eq(L0, R0),
+    eq(L0, R0+' + 4 H<sub>2</sub>O'),
+    eq(L0+' + 8 H<sup>+</sup>', R0+' + 4 H<sub>2</sub>O'),
+    eq(L0+' + 8 H<sup>+</sup> + '+EL+'5 e<sup>−</sup>'+C, R0+' + 4 H<sub>2</sub>O')
+  ];
+  var CNT=[
+    [['Mn',1,1],['O',4,0],['H',0,0],['charge','−1','+2']],
+    [['Mn',1,1],['O',4,4],['H',0,8],['charge','−1','+2']],
+    [['Mn',1,1],['O',4,4],['H',8,8],['charge','+7','+2']],
+    [['Mn',1,1],['O',4,4],['H',8,8],['charge','+2','+2']]
+  ];
+  LECTURES['demi'] = {
+    titre: 'Pourquoi la méthode marche',
+    intro: {t:'Ce qu\'on va apprendre à lire',
+      setup:'<p>Tu connais les cinq temps de la méthode et tu sais qu\'ils ne se discutent pas. Six questions pour voir <b>pourquoi</b> : d\'où l\'on a le droit de sortir de l\'eau et des protons, pourquoi les électrons viennent en dernier, et ce que vérifie vraiment le nombre d\'oxydation.</p><p>Le fil rouge est le couple qui revient le plus souvent, <span class="f"><span class="ox">MnO<sub>4</sub><sup>−</sup></span>/<span class="rd">Mn<sup>2+</sup></span></span>.</p>',
+      cta:'Première question'},
+    beats: [
+      {t:'Deux promesses',
+       setup:'<p>Une demi-équation décrit le passage de <span class="f">MnO<sub>4</sub><sup>−</sup></span> à <span class="f">Mn<sup>2+</sup></span> dans l\'eau. Pour être vraie, elle doit respecter ce que Lavoisier a posé à l\'étape 1 : rien ne se crée, rien ne se perd.</p>',
+       q:'Qu\'est-ce qui doit être identique des deux côtés du signe égal ?',
+       opts:[
+         {t:'Le nombre d\'atomes de chaque élément, et la charge totale', ok:true},
+         {t:'Le nombre de molécules', why:'Le nombre d\'espèces peut changer : quatre molécules d\'eau peuvent apparaître d\'un côté. Ce sont les <b>atomes</b> qui se conservent, pas les molécules.'},
+         {t:'Seulement le nombre d\'atomes', why:'La charge se conserve aussi : les électrons sont de la matière, ils ne disparaissent pas. Une charge créée de nulle part, c\'est une équation fausse.'},
+         {t:'Seulement la charge', why:'Les atomes aussi. Un oxygène de moins d\'un côté, c\'est un atome évaporé — impossible.'}],
+       ok:'<b>Deux conservations : les atomes, élément par élément, et la charge.</b> Toute la méthode n\'est qu\'une façon ordonnée de tenir ces deux promesses. La sixième ligne — le nombre d\'électrons égale la variation du n.o. — est un contrôle, pas une promesse de plus.',
+       note:'Une demi-équation conserve les atomes de chaque élément et la charge totale.'},
+
+      {t:'Où trouver de l\'oxygène',
+       setup:'<p><span class="f">MnO<sub>4</sub><sup>−</sup> = Mn<sup>2+</sup></span>. À gauche, quatre oxygènes ; à droite, aucun. Il en manque quatre, et on n\'a pas le droit de les inventer.</p>',
+       uses:['demi:1'],
+       q:'D\'où peuvent-ils venir ?',
+       opts:[
+         {t:'De l\'eau : la réaction a lieu en solution, H₂O est partout', ok:true},
+         {t:'Du dioxygène dissous', why:'Il n\'y en a pas forcément, et la méthode ne le suppose jamais. L\'eau, elle, est toujours là — c\'est le solvant.'},
+         {t:'On les supprime à gauche', why:'On ne modifie jamais une formule. MnO₄⁻ a quatre oxygènes, point.'},
+         {t:'D\'ions oxyde O²⁻', why:'Ils n\'existent pas en solution aqueuse : ils réagiraient aussitôt avec l\'eau.'}],
+       ok:'<b>Le solvant est le réservoir.</b> Une réaction en solution aqueuse peut consommer ou produire de l\'eau librement — c\'est pourquoi la méthode ajoute H₂O du côté qui manque d\'oxygène. Rien n\'est inventé : l\'eau est déjà dans le bécher.',
+       note:'L\'eau est le solvant : on en ajoute du côté qui manque d\'oxygène, elle est déjà là.'},
+
+      {t:'Où trouver de l\'hydrogène',
+       setup:'<p><span class="f">MnO<sub>4</sub><sup>−</sup> = Mn<sup>2+</sup> + 4 H<sub>2</sub>O</span>. Les quatre molécules d\'eau ont apporté huit hydrogènes à droite, et il n\'y en a aucun à gauche.</p>',
+       uses:['demi:2'],
+       q:'D\'où viennent les hydrogènes qui manquent ?',
+       opts:[
+         {t:'Des ions H⁺ de la solution : le milieu est acide', ok:true},
+         {t:'D\'autres molécules d\'eau, ajoutées à gauche', why:'Ajouter de l\'eau à gauche y ajoute aussi de l\'oxygène — qu\'on vient d\'équilibrer. On tournerait en rond.'},
+         {t:'Du dihydrogène H₂', why:'Il n\'y en a pas dans la solution. Les H⁺, si — en milieu acide, à volonté.'},
+         {t:'On enlève des H aux molécules d\'eau', why:'H₂O est une formule, on ne la retouche pas. On ajoute des espèces, on n\'en modifie aucune.'}],
+       ok:'<b>En milieu acide, la solution contient des H⁺ à volonté</b> : on en ajoute autant qu\'il faut, du côté opposé à l\'eau. Voilà pourquoi la méthode dit « milieu acide par défaut » — et pourquoi le milieu basique demandera une opération de plus, à l\'étape 5.',
+       note:'En milieu acide, les H⁺ sont disponibles : on en ajoute en face de l\'eau pour équilibrer l\'hydrogène.'},
+
+      {t:'La seule charge qui reste',
+       setup:'<p><span class="f">MnO<sub>4</sub><sup>−</sup> + 8 H<sup>+</sup> = Mn<sup>2+</sup> + 4 H<sub>2</sub>O</span>. Les atomes sont tous en place. Compte les charges : −1 + 8 = +7 à gauche, +2 à droite.</p>',
+       uses:['demi:1','demi:3'],
+       q:'Comment rétablir l\'égalité des charges ?',
+       opts:[
+         {t:'Cinq électrons à gauche : +7 − 5 = +2', ok:true},
+         {t:'Cinq H⁺ de plus à droite', why:'Ça remettrait de l\'hydrogène en trop. Les atomes sont faits ; il ne reste que les électrons, qui ne portent aucun atome.'},
+         {t:'Cinq électrons à droite', why:'À droite, +2 − 5 = −3 : l\'écart se creuse. Les électrons vont du côté <b>trop positif</b>, pour le ramener.'},
+         {t:'Changer Mn²⁺ en Mn⁷⁺', why:'On ne change jamais une formule donnée. Mn²⁺ est le produit, c\'est un fait de l\'énoncé.'}],
+       ok:'<b>Les électrons sont la seule espèce chargée qu\'on n\'a pas encore placée, et la seule qui ne porte aucun atome.</b> C\'est pour ça qu\'ils viennent en dernier : après eux, plus rien à ajuster. Cinq à gauche — cette réduction consomme cinq électrons.',
+       note:'Les électrons se posent en dernier : ils équilibrent la charge sans toucher aux atomes.'},
+
+      {t:'Le contrôle gratuit',
+       setup:'<p>Le bilan des charges t\'a donné 5 électrons. Par ailleurs, le manganèse passe de +VII à +II.</p>',
+       uses:['demi:4','nox:6'],
+       q:'Que dit la variation du nombre d\'oxydation ?',
+       opts:[
+         {t:'Cinq unités, donc cinq électrons : les deux comptes coïncident', ok:true},
+         {t:'Rien : le n.o. et les électrons sont deux choses différentes', why:'Une unité de n.o. est un électron — c\'est le résultat de l\'étape 3. Les deux comptes <b>doivent</b> coïncider.'},
+         {t:'Sept électrons, puisque Mn était à +VII', why:'+VII est le départ, +II l\'arrivée. La variation vaut 5, pas 7.'},
+         {t:'Il faut multiplier par 4, le nombre d\'oxygènes', why:'Seuls les atomes dont le n.o. <b>change</b> comptent, et il n\'y a qu\'un manganèse. Les oxygènes restent à −II.'}],
+       ok:'Deux chemins indépendants — le bilan des charges et la variation du n.o. — arrivent au même 5. <b>S\'ils divergent, une erreur se cache en amont</b> : recompte d\'abord les atomes concernés, puis les H, les O, les charges.',
+       note:'La variation du n.o., fois le nombre d\'atomes concernés, doit redonner le nombre d\'électrons : c\'est le contrôle.'},
+
+      {t:'Pourquoi l\'ordre ne se discute pas',
+       setup:'<p>Un camarade place les électrons dès la première ligne, avant l\'eau et les protons : <span class="f">MnO<sub>4</sub><sup>−</sup> + 5 e<sup>−</sup> = Mn<sup>2+</sup></span>. Puis il équilibre l\'oxygène et l\'hydrogène.</p>',
+       uses:['demi:4'],
+       q:'Que va-t-il lui arriver ?',
+       opts:[
+         {t:'Chaque H⁺ ajouté ensuite changera la charge : ses électrons deviendront faux', ok:true},
+         {t:'Rien : l\'ordre des lignes n\'a pas d\'importance', why:'Chaque H⁺ porte une charge. En ajouter après les électrons casse le bilan qu\'ils venaient de fermer.'},
+         {t:'Il trouvera quand même 5 électrons', why:'Ici, peut-être, s\'il a de la chance. Mais son bilan de charges n\'aura rien prouvé — sur le dichromate et ses 14 H⁺, la même méthode donne un n faux.'},
+         {t:'Il ne pourra plus placer l\'eau', why:'L\'eau se place toujours : elle est neutre. C\'est la charge qui devient fausse, pas l\'oxygène.'}],
+       ok:'<b>Les électrons ajustent la charge finale.</b> Tout ce qui est ajouté après eux — et H⁺ est chargé — défait cet ajustement. La méthode n\'est pas un rituel : chaque temps répare ce que le précédent a laissé, et les électrons ferment la marche.',
+       note:'L\'ordre eau → protons → électrons n\'est pas un rituel : chaque H⁺ change la charge, donc les électrons ferment la marche.'}
+    ],
+    final: {t:'Lis maintenant la demi-équation à voix haute',
+      html:E[3]+'<ol>'
+        +'<li><b>Les atomes et la charge se conservent</b> : c\'est la seule règle, tout le reste en découle.</li>'
+        +'<li><b>L\'eau</b> apporte l\'oxygène qui manque — elle est le solvant, elle est déjà là.</li>'
+        +'<li><b>Les protons</b> apportent l\'hydrogène en face — le milieu est acide.</li>'
+        +'<li><b>Les électrons</b> ferment la charge, en dernier, parce qu\'ils ne portent aucun atome.</li>'
+        +'<li><b>La variation du n.o.</b> doit redonner leur nombre : deux chemins, un seul résultat.</li>'
+        +'</ol><p>Les cinq temps du cours ne sont plus une liste : ce sont deux promesses tenues dans l\'ordre où elles peuvent l\'être.</p>'},
+    fig: function(i){
+      var k = i<=1 ? 0 : (i===2 ? 1 : (i===3 ? 2 : 3)), body='', cap='';
+      switch(i){
+        case 0: body=E[0]+lgCompte(CNT[0]); cap='Le point de départ : rien n\'est encore équilibré.'; break;
+        case 1: body=E[0]+lgCompte(CNT[0]); cap='Deux lignes à rendre égales : les atomes et la charge.'; break;
+        case 2: body=E[1]+lgCompte(CNT[1]); cap='Quatre molécules d\'eau : l\'oxygène est réglé, l\'hydrogène ne l\'est plus.'; break;
+        case 3: body=E[2]+lgCompte(CNT[2]); cap='Huit protons en face : les atomes sont tous en place, la charge non.'; break;
+        case 4: body=E[3]+lgCompte(CNT[3]); cap='Cinq électrons à gauche : la charge est fermée.'; break;
+        case 5: body=E[3]+lgSvg(96,'Le manganèse passe de plus sept à plus deux : cinq unités, cinq électrons',
+                  lgTxt(60,42,'+VII','lb','middle','font-weight:600;fill:var(--ox)')+lgArrow(90,38,230,38,'el',2)+lgTxt(160,28,'+ 5 e⁻','lb','middle','fill:var(--el);font-weight:600')
+                  +lgTxt(262,42,'+II','lb','middle','font-weight:600;fill:var(--rd)')+lgTxt(160,74,'5 = 5 : le bilan des charges et le n.o. sont d\'accord','lbs','middle'));
+                cap='Deux comptes indépendants, un seul nombre.'; break;
+        case 6: body=eq(L0+' + '+EL+'5 e<sup>−</sup>'+C+' + 8 H<sup>+</sup>', R0+' + 4 H<sub>2</sub>O')+lgCompte([['charge après les e⁻','−6','+2'],['charge après les H⁺','+2','+2']]);
+                cap='Électrons d\'abord, protons ensuite : la charge bouge encore après les électrons.'; break;
+        default: body=E[3]+lgCompte(CNT[3]); cap='Atomes et charge conservés, électrons en dernier, n.o. d\'accord.';
+      }
+      return {html:body, cap:cap};
+    }
+  };
+})();
+
+/* ── lecture · deux demi-équations, une équation — étape 5 ───────── */
+(function(){
+  var OX='<span class="ox">', RD='<span class="rd">', EL='<span class="el">', C='</span>';
+  function eq(g,d,lab){ return '<div class="lg-eq f" style="font-size:15.5px;line-height:2">'+g+' = '+d+(lab?' <span class="lgl">'+lab+'</span>':'')+'</div>'; }
+  var A1=eq(OX+'Fe<sup>3+</sup>'+C+' + '+EL+'3 e<sup>−</sup>'+C, RD+'Fe'+C, '· prend 3');
+  var B1=eq(RD+'H<sub>2</sub>'+C, OX+'2 H<sup>+</sup>'+C+' + '+EL+'2 e<sup>−</sup>'+C, '· donne 2');
+  var A2=eq(OX+'2 Fe<sup>3+</sup>'+C+' + '+EL+'6 e<sup>−</sup>'+C, RD+'2 Fe'+C, '· × 2');
+  var B2=eq(RD+'3 H<sub>2</sub>'+C, OX+'6 H<sup>+</sup>'+C+' + '+EL+'6 e<sup>−</sup>'+C, '· × 3');
+  var BIL=eq(OX+'2 Fe<sup>3+</sup>'+C+' + '+RD+'3 H<sub>2</sub>'+C, RD+'2 Fe'+C+' + '+OX+'6 H<sup>+</sup>'+C, '');
+  /* la balance des électrons : donnés à gauche, pris à droite */
+  function balance(d,p,ok){
+    var eqv=(d===p);
+    return lgSvg(120,'La balance des électrons : donnés d\'un côté, pris de l\'autre',
+      '<line x1="60" y1="70" x2="260" y2="70" style="stroke:var(--mut);stroke-width:1.6" transform="rotate('+(eqv?0:(d>p?-6:6))+' 160 70)"/>'
+      +'<line x1="160" y1="70" x2="160" y2="96" style="stroke:var(--mut);stroke-width:1.6"/><line x1="130" y1="96" x2="190" y2="96" style="stroke:var(--mut);stroke-width:1.6"/>'
+      +lgTxt(80,(eqv?56:(d>p?66:46)),d+' e⁻ donnés','lb','middle','fill:var(--el);font-weight:600')
+      +lgTxt(240,(eqv?56:(d>p?46:66)),p+' e⁻ pris','lb','middle','fill:var(--el);font-weight:600')
+      +lgTxt(160,114,eqv?'équilibre : on peut additionner':'déséquilibre : un électron resterait','lbs','middle'));
+  }
+  function basique(rows,cap){
+    return rows.map(function(r){ return eq(r[0],r[1],r[2]||''); }).join('')+(cap?'<p class="lg-cap" style="margin-top:2px">'+cap+'</p>':'');
+  }
+  LECTURES['bilan'] = {
+    titre: 'Deux demi-équations, une équation',
+    intro: {t:'Ce qu\'on va apprendre à lire',
+      setup:'<p>Additionner deux demi-équations, puis passer en milieu basique : c\'est demandé à chaque sujet, et c\'est mécanique. Six questions pour que la mécanique ait un sens — pourquoi un multiple commun, pourquoi on multiplie <b>tout</b>, et pourquoi on a le droit d\'ajouter des OH⁻ des deux côtés.</p>',
+      cta:'Première question'},
+    beats: [
+      {t:'Les électrons ne restent pas',
+       setup:'<p><span class="f">Fe<sup>3+</sup> + 3 e<sup>−</sup> = Fe</span> prend trois électrons. <span class="f">H<sub>2</sub> = 2 H<sup>+</sup> + 2 e<sup>−</sup></span> en donne deux. On veut les additionner pour obtenir l\'équation de la réaction.</p>',
+       uses:['couple:6'],
+       q:'Peut-on les additionner telles quelles ?',
+       opts:[
+         {t:'Non : trois pris, deux donnés — un électron resterait seul dans le bilan', ok:true},
+         {t:'Oui : 3 + 2 = 5 électrons échangés', why:'On n\'additionne pas des électrons pris et des électrons donnés. Trois pris, deux donnés : il en manque un, et il n\'a nulle part d\'où venir.'},
+         {t:'Oui, l\'électron en trop est négligeable', why:'Un électron qui reste, c\'est une charge créée de nulle part. L\'équation est fausse, pas approximative.'},
+         {t:'Non, parce que Fe³⁺ et H₂ ne réagissent pas', why:'C\'est une autre question — celle de l\'étape 13. Ici on ne parle que de l\'écriture.'}],
+       ok:'<b>Les électrons donnés doivent être exactement ceux pris.</b> Tant que les deux demi-équations n\'en échangent pas le même nombre, on ne peut pas les additionner : il en resterait dans le bilan, et un électron qui survit signe une équation fausse.',
+       note:'On n\'additionne deux demi-équations que si elles échangent le même nombre d\'électrons.'},
+
+      {t:'Le même total',
+       setup:'<p>Trois d\'un côté, deux de l\'autre. Il faut que les deux demi-équations en échangent autant.</p>',
+       uses:['bilan:1'],
+       q:'Quel est le plus petit nombre d\'électrons que les deux peuvent atteindre ?',
+       opts:[
+         {t:'6 : trois fois deux, ou deux fois trois', ok:true},
+         {t:'5 : trois plus deux', why:'5 n\'est ni un multiple de 3 ni un multiple de 2. Aucune des deux demi-équations ne peut l\'atteindre.'},
+         {t:'3 : le plus grand des deux', why:'La demi-équation à 2 électrons ne peut donner que 2, 4, 6… jamais 3.'},
+         {t:'12 : un multiple sûr', why:'12 marche, mais 6 marche aussi et il est plus petit. Avec 12, il faudrait simplifier tous les coefficients à la fin.'}],
+       ok:'<b>Le plus petit multiple commun.</b> Chaque demi-équation est multipliée par ce qu\'il lui faut pour l\'atteindre : la première par 2, la seconde par 3. Deux fois trois, trois fois deux : six électrons de chaque côté.',
+       note:'On cherche le plus petit multiple commun des deux nombres d\'électrons ; il fixe les deux multiplicateurs.'},
+
+      {t:'Multiplier tout',
+       setup:'<p>On multiplie <span class="f">Fe<sup>3+</sup> + 3 e<sup>−</sup> = Fe</span> par 2.</p>',
+       uses:['bilan:2'],
+       q:'Qu\'obtient-on ?',
+       opts:[
+         {t:'<span class="f">2 Fe<sup>3+</sup> + 6 e<sup>−</sup> = 2 Fe</span>', ok:true},
+         {t:'<span class="f">Fe<sup>3+</sup> + 6 e<sup>−</sup> = Fe</span>', why:'Seuls les électrons ont été doublés. Charges : +3 − 6 = −3 à gauche, 0 à droite. L\'équilibre est cassé.'},
+         {t:'<span class="f">Fe<sup>6+</sup> + 6 e<sup>−</sup> = Fe</span>', why:'On ne touche jamais à une formule. Deux ions à +III, c\'est 2 Fe³⁺ — pas un ion à +6, qui n\'existe pas.'},
+         {t:'<span class="f">2 Fe<sup>3+</sup> + 3 e<sup>−</sup> = 2 Fe</span>', why:'Deux ions à +III demandent six électrons pour devenir deux atomes neutres. Charges : +6 − 3 = +3 à gauche, 0 à droite.'}],
+       ok:'<b>× 2 signifie : tout, des deux côtés.</b> Les coefficients, y compris celui des électrons — jamais les indices d\'une formule ni la charge d\'un ion. Une demi-équation multipliée reste équilibrée ; une demi-équation retouchée ne l\'est plus.',
+       note:'Multiplier une demi-équation, c\'est multiplier tous ses coefficients, jamais les formules.'},
+
+      {t:'Le milieu basique, sans magie',
+       setup:'<p>Ton équation est équilibrée en milieu acide, avec 6 H⁺ à gauche. L\'énoncé demande le milieu basique : une solution basique n\'a presque pas de H⁺, elle a des OH⁻.</p>',
+       uses:['demi:1'],
+       q:'Que fait-on ?',
+       opts:[
+         {t:'On ajoute 6 OH⁻ des deux côtés : une égalité reste vraie quand on ajoute la même chose à ses deux membres', ok:true},
+         {t:'On remplace chaque H⁺ par un OH⁻', why:'H⁺ et OH⁻ ont des charges opposées : remplacer l\'un par l\'autre casse le bilan des charges de 2 par ion remplacé.'},
+         {t:'On ajoute 6 OH⁻ à gauche seulement, pour neutraliser les H⁺', why:'L\'égalité serait rompue : six charges négatives ajoutées d\'un seul côté. C\'est l\'erreur classique, et le bilan des charges la révèle aussitôt.'},
+         {t:'On refait tout l\'équilibrage avec des OH⁻ au lieu de H⁺', why:'Possible, mais long et piégeux. La méthode du cours part de l\'équation acide, déjà juste, et la transforme sans la casser.'}],
+       ok:'La justification est une règle de troisième : <b>ajouter la même quantité aux deux membres d\'une égalité la conserve.</b> Six OH⁻ de chaque côté, et l\'équation reste vraie — atomes et charges compris.',
+       note:'Ajouter la même chose aux deux membres d\'une équation la conserve : c\'est le passage en milieu basique.'},
+
+      {t:'Ce que deviennent les protons',
+       setup:'<p>À gauche, les 6 H⁺ et les 6 OH⁻ ajoutés se retrouvent côte à côte.</p>',
+       uses:['bilan:4'],
+       q:'Que se passe-t-il ?',
+       opts:[
+         {t:'Ils se combinent en 6 H₂O : un acide et une base font de l\'eau', ok:true},
+         {t:'Rien : ils coexistent dans l\'équation', why:'H⁺ + OH⁻ → H₂O, c\'est la neutralisation — immédiate et totale. Ils ne peuvent pas rester côte à côte.'},
+         {t:'Ils s\'annulent et disparaissent', why:'Ils ne disparaissent pas : ils forment de l\'eau, qui reste dans l\'équation — et qu\'on simplifiera peut-être avec celle de l\'autre côté.'},
+         {t:'Les OH⁻ de gauche passent à droite', why:'Ils restent où on les a mis. Ceux de droite, eux, restent des OH⁻ tels quels : ils n\'ont pas de H⁺ à rencontrer.'}],
+       ok:'<b>H⁺ + OH⁻ = H₂O.</b> Du côté des protons, les OH⁻ deviennent de l\'eau ; de l\'autre côté, ils restent des OH⁻. Il ne reste plus qu\'à simplifier l\'eau qui figure maintenant des deux côtés.',
+       note:'Du côté des H⁺, les OH⁻ ajoutés deviennent de l\'eau ; de l\'autre côté, ils restent tels quels.'},
+
+      {t:'La signature, et la preuve',
+       setup:'<p>Tu as fini : plus aucun H⁺, des OH⁻ d\'un côté, l\'eau simplifiée.</p>',
+       uses:['bilan:5','demi:1'],
+       q:'Qu\'est-ce qui prouve que l\'équation obtenue est juste ?',
+       opts:[
+         {t:'Le bilan des atomes et des charges, refait à la fin', ok:true},
+         {t:'L\'absence de H⁺ suffit', why:'C\'est la signature du milieu basique, pas la preuve de justesse. Une équation sans H⁺ peut très bien être fausse.'},
+         {t:'Le fait d\'avoir suivi la méthode', why:'La méthode réduit les erreurs, elle ne les exclut pas. Seul le bilan prouve.'},
+         {t:'Rien : une équation basique ne se vérifie pas', why:'Elle se vérifie exactement comme une équation acide : atomes élément par élément, charge des deux côtés.'}],
+       ok:'<b>L\'absence de H⁺ dit que tu es bien en milieu basique. La justesse, elle, se prouve comme toujours</b> : atomes élément par élément, charge des deux côtés. C\'est le même contrôle qu\'à l\'étape 4, et il ne se saute jamais.',
+       note:'Sans H⁺ on est en milieu basique ; juste, on l\'est quand atomes et charges se conservent — à revérifier.'}
+    ],
+    final: {t:'Lis maintenant une équation-bilan à voix haute',
+      html:BIL+'<ol>'
+        +'<li><b>Deux demi-équations</b>, une dans chaque sens : l\'une prend des électrons, l\'autre en donne.</li>'
+        +'<li><b>Le même nombre</b> : le plus petit multiple commun fixe les multiplicateurs, et on multiplie tout.</li>'
+        +'<li><b>On additionne</b> : les électrons pris sont les électrons donnés, ils disparaissent du bilan.</li>'
+        +'<li><b>Milieu basique</b> : autant de OH⁻ que de H⁺, des deux côtés — une égalité reste une égalité.</li>'
+        +'<li><b>H⁺ + OH⁻ = H₂O</b> du côté des protons, puis on simplifie l\'eau.</li>'
+        +'<li><b>On revérifie</b> atomes et charges. Sans H⁺, c\'est basique ; conservé, c\'est juste.</li>'
+        +'</ol><p>Ce que le cours donne en cinq lignes de méthode tient dans deux idées : les électrons ne restent pas, et une égalité supporte qu\'on ajoute la même chose des deux côtés.</p>'},
+    fig: function(i){
+      var body='', cap='';
+      switch(i){
+        case 0: case 1: body=A1+B1+balance(2,3); cap=i===0?'Deux demi-équations, et une balance qui penche.':'Trois pris, deux donnés : la balance penche, on n\'additionne pas.'; break;
+        case 2: body=A1+B1+balance(6,6); cap='Le plus petit total que les deux peuvent atteindre : six.'; break;
+        case 3: body=A2+B2+balance(6,6); cap='Tous les coefficients de chaque demi-équation, électrons compris.'; break;
+        case 4: body=basique([[OX+'2 Fe<sup>3+</sup>'+C+' + '+RD+'3 H<sub>2</sub>'+C+' + 6 OH<sup>−</sup>', RD+'2 Fe'+C+' + '+OX+'6 H<sup>+</sup>'+C+' + 6 OH<sup>−</sup>']],'six OH⁻ de chaque côté : l\'égalité tient toujours');
+                cap='On ajoute la même chose aux deux membres.'; break;
+        case 5: body=basique([[OX+'2 Fe<sup>3+</sup>'+C+' + '+RD+'3 H<sub>2</sub>'+C+' + 6 OH<sup>−</sup>', RD+'2 Fe'+C+' + 6 H<sub>2</sub>O']],'à droite, 6 H⁺ + 6 OH⁻ sont devenus 6 H₂O');
+                cap='Là où les protons rencontrent les OH⁻, ils font de l\'eau.'; break;
+        case 6: body=basique([[OX+'2 Fe<sup>3+</sup>'+C+' + '+RD+'3 H<sub>2</sub>'+C+' + 6 OH<sup>−</sup>', RD+'2 Fe'+C+' + 6 H<sub>2</sub>O']])+lgCompte([['Fe',2,2],['H','12','12'],['O',6,6],['charge','0','0']]);
+                cap='Plus de H⁺ : milieu basique. Atomes et charges conservés : juste.'; break;
+        default: body=A2+B2+BIL; cap='Six électrons pris, six donnés, aucun dans le bilan.';
+      }
+      return {html:body, cap:cap};
+    }
+  };
+})();
+
 /* ── lecture · lire la loi de Nernst — étape 12 ───────────────────── */
 (function(){
   var P=function(part,html){ return '<span class="lg-part" data-part="'+part+'">'+html+'</span>'; };
@@ -5396,7 +5981,7 @@ function lgDroite(o){
 
       {t:'Dans quel sens la correction pousse',
        setup:'<p>Un oxydant est une espèce qui <b>capte</b> les électrons, et le potentiel mesure la force avec laquelle le couple les capte. Maintenant on ajoute de l\'oxydant : <span class="f">[Fe<sup>3+</sup>]</span> passe de 1 à <b>10 mol·L⁻¹</b>, <span class="f">[Fe<sup>2+</sup>]</span> reste à 1.</p>',
-       uses:['nernst:1'],
+       uses:['nernst:1','couple:2'],
        q:'Que fait E ?',
        opts:[
          {t:'Il monte : avec plus d\'oxydant, le couple capte davantage', ok:true},
@@ -5420,7 +6005,7 @@ function lgDroite(o){
 
       {t:'Pourquoi on divise par n',
        setup:'<p>Pour <span class="f"><span class="ox">Fe<sup>3+</sup></span>/<span class="rd">Fe<sup>2+</sup></span></span>, la demi-équation échange <b>un</b> électron, et le palier vaut 0,06 V. Pour <span class="f"><span class="ox">Cu<sup>2+</sup></span>/<span class="rd">Cu</span></span>, elle en échange <b>deux</b>.</p>',
-       uses:['nernst:3'],
+       uses:['nernst:3','demi:4'],
        q:'Avec deux électrons, que vaut le palier pour un facteur 10 sur le rapport ?',
        opts:[
          {t:'0,03 V — la moitié', ok:true},
@@ -5443,7 +6028,7 @@ function lgDroite(o){
 
       {t:'H⁺ est un réactif comme un autre',
        setup:'<p><span class="f">MnO<sub>4</sub><sup>−</sup></span> + <span class="f">8 H<sup>+</sup></span> + <span class="f">5 e<sup>−</sup></span> = <span class="f">Mn<sup>2+</sup></span> + <span class="f">4 H<sub>2</sub>O</span>. Les protons sont à gauche, du côté de l\'oxydant, avec le coefficient 8.</p>',
-       uses:['nernst:5'],
+       uses:['nernst:5','demi:3'],
        q:'Où et comment <span class="f">[H<sup>+</sup>]</span> entre-t-il dans la loi ?',
        opts:[
          {t:'Au numérateur, à la puissance 8, à côté de <span class="f">[MnO<sub>4</sub><sup>−</sup>]</span>', ok:true},
