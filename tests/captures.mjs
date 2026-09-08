@@ -88,6 +88,17 @@ await shot('33-geste-equation',{ hash: 'e4', after: async p => { await p.click('
                                 await p.click('.entr[data-entr-for="2b"] .ent-mode[data-mode="eq"]');
                                 await p.evaluate(() => document.querySelector('.entr[data-entr-for="2b"]').scrollIntoView()); } });
 
+await shot('34-lecture',      { after: async p => { await p.evaluate(() => document.querySelector('.lecture[data-lecture="nernst"] [data-lg-go="3"]').click());
+                                await p.evaluate(() => document.querySelector('.lecture[data-lecture="nernst"]').scrollIntoView()); } });
+await shot('35-lecture-sombre',{ scheme: 'dark', after: async p => { await p.evaluate(() => document.querySelector('.lecture[data-lecture="nernst"] [data-lg-go="7"]').click());
+                                await p.evaluate(() => document.querySelector('.lecture[data-lecture="nernst"] [data-lg-opt="0"]').click());
+                                await p.evaluate(() => document.querySelector('.lecture[data-lecture="nernst"]').scrollIntoView()); } });
+await shot('36-lecture-mobile',{ w: 375, h: 900, after: async p => { await p.evaluate(() => document.querySelector('.lecture[data-lecture="nernst"] [data-lg-go="9"]').click());
+                                await p.evaluate(() => document.querySelector('.lecture[data-lecture="nernst"]').scrollIntoView()); } });
+await shot('37-registre',     { after: async p => { await p.evaluate(() => { const s = document.querySelector('.lecture[data-lecture="nernst"]'), L = window.__redox.LECTURES.nernst;
+                                for (const n of [1, 2]) { s.querySelector('[data-lg-go="' + n + '"]').click(); s.querySelector('[data-lg-opt="' + L.beats[n - 1].opts.findIndex(o => o.ok) + '"]').click(); } });
+                                await p.click('.dock .tab[data-tool="etabli"]'); } });
+
 await b.close();
 srv.close();
 console.log('captures dans ' + OUT);

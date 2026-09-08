@@ -255,23 +255,23 @@ table.tab{border-collapse:collapse;margin:0;font-size:14.5px;width:100%;min-widt
 /* ── figure ───────────────────────────────────────────────────────── */
 .fig{margin:22px 0;max-width:54em}
 .fig svg{display:block;width:100%;height:auto}
-.fig .cap{font-family:var(--sans);font-size:12.5px;color:var(--mut);margin-top:9px;line-height:1.5}
+.fig .cap,.lg-fig .cap{font-family:var(--sans);font-size:12.5px;color:var(--mut);margin-top:9px;line-height:1.5}
 .fig .cap b{color:var(--ink);font-weight:600}
 /* les jetons de trait, pour que les figures suivent le thème */
-.fig .ax{stroke:var(--mut);stroke-width:1}
-.fig .gr{stroke:var(--line);stroke-width:.6}
-.fig .fr2{stroke:var(--acc);stroke-width:1.7;fill:none}
-.fig .wl{stroke:var(--rd);stroke-width:1.4;fill:none;stroke-dasharray:5 3}
+.fig .ax,.lg-fig .ax{stroke:var(--mut);stroke-width:1}
+.fig .gr,.lg-fig .gr{stroke:var(--line);stroke-width:.6}
+.fig .fr2,.lg-fig .fr2{stroke:var(--acc);stroke-width:1.7;fill:none}
+.fig .wl,.lg-fig .wl{stroke:var(--rd);stroke-width:1.4;fill:none;stroke-dasharray:5 3}
 /* halo de papier sous chaque étiquette : elle reste lisible par-dessus un trait */
-.fig text{paint-order:stroke;stroke:var(--paper);stroke-width:3.2px;stroke-linejoin:round;stroke-linecap:round}
-.fig .mt{fill:var(--mut);font-family:var(--mono);font-size:9px;letter-spacing:.06em}
-.fig .lb{fill:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:11px}
-.fig .lbs{fill:var(--mut);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:10px}
-.fig .sp{fill:var(--acc);font-family:ui-serif,"New York",Charter,Georgia,serif;font-size:13px}
-.fig .wire{stroke:var(--ink);stroke-width:1.4;fill:none}
-.fig .glass{stroke:var(--mut);stroke-width:1.2;fill:none}
-.fig .sol{fill:var(--acc);opacity:.07}
-.fig .el2{stroke:var(--el);stroke-width:1.3;fill:none}
+.fig text,.lg-fig text{paint-order:stroke;stroke:var(--paper);stroke-width:3.2px;stroke-linejoin:round;stroke-linecap:round}
+.fig .mt,.lg-fig .mt{fill:var(--mut);font-family:var(--mono);font-size:9px;letter-spacing:.06em}
+.fig .lb,.lg-fig .lb{fill:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:11px}
+.fig .lbs,.lg-fig .lbs{fill:var(--mut);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:10px}
+.fig .sp,.lg-fig .sp{fill:var(--acc);font-family:ui-serif,"New York",Charter,Georgia,serif;font-size:13px}
+.fig .wire,.lg-fig .wire{stroke:var(--ink);stroke-width:1.4;fill:none}
+.fig .glass,.lg-fig .glass{stroke:var(--mut);stroke-width:1.2;fill:none}
+.fig .sol,.lg-fig .sol{fill:var(--acc);opacity:.07}
+.fig .el2,.lg-fig .el2{stroke:var(--el);stroke-width:1.3;fill:none}
 
 /* ── échelle verticale des potentiels ─────────────────────────────── */
 .ech{margin:18px 0;max-width:44em;font-size:14px}
@@ -569,6 +569,93 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
 .worked-answer summary{cursor:pointer;font:14px/1.5 var(--sans);color:var(--acc)}
 .checkpoint-block{margin:16px 0}
 
+/* ── Lectures guidées : une figure, une chaîne de questions, un registre ── */
+.lecture{margin:26px 0;border:1px solid var(--line);border-radius:9px;background:var(--paper);min-width:0}
+.lecture .lg-head{padding:14px 18px 12px;border-bottom:1px solid var(--line)}
+.lecture .lg-head .k{color:var(--acc);display:flex;gap:9px;align-items:baseline;flex-wrap:wrap;margin-bottom:6px}
+.lecture .lg-head .k .y{color:var(--mut);font-weight:400;margin-left:auto;letter-spacing:.06em}
+.lecture h3{font-family:var(--serif);font-size:1.12rem;font-weight:600;letter-spacing:-.01em;margin:0 0 10px}
+.lg-bar{display:flex;gap:2px;flex-wrap:wrap;align-items:flex-end}
+.lg-bar button{display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 2px 2px;border-radius:4px}
+.lg-bar .pip{display:block;width:20px;height:4px;border-radius:99px;background:var(--line)}
+.lg-bar .pip.done{background:var(--acc);opacity:.45}
+.lg-bar .pip.now{background:var(--ink);height:7px;margin:-1.5px 0}
+.lg-bar .n{font-family:var(--mono);font-size:9.5px;color:var(--mut);line-height:1}
+.lg-bar button[aria-current="step"] .n{color:var(--ink);font-weight:600}
+.lg-bar button:hover .pip{background:var(--mut)}
+.lg-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);align-items:start}
+.lg-fig{padding:16px 18px;border-right:1px solid var(--line);position:sticky;top:0;min-width:0}
+.lg-fig svg{display:block;width:100%;height:auto;margin-top:8px}
+.lg-fig .lg-eq{font-family:var(--serif);font-size:17px;line-height:2.4;text-align:center;overflow-x:auto;overflow-y:hidden;padding:2px 0}
+.lg-fig .fr{white-space:nowrap}
+.lg-part{border-radius:3px;padding:0 .12em;transition:background .25s,box-shadow .25s}
+.lg-part[data-on]{background:var(--soft);box-shadow:0 0 0 1.5px var(--acc)}
+.lg-cap{font-family:var(--sans);font-size:12px;color:var(--mut);line-height:1.5;margin:10px 0 0;text-align:center}
+.lg-ask{padding:16px 18px 18px;min-width:0}
+.lg-kick{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin:0 0 6px}
+.lg-ask h4{font-family:var(--serif);font-size:1.02rem;font-weight:600;margin:0 0 8px;letter-spacing:-.008em}
+.lg-setup{font-size:14.5px;line-height:1.55;color:var(--mut);margin:0 0 12px}
+.lg-setup b{color:var(--ink)}
+.lg-setup p{margin:0 0 8px;max-width:none;font-size:inherit}
+.lg-setup p:last-child{margin-bottom:0}
+.lg-uses{font-family:var(--sans);font-size:11.5px;color:var(--mut);margin:0 0 12px;line-height:1.5}
+.lg-uses a{color:var(--acc);text-decoration:none;border-bottom:1px solid var(--line)}
+.lg-uses a:hover{border-color:var(--acc)}
+.lg-q{font-family:var(--serif);font-size:15.5px;font-weight:600;margin:0 0 10px;line-height:1.5;text-wrap:pretty}
+.lg-opts{display:flex;flex-direction:column;gap:7px}
+.lg-opt{display:block;width:100%;text-align:left;border:1px solid var(--line);border-radius:7px;padding:9px 12px;font-family:var(--sans);font-size:13.5px;line-height:1.45}
+.lg-opt:hover:not([disabled]){border-color:var(--acc)}
+.lg-opt[disabled]{cursor:default}
+.lg-opt[data-state="good"]{border-color:var(--ok);color:var(--ok);font-weight:600}
+.lg-opt[data-state="bad"]{border-color:var(--mark);color:var(--mark-ink);opacity:.7}
+.lg-opt[data-state="dim"]{opacity:.45}
+.lg-fb{margin-top:12px;padding:2px 0 0 12px;border-left:2px solid var(--line);font-size:13.5px;line-height:1.55;color:var(--mut)}
+.lg-fb[hidden]{display:none}
+.lg-fb b{color:var(--ink)}
+.lg-fb .hd{display:block;font-weight:600;color:var(--ink);margin-bottom:3px}
+.lg-fb.good{border-color:var(--ok)}
+.lg-fb.good .hd{color:var(--ok)}
+.lg-fb.bad{border-color:var(--mark)}
+.lg-fb.bad .hd{color:var(--mark)}
+.lg-acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.lg-acts:empty{display:none}
+.lg-btn{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:6px 13px 7px;border-radius:99px;background:var(--acc);color:var(--on-acc);white-space:nowrap}
+.lg-btn.sec{background:none;color:var(--mut);border:1px solid var(--line)}
+.lg-btn.sec:hover{color:var(--acc);border-color:var(--acc)}
+.lg-btn[disabled]{opacity:.35;cursor:default}
+.lg-nav{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}
+.lg-nav .tag{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--ok);border:1px solid var(--line);border-radius:99px;padding:3px 9px}
+.lg-final ol{margin:8px 0 0;padding-left:0;list-style:none;counter-reset:lf}
+.lg-final li{counter-increment:lf;position:relative;padding:0 0 8px 28px;font-size:14.5px;line-height:1.5}
+.lg-final li::before{content:counter(lf);position:absolute;left:0;top:2px;width:18px;height:18px;border-radius:50%;border:1px solid var(--line);font-family:var(--mono);font-size:9.5px;color:var(--acc);text-align:center;line-height:18px}
+.lg-final p{font-size:14px;color:var(--mut);margin:6px 0 0;max-width:none}
+.lg-book{border-top:1px solid var(--line);padding:12px 18px 14px}
+.lg-book .k{margin-bottom:8px}
+.lg-book ol{margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:5px}
+.lg-book li{position:relative;padding-left:28px;font-family:var(--sans);font-size:13px;line-height:1.45}
+.lg-book li::before{content:attr(data-n);position:absolute;left:0;top:1px;width:18px;height:18px;border-radius:50%;border:1px solid var(--line);font-family:var(--mono);font-size:9px;color:var(--acc);text-align:center;line-height:17px}
+.lg-book .vide{color:var(--mut);font-style:italic;padding-left:0}
+.lg-book .vide::before{content:none}
+/* le registre global, dans la paillasse */
+.etabli{font-family:var(--sans);max-width:56em}
+.etabli .tot{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin:0 0 12px}
+.etabli .tot b{color:var(--acc)}
+.etabli .lec{margin:0 0 12px;padding-left:12px;border-left:2px solid var(--line)}
+.etabli .lec.plein{border-color:var(--acc)}
+.etabli .lec .t{font-size:12.5px;font-weight:600;margin:0 0 4px;max-width:none}
+.etabli .lec .t a{color:var(--ink);text-decoration:none}
+.etabli .lec .t a:hover{color:var(--acc)}
+.etabli .lec .t .e{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--acc);margin-right:7px;font-weight:400}
+.etabli .lec ol{margin:0;padding-left:0;list-style:none}
+.etabli .lec li{font-size:12.5px;line-height:1.45;padding:1px 0 1px 20px;position:relative}
+.etabli .lec li::before{content:attr(data-n);position:absolute;left:0;top:2px;font-family:var(--mono);font-size:9px;color:var(--acc)}
+.etabli .lec li.reste{color:var(--mut);font-style:italic}
+.etabli .lec li.reste::before{content:"·"}
+@media (max-width:900px){
+  .lg-body{grid-template-columns:minmax(0,1fr)}
+  .lg-fig{position:static;border-right:0;border-bottom:1px solid var(--line)}
+}
+
 @media print{
   html,body{height:auto;overflow:visible;background:#fff;color:#000;font-size:11pt}
   .rail,.nav,.scrim,.dockwrap,.nx,.skip{display:none!important}
@@ -582,6 +669,10 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
   .practice{background:none;break-inside:avoid;padding:12px 0;border:0;border-left:2px solid #999}
   .practice .practice-actions,.practice .practice-reset{display:none}
   .practice input{border:1px solid #999;background:none}
+  .lecture{break-inside:avoid}
+  .lg-bar,.lg-acts,.lg-nav,.lg-uses{display:none}
+  .lg-body{grid-template-columns:minmax(0,1fr)}
+  .lg-fig{position:static;border-right:0;border-bottom:1px solid #999}
 }
 
 </style>
@@ -817,6 +908,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
   <div class="def"><span class="k">Le <span class="f">pOH</span>, pour l'étape 14</span>
     <p>Exactement la même définition, sur l'autre ion : <span class="f">pOH = − <span class="op">log</span> [OH<sup>−</sup>]</span>. Et dans l'eau à 25 °C, les deux sont liés par une seule ligne :</p>
     <p style="text-align:center;font-size:17px;margin-top:10px"><span class="f">pH + pOH = 14</span></p>
+    <p>D'où vient ce 14 : dans l'eau à 25 °C, le produit <span class="f">[H<sup>+</sup>] · [OH<sup>−</sup>]</span> vaut toujours <span class="f">10<sup>−14</sup></span> — c'est une constante de l'eau, notée <span class="f">K<sub>e</sub></span>. On prend le log des deux côtés avec la règle de la section 3 : <span class="f"><span class="op">log</span> [H<sup>+</sup>] + <span class="op">log</span> [OH<sup>−</sup>] = −14</span>, c'est-à-dire <span class="f">− pH − pOH = −14</span>. On change tous les signes, et il reste <span class="f">pH + pOH = 14</span>. Rien à retenir de plus que <span class="f">K<sub>e</sub> = 10<sup>−14</sup></span>.</p>
     <p>C'est ce couple de formules qui transforme un produit de solubilité en <b>frontière verticale</b> du diagramme E-pH.</p></div>
 
   <h2>5 · Une droite, c'est <span class="f">y = a·x + b</span></h2>
@@ -1751,7 +1843,8 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
     <p>À l'<b>anode</b> se produit l'<b>oxydation</b> — deux mots qui commencent par une voyelle. À la <b>cathode</b> se produit la <b>réduction</b> — deux mots qui commencent par une consonne.</p></div>
 
   <div class="piege"><span class="k">Le signe n'est pas la définition</span>
-    <p>Dans une <b>pile</b>, l'anode est le pôle ⊖ et la cathode le pôle ⊕. Dans une <b>électrolyse</b>, c'est l'inverse. Ce qui définit l'anode et la cathode, c'est la <b>réaction</b> qui s'y produit, jamais le signe. Retiens la réaction, le signe s'en déduit.</p></div>
+    <p>Dans une <b>pile</b>, l'anode est le pôle ⊖ et la cathode le pôle ⊕. Dans une <b>électrolyse</b>, c'est l'inverse. Ce qui définit l'anode et la cathode, c'est la <b>réaction</b> qui s'y produit, jamais le signe. Retiens la réaction, le signe s'en déduit.</p>
+    <p>Et voici comment il s'en déduit. L'oxydation <b>produit</b> des électrons à l'anode ; ils s'y accumulent avant de partir dans le fil, et un excès d'électrons, c'est une borne négative. La cathode les <b>consomme</b> : elle en manque, elle est positive. En électrolyse, c'est le générateur qui impose les signes de l'extérieur, et la réaction suit.</p></div>
 
   <div class="piege"><span class="k">Électrons et courant vont en sens contraire</span>
     <p>Dans le fil, les électrons vont de l'anode vers la cathode, donc du ⊖ vers le ⊕. Le <b>courant conventionnel</b>, lui, va dans le sens opposé : du ⊕ vers le ⊖ dans le circuit extérieur. Sur un schéma, deux flèches, deux sens — c'est une question de cours qui tombe telle quelle.<button class="cp" type="button" data-cp="7-3" aria-expanded="false" aria-controls="q7-3">vérifier</button></p>
@@ -1776,7 +1869,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
     <span class="k">Geste 3a <span class="y">tombé en 2022, 2023 et 2025</span></span>
     <h3>Annoter un schéma de pile</h3>
     <ol>
-      <li><b>Le couple au E° le plus bas donne l'anode</b> : c'est le meilleur réducteur, il cède ses électrons.</li>
+      <li><b>Le couple au E° le plus bas donne l'anode</b> : c'est le meilleur réducteur, il cède ses électrons. L'énoncé donne les E° — un nombre par couple, qui les classe ; l'étape 11 dit d'où il vient.</li>
       <li><b>Anode = oxydation = pôle ⊖</b> ; cathode = réduction = pôle ⊕. Dans une pile, jamais l'inverse.</li>
       <li><b>Les électrons vont de l'anode vers la cathode</b> dans le fil.</li>
       <li><b>Le courant va en sens contraire</b> — c'est la convention, pas un choix.</li>
@@ -1862,6 +1955,9 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
       <button class="opt" data-ok="0" data-fb="Jamais, pour une pile qui débite.">Rien : une fem peut être négative</button>
       <div class="fb" role="status" aria-live="polite" hidden></div>
     </div></div>
+
+  <div class="def"><span class="k">Ce qu'il faut savoir de E° pour cette étape</span>
+    <p>Chaque couple porte un nombre, son <b>potentiel standard</b> <span class="f">E°</span>, en volts, que l'énoncé te donne. Il classe les couples : <b>plus E° est haut, plus l'oxydant du couple capte fort les électrons</b>. C'est tout ce dont la fem a besoin. D'où vient ce nombre, comment on le mesure, et pourquoi il vaut 0 pour l'hydrogène : c'est l'étape 11.</p></div>
 
   <div class="formula">
     <span class="k">Force électromotrice</span>
@@ -2093,6 +2189,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
 <fieldset hidden disabled data-answer="0.65" data-hint-one="Ajoute la correction à E°, et non au rapport." data-hint-two="0,77 + (−0,12)." data-success="Oui : E = 0,65 V, inférieur à E° comme prévu." data-errors="{}"><legend>Étape 4 sur 4</legend><label for="nernst-essai-3">Que vaut le potentiel E, en volts ?</label><input id="nernst-essai-3" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="nernst-essai-fb-3 nernst-essai-hint-3"><div class="practice-actions"><button class="go" type="submit">Vérifier cette étape</button><button type="button" class="practice-hint">Un indice</button></div><p class="practice-help" id="nernst-essai-hint-3" role="status" aria-live="polite" hidden></p><p class="practice-feedback" id="nernst-essai-fb-3" role="status" aria-live="polite" hidden></p></fieldset>
 <p class="practice-finish" role="status" aria-live="polite" hidden>Entraînement terminé. Tu peux refaire cet essai ou poursuivre le parcours.</p><button type="button" class="practice-reset" hidden>Recommencer cet entraînement</button></form>
 
+  <section class="lecture" data-lecture="nernst" aria-labelledby="lg-nernst-t"></section>
 
   <div class="chain">
     <div class="hd">Faisons-le en entier<br><span class="yr">Sujet 2024, exercice 3 — couple <span class="f"><span class="ox">HSO<sub>4</sub><sup>−</sup></span>/<span class="rd">SO<sub>2</sub></span></span>, les deux à 10<sup>−2</sup> mol·L⁻¹, <span class="f">pH = 3</span>, <span class="f">E° = 0,16 V</span></span></div>
@@ -3527,10 +3624,14 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
     <button class="tab" data-tool="ner" aria-pressed="false" aria-controls="panel">Calculateur Nernst</button>
     <button class="tab" data-tool="eph" aria-pressed="false" aria-controls="panel">Traceur E-pH</button>
     <button class="tab" data-tool="ti"  aria-pressed="false" aria-controls="panel">Vérifier mon calcul</button>
+    <button class="tab" data-tool="etabli" aria-pressed="false" aria-controls="panel">Ce qui est établi</button>
     <span class="hint">toujours accessible · pré-remplie avec le couple lu</span>
   </div>
 
   <div class="panel" id="panel" hidden>
+
+    <!-- ── le registre : la chaîne du raisonnement, lecture après lecture ── -->
+    <div data-pane="etabli" hidden><div class="etabli" id="etabli"></div></div>
 
     <!-- ── outil 1 · l'échelle des potentiels et la règle du γ ── -->
     <div data-pane="eqb" hidden>
@@ -3682,13 +3783,14 @@ var segs=$('#segs'), pos=$('#pos'), themeBtn=$('#theme'), navlist=$('#navlist'),
 
 /* ── état persisté ────────────────────────────────────────────────── */
 var LS='redox.v1';
-var S={theme:'auto', step:0, mode:'fil', tool:null, cp:{}, tools:{}, entr:{}, ann:'2025'};
+var S={theme:'auto', step:0, mode:'fil', tool:null, cp:{}, tools:{}, entr:{}, ann:'2025', lg:{}};
 try{
   var raw=localStorage.getItem(LS);
   if(raw){ var o=JSON.parse(raw); for(var k in S){ if(o[k]!=null) S[k]=o[k]; } }
 }catch(e){}
 if(typeof S.cp!=='object'||!S.cp) S.cp={};
 if(typeof S.tools!=='object'||!S.tools) S.tools={};
+if(typeof S.lg!=='object'||!S.lg) S.lg={};
 function save(){ try{ localStorage.setItem(LS,JSON.stringify(S)); }catch(e){} }
 
 /* ── thème : auto → clair → sombre ────────────────────────────────── */
@@ -4786,7 +4888,8 @@ GEN['3a'] = function(){
   var g = Math.random()<0.5 ? p.cat : p.an, d = (g===p.cat ? p.an : p.cat);
   return {
     q: 'On monte une pile avec une électrode de <span class="f rd" style="font-size:1.05em">'+g.rd+'</span> '
-      + 'à gauche et une électrode de <span class="f rd" style="font-size:1.05em">'+d.rd+'</span> à droite.',
+      + 'à gauche et une électrode de <span class="f rd" style="font-size:1.05em">'+d.rd+'</span> à droite.<br>'
+      + 'L\'énoncé donne E°(<span class="f">'+g.ox+'/'+g.rd+'</span>) = <b>'+fr(g.e0,2)+' V</b> et E°(<span class="f">'+d.ox+'/'+d.rd+'</span>) = <b>'+fr(d.e0,2)+' V</b>.',
     champs: [
       {k:'an', lab:'quelle électrode est l\'anode ?', type:'sel',
        opts:[['g',plainF(g.rd)+' — à gauche'],['d',plainF(d.rd)+' — à droite']]},
@@ -5029,13 +5132,413 @@ function toolsRestore(){
   drawGamma(); nerDraw(); tiDraw(); if(eqIn) eqDraw();
 }
 
+
+/* ── lectures guidées ──────────────────────────────────────────────
+   Une figure, une chaîne de questions où chacune s'appuie sur la
+   précédente, et un registre de ce qui est établi. Chaque bonne réponse
+   ajoute une ligne au registre de la lecture, et au registre global de
+   la paillasse : c'est la chaîne du raisonnement, rendue visible.
+   Une lecture = {titre, intro, beats[], final, fig(i)}. Un fait établi
+   porte l'identifiant « lecture:numéro » ; un beat peut déclarer les
+   faits sur lesquels il s'appuie (uses), et un test vérifie qu'ils sont
+   tous établis plus tôt dans le fil.                                 */
+var LECTURES = {};
+var LG_ORDER = [];
+
+function lgState(id){
+  var n=LECTURES[id].beats.length, st=S.lg[id];
+  if(!st||!st.d||st.d.length!==n){
+    st=S.lg[id]={i:0,d:[],w:[],g:[]};
+    for(var k=0;k<n;k++){ st.d.push(false); st.w.push([]); st.g.push(false); }
+  }
+  if(typeof st.i!=='number') st.i=0;
+  return st;
+}
+function lgFaits(id){
+  var L=LECTURES[id], st=lgState(id), out=[];
+  L.beats.forEach(function(b,k){ if(st.d[k]) out.push({n:k+1, k:k, txt:b.note}); });
+  return out;
+}
+function lgSection(id){ return document.querySelector('.lecture[data-lecture="'+id+'"]'); }
+function lgEtape(id){
+  var sec=lgSection(id), art=sec&&sec.closest('article.step');
+  return art ? STEPS.indexOf(art) : -1;
+}
+/* « lecture:3 » → {id, k, note, etape} */
+function lgFait(ref){
+  var m=/^([a-z0-9-]+):(\d+)$/.exec(ref||''); if(!m||!LECTURES[m[1]]) return null;
+  var L=LECTURES[m[1]], k=parseInt(m[2],10)-1; if(!L.beats[k]) return null;
+  return {id:m[1], k:k, note:L.beats[k].note, etape:lgEtape(m[1]), titre:L.titre};
+}
+
+function lgPip(id, pos, label, aria, st){
+  var n=LECTURES[id].beats.length, cur=(st.i===pos);
+  var cls = cur ? 'now' : ((pos>=1&&pos<=n&&st.d[pos-1]) ? 'done' : '');
+  return '<button type="button" data-lg-go="'+pos+'"'+(cur?' aria-current="step"':'')+' aria-label="'+aria+'">'
+       + '<span class="pip '+cls+'"></span><span class="n">'+label+'</span></button>';
+}
+
+function lgRender(id){
+  var L=LECTURES[id], sec=lgSection(id); if(!sec) return;
+  var st=lgState(id), n=L.beats.length, i=st.i;
+  var faits=lgFaits(id);
+  var h='<div class="lg-head"><span class="k">Lecture guidée <span class="y">'+n+' questions · '
+       +faits.length+' établie'+(faits.length>1?'s':'')+'</span></span>'
+       +'<h3 id="lg-'+id+'-t">'+L.titre+'</h3><div class="lg-bar" role="group" aria-label="Progression de la lecture">';
+  h+=lgPip(id,0,'○','point de départ',st);
+  for(var k=0;k<n;k++) h+=lgPip(id,k+1,String(k+1),'question '+(k+1),st);
+  h+=lgPip(id,n+1,'∑','bilan',st);
+  h+='</div></div>';
+
+  /* la figure, puis la question */
+  var figHtml='', cap='';
+  try{ var f=L.fig(i,{st:st,faits:faits}); figHtml=f.html||''; cap=f.cap||''; }catch(e){ figHtml=''; }
+  h+='<div class="lg-body"><div class="lg-fig">'+figHtml+(cap?'<p class="lg-cap">'+cap+'</p>':'')+'</div>';
+  h+='<div class="lg-ask">';
+
+  if(i===0){
+    h+='<p class="lg-kick">'+(L.intro.k||'point de départ')+'</p><h4>'+L.intro.t+'</h4><div class="lg-setup">'+L.intro.setup+'</div>'
+     +'<div class="lg-nav"><span></span><button type="button" class="lg-btn" data-lg-go="1">'+(L.intro.cta||'Première question')+'</button></div>';
+  }else if(i>n){
+    h+='<p class="lg-kick">terminé</p><h4>'+L.final.t+'</h4><div class="lg-final">'+L.final.html+'</div>'
+     +'<div class="lg-acts"><button type="button" class="lg-btn sec" data-lg-reset="1">Tout recommencer</button></div>'
+     +'<div class="lg-nav"><button type="button" class="lg-btn sec" data-lg-go="'+n+'">‹ Précédente</button><span></span></div>';
+  }else{
+    var b=L.beats[i-1], k2=i-1, fini=st.d[k2];
+    h+='<p class="lg-kick">'+(b.k||('question '+i))+'</p><h4>'+b.t+'</h4>';
+    if(b.setup) h+='<div class="lg-setup">'+b.setup+'</div>';
+    if(b.uses&&b.uses.length){
+      var refs=b.uses.map(function(r){ var f=lgFait(r); if(!f) return '';
+        return f.id===id ? '<span>'+f.note+'</span>' : '<a href="#e'+f.etape+'">'+f.note+'</a>'; }).filter(Boolean);
+      if(refs.length) h+='<p class="lg-uses">S\'appuie sur · '+refs.join(' · ')+'</p>';
+    }
+    h+='<p class="lg-q">'+b.q+'</p><div class="lg-opts">';
+    b.opts.forEach(function(o,j){
+      var state='';
+      if(fini){ state = o.ok ? 'good' : (st.w[k2].indexOf(j)>=0 ? 'bad' : 'dim'); }
+      else if(st.w[k2].indexOf(j)>=0) state='bad';
+      h+='<button type="button" class="lg-opt" data-lg-opt="'+j+'"'+(state?' data-state="'+state+'"':'')+((state==='bad'||fini)?' disabled':'')+'>'+o.t+'</button>';
+    });
+    h+='</div>';
+    var fb='';
+    if(fini) fb = st.g[k2] ? '<span class="hd">La réponse :</span>'+b.ok : '<span class="hd">Oui.</span>'+b.ok;
+    else if(st.w[k2].length){
+      var last=b.opts[st.w[k2][st.w[k2].length-1]];
+      fb='<span class="hd">Pas celle-là.</span>'+(last.why||'')+'<br><br>Réessaie, tu as encore le choix.';
+    }
+    h+='<div class="lg-fb'+(fini?(st.g[k2]?'':' good'):(fb?' bad':''))+'"'+(fb?'':' hidden')+' role="status" aria-live="polite">'+fb+'</div>';
+    h+='<div class="lg-acts">'+((!fini&&st.w[k2].length)?'<button type="button" class="lg-btn sec" data-lg-giveup="1">Donne-moi la réponse</button>':'')+'</div>';
+    h+='<div class="lg-nav"><button type="button" class="lg-btn sec" data-lg-go="'+(i-1)+'">‹ Précédente</button>'
+     +(fini?'<span class="tag">établi</span>':'<span></span>')
+     +'<button type="button" class="lg-btn'+(fini?'':' sec')+'" data-lg-go="'+(i+1)+'"'+(fini?'':' disabled')+'>'+(i===n?'Voir le bilan':'Suivante ›')+'</button></div>';
+  }
+  h+='</div></div>';
+
+  /* le registre de la lecture */
+  h+='<div class="lg-book"><span class="k">Ce qui est établi</span><ol>';
+  if(!faits.length) h+='<li class="vide">Rien encore. Chaque bonne réponse ajoutera une ligne ici.</li>';
+  faits.forEach(function(f){ h+='<li data-n="'+f.n+'">'+f.txt+'</li>'; });
+  h+='</ol></div>';
+  sec.innerHTML=h;
+  paintEtabli();
+}
+
+function lgGo(id,pos){
+  var st=lgState(id), n=LECTURES[id].beats.length;
+  st.i=Math.max(0,Math.min(n+1,pos)); save(); lgRender(id);
+  var sec=lgSection(id); if(sec){ var top=sec.getBoundingClientRect().top-read.getBoundingClientRect().top+read.scrollTop-12; if(read.scrollTop>top) read.scrollTop=top; }
+}
+function lgAnswer(id,j){
+  var st=lgState(id), k=st.i-1, b=LECTURES[id].beats[k]; if(!b||st.d[k]) return;
+  if(b.opts[j].ok){ st.d[k]=true; st.g[k]=false; }
+  else{
+    if(st.w[k].indexOf(j)<0) st.w[k].push(j);
+    if(st.w[k].length>=3){ st.d[k]=true; st.g[k]=true; }
+  }
+  save(); lgRender(id);
+}
+function lgGiveup(id){
+  var st=lgState(id), k=st.i-1; if(k<0||st.d[k]) return;
+  st.d[k]=true; st.g[k]=true; save(); lgRender(id);
+}
+function lgReset(id){
+  var st=lgState(id);
+  for(var k=0;k<st.d.length;k++){ st.d[k]=false; st.w[k]=[]; st.g[k]=false; }
+  st.i=0; save(); lgRender(id);
+}
+document.addEventListener('click',function(ev){
+  var t=ev.target.closest ? ev.target.closest('[data-lg-go],[data-lg-opt],[data-lg-giveup],[data-lg-reset]') : null;
+  if(!t) return;
+  var sec=t.closest('.lecture'); if(!sec) return;
+  var id=sec.dataset.lecture;
+  if(t.hasAttribute('data-lg-go')){ if(!t.disabled) lgGo(id, parseInt(t.getAttribute('data-lg-go'),10)); }
+  else if(t.hasAttribute('data-lg-opt')){ if(!t.disabled) lgAnswer(id, parseInt(t.getAttribute('data-lg-opt'),10)); }
+  else if(t.hasAttribute('data-lg-giveup')) lgGiveup(id);
+  else if(t.hasAttribute('data-lg-reset')) lgReset(id);
+});
+document.addEventListener('keydown',function(e){
+  if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight') return;
+  if(e.target&&/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+  var sec=e.target&&e.target.closest ? e.target.closest('.lecture') : null; if(!sec) return;
+  var id=sec.dataset.lecture, st=lgState(id), n=LECTURES[id].beats.length;
+  if(e.key==='ArrowLeft'&&st.i>0){ e.preventDefault(); lgGo(id,st.i-1); }
+  if(e.key==='ArrowRight'&&st.i<=n&&(st.i===0||st.d[st.i-1])){ e.preventDefault(); lgGo(id,st.i+1); }
+});
+
+/* le registre global : chaque lecture dans l'ordre du fil, ses faits
+   établis en clair, et le compte de ce qui reste                      */
+function paintEtabli(){
+  var box=$('#etabli'); if(!box) return;
+  var tot=0, ok=0, h='', e1=-1, e2=-1;
+  LG_ORDER.forEach(function(id){
+    var L=LECTURES[id], n=L.beats.length, faits=lgFaits(id), ei=lgEtape(id);
+    if(e1<0||ei<e1) e1=ei; if(ei>e2) e2=ei;
+    tot+=n; ok+=faits.length;
+    h+='<div class="lec'+(faits.length===n?' plein':'')+'"><p class="t"><span class="e">étape '+ei+'</span><a href="#e'+ei+'">'+L.titre+'</a></p><ol>';
+    faits.forEach(function(f){ h+='<li data-n="'+f.n+'">'+f.txt+'</li>'; });
+    var reste=n-faits.length;
+    if(reste) h+='<li class="reste">'+reste+' fait'+(reste>1?'s':'')+' encore à établir</li>';
+    h+='</ol></div>';
+  });
+  box.innerHTML='<p class="tot"><b>'+ok+'</b> fait'+(ok>1?'s':'')+' établi'+(ok>1?'s':'')+' sur '+tot
+    +' · la chaîne du raisonnement, de l\'étape '+e1+' à l\'étape '+e2+'</p>'+h;
+}
+
+/* ── les figures partagées ─────────────────────────────────────────
+   Tout en Unicode dans le SVG : ni <sub> ni <sup> n'y sont permis.   */
+function lgEsc(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+/* une échelle verticale de potentiels : marks = [{v, lab, cls, big}], fleches = [[v1,v2,lab]] */
+function lgEchelle(o){
+  var lo=o.lo, hi=o.hi, H=o.h||150, top=14, bot=H-26, x=64, hasF=(o.fleches||[]).length>0;
+  function y(v){ return bot-(v-lo)/(hi-lo)*(bot-top); }
+  var s='<svg viewBox="0 0 320 '+H+'" role="img" aria-label="'+lgEsc(o.aria||'Échelle des potentiels')+'">';
+  s+='<line class="ax" x1="'+x+'" y1="'+top+'" x2="'+x+'" y2="'+bot+'"/>';
+  var step=o.step||0.05;
+  for(var v=Math.ceil(lo/step-1e-9)*step; v<=hi+1e-9; v+=step){
+    var yy=y(v); s+='<line class="ax" x1="'+(x-4)+'" y1="'+yy.toFixed(1)+'" x2="'+x+'" y2="'+yy.toFixed(1)+'"/>'
+      +'<text class="mt" x="'+(x-8)+'" y="'+(yy+3).toFixed(1)+'" text-anchor="end">'+fr(v,2)+'</text>';
+  }
+  s+='<text class="mt" x="'+x+'" y="'+(H-7)+'" text-anchor="middle">E en volts</text>';
+  (o.fleches||[]).forEach(function(f){
+    var y1=y(f[0]), y2=y(f[1]), xx=x+11, d=(y2<y1?1:-1);
+    s+='<line class="el2" x1="'+xx+'" y1="'+y1.toFixed(1)+'" x2="'+xx+'" y2="'+(y2+d*5).toFixed(1)+'"/>'
+      +'<path style="fill:var(--el)" d="M'+(xx-3.5)+' '+(y2+d*6).toFixed(1)+' L'+xx+' '+y2.toFixed(1)+' L'+(xx+3.5)+' '+(y2+d*6).toFixed(1)+' Z"/>';
+  });
+  (o.marks||[]).forEach(function(m){
+    var yy=y(m.v), lx=x+(hasF?22:12);
+    s+='<circle cx="'+x+'" cy="'+yy.toFixed(1)+'" r="'+(m.big?4.5:3.2)+'" style="fill:var(--'+(m.cls||'acc')+')"/>';
+    s+='<text class="'+(m.big?'lb':'lbs')+'" x="'+lx+'" y="'+(yy+3.5).toFixed(1)+'"'+(m.big?' style="font-weight:600"':'')+'>'+lgEsc(m.lab)+'</text>';
+  });
+  return s+'</svg>';
+}
+/* une droite E = b + a·pH dans le plan, avec ses deux points de tracé */
+function lgDroite(o){
+  var W=320, H=o.h||170, L=44, R=10, T=14, B=30;
+  var pxX=function(ph){ return L+ph/14*(W-L-R); }, pxY=function(E){ return T+(o.hi-E)/(o.hi-o.lo)*(H-T-B); };
+  var s='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+lgEsc(o.aria||'Une droite E en fonction du pH')+'">';
+  s+='<line class="ax" x1="'+L+'" y1="'+T+'" x2="'+L+'" y2="'+(H-B)+'"/><line class="ax" x1="'+L+'" y1="'+(H-B)+'" x2="'+(W-R)+'" y2="'+(H-B)+'"/>';
+  [0,7,14].forEach(function(p){ s+='<text class="mt" x="'+pxX(p)+'" y="'+(H-B+12)+'" text-anchor="middle">'+p+'</text>'; });
+  s+='<text class="mt" x="'+(W-R)+'" y="'+(H-4)+'" text-anchor="end">pH</text>';
+  [o.lo,o.hi].forEach(function(E){ s+='<text class="mt" x="'+(L-5)+'" y="'+(pxY(E)+3)+'" text-anchor="end">'+fr(E,2)+'</text>'; });
+  (o.droites||[]).forEach(function(d){
+    var E0=d.b, E14=d.b+d.a*14;
+    s+='<line class="fr2" x1="'+pxX(0)+'" y1="'+pxY(E0).toFixed(1)+'" x2="'+pxX(14)+'" y2="'+pxY(E14).toFixed(1)+'"'+(d.dash?' style="stroke-dasharray:5 3;opacity:.55"':'')+'/>';
+    if(d.pts){
+      s+='<circle cx="'+pxX(0)+'" cy="'+pxY(E0).toFixed(1)+'" r="4" style="fill:var(--acc)"/><circle cx="'+pxX(14)+'" cy="'+pxY(E14).toFixed(1)+'" r="4" style="fill:var(--acc)"/>';
+      s+='<text class="lbs" x="'+(pxX(0)+8)+'" y="'+(pxY(E0)+(E0>o.lo+(o.hi-o.lo)*0.85?14:-7)).toFixed(1)+'">pH 0 : '+fr(E0,3)+' V</text>';
+      s+='<text class="lbs" x="'+(pxX(14)-8)+'" y="'+(pxY(E14)-8).toFixed(1)+'" text-anchor="end">pH 14 : '+fr(E14,3)+' V</text>';
+    }
+    if(d.lab) s+='<text class="sp" x="'+pxX(8)+'" y="'+(pxY(d.b+d.a*8)-16).toFixed(1)+'" text-anchor="middle">'+lgEsc(d.lab)+'</text>';
+  });
+  (o.points||[]).forEach(function(p){
+    s+='<circle cx="'+pxX(p.ph)+'" cy="'+pxY(p.E).toFixed(1)+'" r="4.5" style="fill:var(--'+(p.cls||'el')+')"/>'
+      +'<text class="lbs" x="'+(pxX(p.ph)+8)+'" y="'+(pxY(p.E)+(p.dy||-6)).toFixed(1)+'">'+lgEsc(p.lab)+'</text>';
+  });
+  return s+'</svg>';
+}
+
+/* ── lecture · lire la loi de Nernst — étape 12 ───────────────────── */
+(function(){
+  var P=function(part,html){ return '<span class="lg-part" data-part="'+part+'">'+html+'</span>'; };
+  var FR=function(n,d){ return '<span class="fr"><span class="n">'+n+'</span><span class="d">'+d+'</span></span>'; };
+  var OX='<span class="ox">', RD='<span class="rd">', C='</span>';
+  function eqGen(on){
+    var h='<div class="lg-eq f">'
+      +P('E','E')+' = '+P('E0','E°')+' + '+P('coef',FR('0,06','n'))+' · '
+      +P('log','<span class="op">log</span> '+FR(P('ox','[Ox]<sup>x</sup>')+' · '+P('h','[H<sup>+</sup>]<sup>h</sup>'), P('red','[Red]<sup>y</sup>')))
+      +'</div>';
+    (on||[]).forEach(function(p){ h=h.replace('data-part="'+p+'"','data-part="'+p+'" data-on=""'); });
+    return h;
+  }
+  var FE  = '<div class="lg-eq f" style="font-size:15px;line-height:2.2">E = 0,77 + 0,06 · <span class="op">log</span> '+FR(OX+'[Fe<sup>3+</sup>]'+C, RD+'[Fe<sup>2+</sup>]'+C)+'</div>';
+  var CR  = '<div class="lg-eq f" style="font-size:15px;line-height:2.2">E = 1,33 + '+FR('0,06','6')+' · <span class="op">log</span> '+FR(OX+'[Cr<sub>2</sub>O<sub>7</sub><sup>2−</sup>]'+C+' · [H<sup>+</sup>]<sup>14</sup>', RD+'[Cr<sup>3+</sup>]<sup>2</sup>'+C)+'</div>';
+  var MN  = '<div class="lg-eq f" style="font-size:15px;line-height:2.2">E = 1,51 + '+FR('0,06','5')+' · <span class="op">log</span> '+FR(OX+'[MnO<sub>4</sub><sup>−</sup>]'+C+' · [H<sup>+</sup>]<sup>8</sup>', RD+'[Mn<sup>2+</sup>]'+C)+'</div>';
+  var MN2 = '<div class="lg-eq f" style="font-size:15px;line-height:2.2">E = 1,51 + 0,012 · <span class="op">log</span> '+FR(OX+'[MnO<sub>4</sub><sup>−</sup>]'+C, RD+'[Mn<sup>2+</sup>]'+C)+' <b>− 0,096 · pH</b></div>';
+  var MN3 = '<div class="lg-eq f" style="font-size:15px;line-height:2.2">E = 1,486 − 0,096 · pH</div>';
+
+  LECTURES['nernst'] = {
+    titre: 'Lire la loi de Nernst',
+    intro: {t:'Ce qu\'on va apprendre à lire',
+      setup:'<p>Tu viens de faire le calcul, quatre maillons de suite. Cette lecture ne le refait pas : elle te fait dire ce que chaque morceau de la ligne veut dire, pour que tu n\'aies plus à la retenir — seulement à la relire.</p>'
+       +'<p>Neuf questions. Chaque bonne réponse ajoute une ligne à <b>ce qui est établi</b>, en bas du bloc et dans la paillasse. À la fin, la loi de Nernst se lit comme une phrase.</p>',
+      cta:'Première question'},
+    beats: [
+      {t:'Pourquoi E° est dedans',
+       setup:'<p>Tu prépares une solution du couple <span class="f"><span class="ox">Fe<sup>3+</sup></span>/<span class="rd">Fe<sup>2+</sup></span></span> où les deux ions sont exactement à <b>1 mol·L⁻¹</b> chacun. Tu regardes la ligne, morceau par morceau.</p>',
+       q:'Que vaut le logarithme, et que vaut E ?',
+       opts:[
+         {t:'Le log vaut 0, donc E = E°', ok:true},
+         {t:'Le log vaut 1, donc E = E° + 0,06', why:'Le rapport de deux concentrations égales vaut 1, et 1 s\'écrit 10⁰ : son log est l\'exposant, zéro. C\'est le cas de l\'étape 0, section 2.'},
+         {t:'On ne peut pas savoir sans connaître n', why:'n multiplie un log qui vaut zéro. Zéro fois n\'importe quoi reste zéro : n n\'a rien à dire ici.'},
+         {t:'E vaut 0, puisque le log vaut 0', why:'Le log vaut bien zéro, mais il est <b>ajouté</b> à E°, pas multiplié avec. Il reste E°.'}],
+       ok:'<b>E° est le point de départ</b> : la valeur de E quand la correction ne corrige rien. Tout le reste de la ligne est un décalage autour de E° — et à 1 mol·L⁻¹, ce décalage vaut zéro. C\'est la définition même des conditions standard, lue dans la formule.',
+       note:'E° est le point de départ : E dans les conditions standard, quand la correction vaut zéro.'},
+
+      {t:'Dans quel sens la correction pousse',
+       setup:'<p>Un oxydant est une espèce qui <b>capte</b> les électrons, et le potentiel mesure la force avec laquelle le couple les capte. Maintenant on ajoute de l\'oxydant : <span class="f">[Fe<sup>3+</sup>]</span> passe de 1 à <b>10 mol·L⁻¹</b>, <span class="f">[Fe<sup>2+</sup>]</span> reste à 1.</p>',
+       uses:['nernst:1'],
+       q:'Que fait E ?',
+       opts:[
+         {t:'Il monte : avec plus d\'oxydant, le couple capte davantage', ok:true},
+         {t:'Il descend', why:'Davantage d\'espèces qui captent des électrons, ce n\'est pas une traction plus faible. Regarde le rapport : 10/1 est plus grand que 1, son log est positif, la correction s\'ajoute.'},
+         {t:'Il ne bouge pas : E° est une constante', why:'E° est constant, oui. E ne l\'est pas — c\'est toute la raison d\'être de la loi.'},
+         {t:'Il devient négatif', why:'Le signe de E n\'a rien à voir avec le sens de la variation. E part de 0,77 V et se déplace un peu.'}],
+       ok:'<b>Plus d\'oxydant, E monte.</b> Le log le dit : log(10/1) = 1, positif, la correction s\'ajoute. Et symétriquement, plus de réducteur fait <b>descendre</b> E — c\'est pour ça que [Red] est en bas de la fraction : il agrandit le dénominateur, le rapport diminue, le log devient négatif.',
+       note:'Plus d\'oxydant fait monter E, plus de réducteur le fait descendre : c\'est le sens de la fraction.'},
+
+      {t:'Pourquoi un logarithme',
+       setup:'<p>Trois solutions du même couple, avec un rapport <span class="f">[Fe<sup>3+</sup>]/[Fe<sup>2+</sup>]</span> de <b>1</b>, puis <b>10</b>, puis <b>100</b>. Le voltmètre donne <b>0,77 V</b>, <b>0,83 V</b>, <b>0,89 V</b>.</p>',
+       uses:['nernst:2'],
+       q:'Que se passe-t-il chaque fois que le rapport est multiplié par 10 ?',
+       opts:[
+         {t:'E gagne toujours le même écart, 0,06 V', ok:true},
+         {t:'E est multiplié par 10', why:'0,77 × 10 ferait 7,7 V. Regarde les trois nombres : ils avancent par petits pas égaux.'},
+         {t:'E gagne de plus en plus à chaque fois', why:'De 0,77 à 0,83 : 0,06. De 0,83 à 0,89 : 0,06 encore. Le pas ne grandit pas.'},
+         {t:'E gagne de moins en moins', why:'Le pas est le même les deux fois, 0,06 V. Il ne rétrécit pas.'}],
+       ok:'Un même <b>facteur</b> sur le rapport donne un même <b>écart</b> sur E. Transformer une multiplication en addition, c\'est exactement ce que fait un logarithme — c\'est sa définition, étape 0. Voilà pourquoi il y en a un dans la loi : la chimie répond au rapport <b>par paliers</b>, et le log compte les paliers.',
+       note:'×10 sur le rapport donne +0,06 V sur E : la réponse est par paliers, et le log compte les paliers.'},
+
+      {t:'Pourquoi on divise par n',
+       setup:'<p>Pour <span class="f"><span class="ox">Fe<sup>3+</sup></span>/<span class="rd">Fe<sup>2+</sup></span></span>, la demi-équation échange <b>un</b> électron, et le palier vaut 0,06 V. Pour <span class="f"><span class="ox">Cu<sup>2+</sup></span>/<span class="rd">Cu</span></span>, elle en échange <b>deux</b>.</p>',
+       uses:['nernst:3'],
+       q:'Avec deux électrons, que vaut le palier pour un facteur 10 sur le rapport ?',
+       opts:[
+         {t:'0,03 V — la moitié', ok:true},
+         {t:'0,12 V — le double', why:'Plus d\'électrons ne rend pas le couple plus sensible : les deux électrons se partagent la même marche, chacun n\'en fait que la moitié.'},
+         {t:'0,06 V — le même', why:'Alors n ne servirait à rien dans la formule. Il y est justement parce que le palier en dépend.'},
+         {t:'Cela dépend de E°', why:'E° fixe le point de départ, pas la hauteur des paliers. Deux couples de même n ont les mêmes paliers, quel que soit leur E°.'}],
+       ok:'<b>Le palier vaut 0,06 divisé par n.</b> Plus le couple échange d\'électrons, plus il faut de concentration pour déplacer E. Ce n vient de la demi-équation de l\'étape 4, et de nulle part ailleurs — c\'est pour ça que l\'équilibrer est toujours le premier geste.',
+       note:'Le palier vaut 0,06/n : n électrons se partagent la même marche.'},
+
+      {t:'D\'où viennent les exposants',
+       setup:'<p>Dans le log, chaque concentration est élevée à la puissance de son <b>coefficient</b> dans la demi-équation. Pour <span class="f">Cl<sub>2</sub> + 2 e<sup>−</sup> = 2 Cl<sup>−</sup></span>, on écrit <span class="f">[Cl<sub>2</sub>]</span> en haut et <span class="f">[Cl<sup>−</sup>]<sup>2</sup></span> en bas.</p>',
+       q:'Pour <span class="f">Cr<sub>2</sub>O<sub>7</sub><sup>2−</sup></span> + <span class="f">14 H<sup>+</sup></span> + <span class="f">6 e<sup>−</sup></span> = <span class="f">2 Cr<sup>3+</sup></span> + <span class="f">7 H<sub>2</sub>O</span>, quel est le dénominateur du log ?',
+       opts:[
+         {t:'<span class="f">[Cr<sup>3+</sup>]<sup>2</sup></span>', ok:true},
+         {t:'<span class="f">[Cr<sup>3+</sup>]</span>', why:'Le 2 devant Cr³⁺ ne disparaît pas : il devient un exposant sur la concentration.'},
+         {t:'<span class="f">[Cr<sup>3+</sup>]<sup>2</sup> · [H<sub>2</sub>O]<sup>7</sup></span>', why:'L\'eau est le solvant : son activité vaut 1, elle ne figure jamais dans le log. Les 7 H₂O restent dans la demi-équation, pas dans la loi.'},
+         {t:'<span class="f">2 [Cr<sup>3+</sup>]</span>', why:'Un coefficient devient une <b>puissance</b>, pas un facteur. Deux ions Cr³⁺, c\'est [Cr³⁺] au carré.'}],
+       ok:'<b>Un coefficient devant l\'espèce devient un exposant sur sa concentration.</b> Ce qui n\'est pas dissous ne figure pas : les solides et l\'eau comptent pour 1. C\'est la seule règle d\'écriture, et elle se lit sur la demi-équation.',
+       note:'Un coefficient devant l\'espèce devient un exposant sur sa concentration ; solides et eau comptent pour 1.'},
+
+      {t:'H⁺ est un réactif comme un autre',
+       setup:'<p><span class="f">MnO<sub>4</sub><sup>−</sup></span> + <span class="f">8 H<sup>+</sup></span> + <span class="f">5 e<sup>−</sup></span> = <span class="f">Mn<sup>2+</sup></span> + <span class="f">4 H<sub>2</sub>O</span>. Les protons sont à gauche, du côté de l\'oxydant, avec le coefficient 8.</p>',
+       uses:['nernst:5'],
+       q:'Où et comment <span class="f">[H<sup>+</sup>]</span> entre-t-il dans la loi ?',
+       opts:[
+         {t:'Au numérateur, à la puissance 8, à côté de <span class="f">[MnO<sub>4</sub><sup>−</sup>]</span>', ok:true},
+         {t:'Nulle part : le pH est un terme à part, qu\'on ajoute à la fin', why:'Le terme en pH n\'est pas ajouté après coup : il <b>sort</b> du log, à la question suivante. Avant ça, [H⁺] est une concentration comme les autres.'},
+         {t:'Au dénominateur, puisque le pH fait baisser E', why:'Il est du côté de l\'oxydant, donc en haut, comme le dit la demi-équation. C\'est en sortant du log qu\'il prendra un signe moins — pas en changeant de place.'},
+         {t:'Au numérateur, sans puissance', why:'Coefficient 8, donc puissance 8 : la règle de la question précédente vaut pour lui comme pour les autres.'}],
+       ok:'<b>[H⁺] entre dans le log comme n\'importe quel réactif</b>, du côté où la demi-équation le place, à la puissance de son coefficient. Le pH n\'existe pas encore à ce stade — il n\'apparaîtra qu\'en cassant le log.',
+       note:'[H⁺] entre dans le log comme n\'importe quel réactif, à la puissance de son coefficient.'},
+
+      {t:'D\'où sort le signe moins',
+       setup:'<p>On casse le log avec la règle de l\'étape 0 : <span class="f"><span class="op">log</span>(a × b) = <span class="op">log</span> a + <span class="op">log</span> b</span>. Le terme des protons se sépare du reste : il reste <span class="f">8 × <span class="op">log</span> [H<sup>+</sup>]</span> tout seul.</p>',
+       uses:['nernst:6'],
+       q:'Que devient <span class="f">8 × <span class="op">log</span> [H<sup>+</sup>]</span> ?',
+       opts:[
+         {t:'<span class="f">− 8 · pH</span>, parce que <span class="f"><span class="op">log</span> [H<sup>+</sup>] = − pH</span>', ok:true},
+         {t:'<span class="f">+ 8 · pH</span>', why:'Le signe vient de la définition du pH, pH = −log[H⁺]. Retournée, elle donne log[H⁺] = −pH. Le moins est dedans.'},
+         {t:'<span class="f">8 · pH</span>, et on ajoute le signe à la fin selon le cas', why:'Il n\'y a rien à ajouter « selon le cas » : la définition du pH porte déjà le signe, et elle ne change jamais.'},
+         {t:'<span class="f"><span class="op">log</span>(8 · pH)</span>', why:'Le 8 est un facteur <b>devant</b> le log, pas dedans. Il multiplie le résultat.'}],
+       ok:'Le terme en pH vaut <b>−(0,06/n) · h · pH</b>, avec h le nombre de protons. Le signe moins vient de <span class="f"><span class="op">log</span> [H<sup>+</sup>] = − pH</span> et de nulle part ailleurs. Pour le permanganate : −(0,06/5) × 8 = <b>−0,096 V par unité de pH</b>.',
+       note:'Le terme en pH vaut −(0,06/n)·h·pH : le signe moins vient de log[H⁺] = −pH.'},
+
+      {t:'Lire l\'effet du pH',
+       setup:'<p>Concentrations fixées, le permanganate s\'écrit <span class="f">E = 1,486 − 0,096 · pH</span>. Tu acidifies la solution : le pH passe de <b>4</b> à <b>1</b>.</p>',
+       uses:['nernst:7'],
+       q:'Que fait E ?',
+       opts:[
+         {t:'Il monte de 0,29 V : un pH plus petit retire moins', ok:true},
+         {t:'Il descend', why:'On <b>soustrait</b> 0,096 × pH. Un pH plus petit retire moins, donc E est plus grand.'},
+         {t:'Il ne bouge pas, les concentrations sont fixées', why:'[H⁺] est une concentration, et elle vient d\'être multipliée par mille. Seules celles du manganèse sont fixées.'},
+         {t:'Il monte de 0,096 V', why:'Trois unités de pH, pas une : 3 × 0,096 = 0,288 V.'}],
+       ok:'<b>Acidifier renforce un oxydant qui consomme des protons.</b> Le permanganate est plus oxydant à pH 1 qu\'à pH 4 — c\'est la lecture chimique du signe moins. Et un oxydant sans H⁺ dans sa demi-équation, comme Fe³⁺, ne sent pas le pH du tout.',
+       note:'Un oxydant qui consomme des H⁺ est renforcé par l\'acidité : E monte quand le pH baisse.'},
+
+      {t:'Ce qui reste quand tout est fixé',
+       setup:'<p>Concentrations fixées, pH laissé en lettre : <span class="f">E = 1,486 − 0,096 · pH</span>.</p>',
+       uses:['nernst:7','nernst:8'],
+       q:'Qu\'est-ce que cette écriture, mathématiquement ?',
+       opts:[
+         {t:'Une droite : E est une fonction affine du pH', ok:true},
+         {t:'Une parabole', why:'Il faudrait un pH au carré. Il n\'y a que pH, à la puissance 1.'},
+         {t:'Un logarithme', why:'Le log a déjà été calculé : il n\'en reste que des nombres. Le pH, lui, est resté en lettre — et il n\'est pas sous un log.'},
+         {t:'Une constante', why:'Le pH varie, et E avec lui. Une constante n\'aurait pas de pH dedans.'}],
+       ok:'<b>Une droite</b>, y = a·x + b, avec la pente −0,096 et l\'ordonnée 1,486. La tracer dans le plan (pH, E), c\'est déjà dessiner une frontière du diagramme de l\'étape 14. Rien de nouveau ne t\'attend là-bas : c\'est ce calcul, laissé en fonction du pH.',
+       note:'À concentrations fixées, E = b − a·pH est une droite : une frontière du diagramme E-pH.'}
+    ],
+    final: {t:'Lis-la maintenant à voix haute',
+      html:'<ol>'
+        +'<li><b>E°</b> : le point de départ — E quand tout est à 1 mol·L⁻¹ et que la correction vaut zéro.</li>'
+        +'<li><b>0,06/n</b> : la marche — ce que E gagne quand le rapport est multiplié par 10, partagée entre les n électrons.</li>'
+        +'<li><b>log(…)</b> : le compteur de marches — il transforme les facteurs 10 du rapport en marches ajoutées.</li>'
+        +'<li><b>[Ox] en haut, [Red] en bas</b>, chacun à la puissance de son coefficient : plus d\'oxydant fait monter E, plus de réducteur le fait descendre.</li>'
+        +'<li><b>[H⁺]</b> est dedans, à la puissance h, du côté où la demi-équation le met ; et log[H⁺] = −pH en fait sortir le terme −(0,06/n)·h·pH.</li>'
+        +'<li>À concentrations fixées, ce qui reste est <b>une droite en pH</b> : une frontière du diagramme de l\'étape 14.</li>'
+        +'</ol><p>Le cours écrit la loi et passe au calcul. Toi, tu peux maintenant la reconstruire.</p>'},
+    fig: function(i){
+      var cap='', body='', on=[];
+      switch(i){
+        case 0: body=FE+lgEchelle({lo:0.70,hi:0.95,marks:[{v:0.77,lab:'E° = 0,77 V',big:true}],aria:'Échelle avec le potentiel standard du couple fer III / fer II'});
+                cap='Le couple Fe³⁺/Fe²⁺ servira de fil rouge : E° = 0,77 V, un seul électron.'; break;
+        case 1: on=['E0']; body=FE+lgEchelle({lo:0.70,hi:0.95,marks:[{v:0.77,lab:'E = E° = 0,77 V',big:true}]});
+                cap='[Fe³⁺] = [Fe²⁺] = 1 mol·L⁻¹ : E se pose exactement sur E°.'; break;
+        case 2: on=['ox','red']; body=FE+lgEchelle({lo:0.70,hi:0.95,marks:[{v:0.77,lab:'E° = 0,77 V',cls:'mut'},{v:0.83,lab:'E = 0,83 V, avec dix fois plus d\'oxydant',big:true}],fleches:[[0.77,0.83]]});
+                cap='Dix fois plus d\'oxydant que de réducteur : E monte.'; break;
+        case 3: on=['log']; body=FE+lgEchelle({lo:0.70,hi:0.95,marks:[{v:0.77,lab:'rapport 1 : 0,77 V'},{v:0.83,lab:'rapport 10 : 0,83 V — une marche de 0,06'},{v:0.89,lab:'rapport 100 : 0,89 V — la même marche'}],fleches:[[0.77,0.83],[0.83,0.89]]});
+                cap='Chaque facteur 10 sur le rapport ajoute la même marche.'; break;
+        case 4: on=['coef']; body=FE.replace('E = 0,77 + 0,06','E = E° + '+FR('0,06','n'))+lgEchelle({lo:0.70,hi:0.95,marks:[{v:0.77,lab:'E°, point de départ',cls:'mut'},{v:0.83,lab:'n = 1 : une marche de 0,06',big:true},{v:0.80,lab:'n = 2 : une marche de 0,03',big:true,cls:'rd'}],fleches:[[0.77,0.83]]});
+                cap='Pour un même facteur 10, deux électrons ne font que la moitié de la marche.'; break;
+        case 5: on=['ox','red']; body=CR; cap='Le dichromate : chaque coefficient de la demi-équation devient un exposant.'; break;
+        case 6: on=['h']; body=MN; cap='Le permanganate : les 8 H⁺ sont en haut, avec l\'oxydant, à la puissance 8.'; break;
+        case 7: on=['h']; body=MN+'<p class="lg-cap" style="margin:0 0 4px">devient, une fois le log cassé et log[H⁺] remplacé par −pH :</p>'+MN2;
+                cap='Le terme en pH sort du log avec son signe moins.'; break;
+        case 8: body=MN3+lgEchelle({lo:1.0,hi:1.5,step:0.1,marks:[{v:1.102,lab:'pH 4 : 1,10 V',cls:'mut'},{v:1.39,lab:'pH 1 : 1,39 V, soit 0,29 V de plus',big:true}],fleches:[[1.102,1.39]]});
+                cap='Acidifier fait monter le potentiel d\'un oxydant qui consomme des protons.'; break;
+        case 9: body=MN3+lgDroite({lo:0,hi:1.6,droites:[{b:1.486,a:-0.096,pts:true,lab:'E = 1,486 − 0,096 · pH'}]});
+                cap='Deux points suffisent à la tracer : c\'est déjà une frontière du diagramme E-pH.'; break;
+        default: body=eqGen()+lgDroite({lo:0,hi:1.6,droites:[{b:1.486,a:-0.096,pts:true}]});
+                cap='La loi entière, et ce qu\'elle devient quand on la laisse en fonction du pH.';
+      }
+      return {html: (i>=1&&i<=9 ? eqGen(on) : (i===0 ? eqGen() : ''))+body, cap:cap};
+    }
+  };
+})();
+
+/* démarrage des lectures, dans l'ordre du fil */
+LG_ORDER = $$('.lecture[data-lecture]').map(function(sec){ return sec.dataset.lecture; }).filter(function(id){ return !!LECTURES[id]; });
+LG_ORDER.forEach(lgRender);
+
 /* ── prise de test ─────────────────────────────────────────────────
    Les tables et les fonctions pures sont exposées sous un seul nom, pour
    que les tests puissent vérifier la chimie sans passer par l'interface.
    Rien du site ne s'en sert.                                            */
 window.__redox = {COUPLES:COUPLES, BYKEY:BYKEY, EQUIL:EQUIL, NOX:NOX, DISM:DISM,
                   METAUX:METAUX, GEN:GEN, demiEq:demiEq, nernst:nernst,
-                  verifieEquation:verifieEquation, parseEspece:parseEspece, eqNorm:eqNorm, fr:fr, fv:fv, plainF:plainF};
+                  verifieEquation:verifieEquation, parseEspece:parseEspece, eqNorm:eqNorm, fr:fr, fv:fv, plainF:plainF,
+                  LECTURES:LECTURES, lgFait:lgFait, lgEtape:lgEtape};
 
 /* ═══ les annales : navigation, corrections repliées, chronomètre ═══ */
 var annBtns=$$('.ann-nav button'), anns=$$('.ann');

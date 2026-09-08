@@ -243,6 +243,14 @@ Apprises sur le site Ondes, ou spécifiques à la chimie :
     large va dans `.tw`. Et une équation **dans une phrase** doit être découpée
     en plusieurs `.f` séparés par du texte, sinon elle pousse la page — le test
     des 375 px l'attrape.
+12. **Aucun saut pédagogique.** Une notion n'est utilisée qu'après avoir été
+    établie plus tôt dans le fil. Les **lectures guidées** (`.lecture`) en
+    sont l'instrument : une figure, une chaîne de questions où chacune
+    s'appuie sur la précédente, et un registre de « ce qui est établi » —
+    par lecture, et global dans la paillasse. Chaque question peut déclarer
+    `uses:['lecture:n']` ; `tests/lectures.test.mjs` refuse tout renvoi vers
+    un fait établi plus tard. Les questions d'une lecture obéissent à la
+    convention 6 comme les points de contrôle.
 
 ---
 
@@ -479,7 +487,7 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 
 ## 10 bis. L'état des tests
 
-**92 tests**, répartis en sept fichiers, tous branchés en `pre-commit` et en CI :
+**104 tests**, répartis en huit fichiers, tous branchés en `pre-commit` et en CI :
 
 | Fichier | Ce qu'il garde |
 |---|---|
@@ -490,15 +498,16 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 | `annales.test.mjs` | les quatre annales, le chronomètre, et les valeurs des quatre corrigés officiels |
 | `controle.test.mjs` | la couverture, les formes déclarées, **la garde de la convention 6**, et la garde de la garde |
 | `pedagogie.test.mjs` | l'ordre exemple → essai → contrôle, les 26 réponses des onze essais recalculées par des oracles indépendants, les indices, la réinitialisation, l'apparence des commandes, et le fait qu'un entraîneur ne livre pas sa propre réponse |
+| `lectures.test.mjs` | **la chaîne du raisonnement** — aucun fait utilisé avant d'être établi —, la forme de chaque lecture, la convention 6 sur ses questions, le moteur (diagnostic, abandon au troisième essai, registre, persistance, remise à zéro), l'absence de débordement sur chaque question à 320, 375 et 1280 px, et le registre de la paillasse |
 
-`npm run captures` rend 33 vues clair/sombre pour la relecture à l'œil.
+`npm run captures` rend 37 vues clair/sombre pour la relecture à l'œil.
 
 ---
 
 ## 11. Pour reprendre
 
 > **L'ordre des travaux est terminé.** Les sept points sont faits, le site
-> couvre tout le dossier, et 92 tests le gardent.
+> couvre tout le dossier, et 104 tests le gardent.
 >
 > S'il faut y revenir, trois choses valent d'être sues avant de toucher au
 > fichier :
@@ -521,6 +530,16 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 >   (372 px contre 347 px pour le même texte). **Les gardes de débordement ne
 >   valent que lancées ici.** C'est ce qui a laissé passer la branche
 >   `pedagogie/progression-guidee`.
+> - **La chaîne du raisonnement est un objet du site, pas une intention.**
+>   L'audit du 9 septembre 2026 a relevé treize sauts entre l'étape 0 et
+>   l'étape 15 — E° employé à l'étape 9 et défini à l'étape 11, le signe de
+>   l'anode donné comme une règle, « charge formelle » jamais expliquée, la
+>   loi de Nernst tombée du ciel, la règle du γ énoncée et non déduite, le
+>   dessus d'une frontière déclaré domaine de l'oxydant sans dire pourquoi…
+>   Les lectures guidées comblent ces sauts à l'endroit où ils sont, et le
+>   registre « Ce qui est établi » de la paillasse montre la chaîne entière.
+>   Toute nouvelle lecture déclare ses appuis dans `uses`, et un test refuse
+>   un appui sur un fait établi plus tard.
 > - **`npm run captures` avant de conclure.** Les tests vérifient la mécanique,
 >   pas l'allure. Trois bugs de ce projet — le γ qui ne se dessinait pas, le
 >   proton compté deux fois, les étiquettes superposées — n'ont été trouvés
