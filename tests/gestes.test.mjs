@@ -101,6 +101,15 @@ test('chaque demi-équation d\'entraînement conserve charge, oxygène et hydrog
       assert.equal(Hox + h, Hrd + 2 * wExtra, `${nom} : bilan de l'hydrogène`);
     }
   }
+  /* et le rendu lui-même, tel que le site l'affiche, doit être équilibré sur
+     tous les éléments — c'est le chrome du dichromate qui manquait, et que
+     le bilan O/H/charge ci-dessus ne pouvait pas voir                     */
+  const rendus = await page.evaluate(() => window.__redox.EQUIL.map(q => {
+    const txt = window.__redox.demiEq(q).replace(/<[^>]+>/g, '');
+    const r = window.__redox.verifieEquation(txt);
+    return { txt, ok: !!r.ok && !r.err, err: r.err || '' };
+  }));
+  assert.deepEqual(rendus.filter(r => !r.ok).map(r => r.txt + (r.err ? ' — ' + r.err : '')), [], 'chaque demi-équation rendue est équilibrée');
   await ctx.close();
 });
 

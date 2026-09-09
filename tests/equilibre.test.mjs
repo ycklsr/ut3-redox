@@ -170,18 +170,28 @@ test('le geste 2b propose d\'écrire l\'équation entière, et la corrige', asyn
   await page.waitForFunction(() =>
     /en entier/.test(document.querySelector('.entr[data-entr-for="2b"] .q3').textContent));
 
-  /* on écrit l'équation attendue, telle que le site la rendrait */
-  const attendue = await page.evaluate(() => {
-    const box = document.querySelector('.entr[data-entr-for="2b"]');
-    const nu = h => h.replace(/<[^>]+>/g, '');
-    const m = box.querySelector('.q3').textContent.match(/couple\s+(.+?)\s*\/\s*(.+?),/);
-    return window.__redox.EQUIL
-      .map(q => ({ q, t: window.__redox.demiEq(q).replace(/<[^>]+>/g, '') }))
-      .find(x => nu(x.q.ox) === m[1] && nu(x.q.rd) === m[2]).t;
-  });
-  await page.fill('.entr[data-entr-for="2b"] input.eqin', attendue);
-  await page.click('.entr[data-entr-for="2b"] .ent-ok');
-  assert.match(await page.textContent('.entr[data-entr-for="2b"] .corr'), /Juste/);
+  /* Les douze demi-équations du banc, une par une : on force le tirage en
+     remplaçant Math.random, on écrit l'équation telle que le site la rend, et
+     le correcteur doit dire « Juste » à chaque fois. Un échantillon au hasard
+     ne prouvait rien et vacillait sous charge ; douze cas forcés prouvent le
+     banc entier.                                                            */
+  const n = await page.evaluate(() => window.__redox.EQUIL.length);
+  const fautes = [];
+  for (let i = 0; i < n; i++) {
+    await page.evaluate(i => { Math.random = () => (i + 0.5) / window.__redox.EQUIL.length; }, i);
+    await page.click('.entr[data-entr-for="2b"] .ent-new');
+    await page.waitForFunction(() => { const b = document.querySelector('.entr[data-entr-for="2b"]'); return !!(b.__Q && b.__Q.sol && b.__Q.sol.eq && b.querySelector('input.eqin')); });
+    const r = await page.evaluate(i => {
+      const R = window.__redox, box = document.querySelector('.entr[data-entr-for="2b"]'), q = R.EQUIL[i];
+      const t = R.demiEq(q).replace(/<[^>]+>/g, '');
+      const inp = box.querySelector('input.eqin'); inp.value = t; inp.dispatchEvent(new Event('input', { bubbles: true }));
+      return { t, enonce: box.querySelector('.q3').textContent.replace(/\s+/g, ' ') };
+    }, i);
+    await page.click('.entr[data-entr-for="2b"] .ent-ok');
+    const corr = await page.textContent('.entr[data-entr-for="2b"] .corr');
+    if (!/Juste/.test(corr)) fautes.push(`n° ${i} · saisi « ${r.t} » · énoncé « ${r.enonce.slice(0, 90)} » · verdict « ${corr.replace(/\s+/g, ' ').slice(0, 160)} »`);
+  }
+  assert.deepEqual(fautes, []);
   await ctx.close();
 });
 

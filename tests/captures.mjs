@@ -99,6 +99,17 @@ await shot('37-registre',     { after: async p => { await p.evaluate(() => { con
                                 for (const n of [1, 2]) { s.querySelector('[data-lg-go="' + n + '"]').click(); s.querySelector('[data-lg-opt="' + L.beats[n - 1].opts.findIndex(o => o.ok) + '"]').click(); } });
                                 await p.click('.dock .tab[data-tool="etabli"]'); } });
 
+for (const [n, id, step, beat] of [[38,'couple',2,5],[39,'nox',3,3],[40,'demi',4,4],[41,'bilan',5,1],[42,'pile',7,6],[43,'fem',9,5],[44,'potentiel',11,3],[45,'gamma',13,3],[46,'eph',14,7],[47,'eau',15,4]]) {
+  await shot(n + '-lecture-' + id, { hash: 'e' + step, after: async p => {
+    await p.evaluate(([id, beat]) => document.querySelector('.lecture[data-lecture="' + id + '"] [data-lg-go="' + beat + '"]').click(), [id, beat]);
+    await p.evaluate(id => document.querySelector('.lecture[data-lecture="' + id + '"]').scrollIntoView(), id); } });
+}
+await shot('48-registre-complet', { after: async p => {
+  await p.evaluate(() => { const R = window.__redox;
+    for (const sec of document.querySelectorAll('.lecture[data-lecture]')) { const id = sec.dataset.lecture, L = R.LECTURES[id];
+      L.beats.forEach((b, k) => { sec.querySelector('[data-lg-go="' + (k + 1) + '"]').click(); sec.querySelector('[data-lg-opt="' + b.opts.findIndex(o => o.ok) + '"]').click(); }); } });
+  await p.click('.dock .tab[data-tool="etabli"]'); } });
+
 await b.close();
 srv.close();
 console.log('captures dans ' + OUT);

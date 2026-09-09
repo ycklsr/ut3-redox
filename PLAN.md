@@ -252,6 +252,23 @@ Apprises sur le site Ondes, ou spécifiques à la chimie :
     un fait établi plus tard. Les questions d'une lecture obéissent à la
     convention 6 comme les points de contrôle.
 
+    Les onze lectures, dans l'ordre du fil — chacune posée juste avant le
+    geste qu'elle rend intelligible :
+
+    | Étape | Lecture | Ce qu'elle établit |
+    |---|---|---|
+    | 2 | Qui capte, qui cède | l'oxydant prend et se réduit ; Ox/Red ; le rôle est relatif au couple ; deux couples par réaction |
+    | 3 | Le nombre d'oxydation, un compteur d'électrons | la charge formelle expliquée ; O −II et H +I déduits, avec leurs exceptions ; la somme ; une unité = un électron |
+    | 4 | Pourquoi la méthode marche | d'où viennent H₂O et H⁺ ; pourquoi les électrons ferment la marche ; le contrôle par le n.o. |
+    | 5 | Deux demi-équations, une équation | le multiple commun ; multiplier tout ; le milieu basique comme égalité conservée |
+    | 7 | Lire un schéma de pile | le signe de l'anode déduit ; deux flèches ; le pont salin ; l'écriture symbolique |
+    | 9 | Ce que mesure le voltmètre | E° comme classement donné ; fem = écart ; positive par construction ; l'électrolyse |
+    | 11 | Le potentiel, une envie d'électrons | ce que E mesure ; jamais seul ; l'ESH à zéro ; standard ; la table dans les deux sens |
+    | 12 | Lire la loi de Nernst | E° le départ ; le sens de la fraction ; le log ; 0,06/n ; [H⁺] réactif ; −pH ; la droite |
+    | 13 | Pourquoi le γ | déduit de E ; le sens du trait ; les espèces, pas les couples ; l'écart ; la dismutation prédite |
+    | 14 | Lire un diagramme E-pH | un point = deux conditions ; Nernst à l'envers ; [Ox] = [Red] ; les trois frontières ; où s'arrête une droite |
+    | 15 | Le diagramme comme prédicteur | domaines disjoints ⟹ réaction ; les droites de l'eau ; corrosion, passivation, immunité |
+
 ---
 
 ## 8. Données de référence
@@ -493,14 +510,14 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 |---|---|
 | `squelette.test.mjs` | le fil, le thème, l'impression, la casse chimique, les débordements de 375 à 1280 px, le contraste sur fond accent, l'intégrité des figures, l'absence de CSS mort, l'absence de coulisses dans le texte lu, l'homogénéité des apostrophes |
 | `paillasse.test.mjs` | les quatre outils, avec les valeurs de contrôle des exercices 12 et 13 et du sujet 2024 |
-| `gestes.test.mjs` | les dix entraîneurs, plus les bilans de charge, d'oxygène et d'hydrogène des douze demi-équations et les vingt n.o., recopiés d'une vérification à la main |
-| `equilibre.test.mjs` | le moteur d'équilibrage sur 28 équations de référence, l'outil de la paillasse, et le mode « équation entière » du geste 2b |
+| `gestes.test.mjs` | les dix entraîneurs, les bilans de charge, d'oxygène et d'hydrogène des douze demi-équations recopiés d'une vérification à la main, **chaque demi-équation rendue passée au vérificateur d'équations** (tous les éléments), et les vingt n.o. |
+| `equilibre.test.mjs` | le moteur d'équilibrage sur 28 équations de référence, l'outil de la paillasse, et le mode « équation entière » du geste 2b **sur les douze demi-équations du banc, tirage forcé** |
 | `annales.test.mjs` | les quatre annales, le chronomètre, et les valeurs des quatre corrigés officiels |
 | `controle.test.mjs` | la couverture, les formes déclarées, **la garde de la convention 6**, et la garde de la garde |
 | `pedagogie.test.mjs` | l'ordre exemple → essai → contrôle, les 26 réponses des onze essais recalculées par des oracles indépendants, les indices, la réinitialisation, l'apparence des commandes, et le fait qu'un entraîneur ne livre pas sa propre réponse |
 | `lectures.test.mjs` | **la chaîne du raisonnement** — aucun fait utilisé avant d'être établi —, la forme de chaque lecture, la convention 6 sur ses questions, le moteur (diagnostic, abandon au troisième essai, registre, persistance, remise à zéro), l'absence de débordement sur chaque question à 320, 375 et 1280 px, et le registre de la paillasse |
 
-`npm run captures` rend 37 vues clair/sombre pour la relecture à l'œil.
+`npm run captures` rend 48 vues clair/sombre pour la relecture à l'œil.
 
 ---
 
@@ -540,6 +557,16 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 >   registre « Ce qui est établi » de la paillasse montre la chaîne entière.
 >   Toute nouvelle lecture déclare ses appuis dans `uses`, et un test refuse
 >   un appui sur un fait établi plus tard.
+> - **Un test qui « vacille » peut être un test qui a raison une fois sur
+>   douze.** Le test du geste 2b en mode équation tirait une demi-équation au
+>   hasard et échouait par intermittence ; on l'a pris pour un aléa de charge.
+>   Forcé sur les douze entrées du banc, il tombait à coup sûr sur le
+>   dichromate : la table `EQUIL` rendait `Cr₂O₇²⁻ + 14 H⁺ + 6 e⁻ = Cr³⁺ +
+>   7 H₂O`, sans le 2 devant Cr³⁺, et la garde de bilan ne comptait ni le
+>   chrome ni le rendu. Corrigé à la source (`c`, le coefficient du
+>   réducteur), demandé dans l'entraîneur, et chaque rendu passe désormais
+>   au vérificateur d'équations. Devant un test intermittent : le forcer,
+>   pas le relancer.
 > - **`npm run captures` avant de conclure.** Les tests vérifient la mécanique,
 >   pas l'allure. Trois bugs de ce projet — le γ qui ne se dessinait pas, le
 >   proton compté deux fois, les étiquettes superposées — n'ont été trouvés

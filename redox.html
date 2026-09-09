@@ -2469,6 +2469,8 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
     </ol>
   </div>
 
+  <section class="lecture" data-lecture="gamma" aria-labelledby="lg-gamma-t"></section>
+
   <div class="geste" data-geste="2d" data-gt="Prévoir si une réaction se fait" data-yr="tombé les quatre années">
     <span class="k">Geste 2d <span class="y">tombé les quatre années</span></span>
     <h3>Prévoir si une réaction se fait, et dans quel sens</h3>
@@ -2773,6 +2775,8 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
       <div class="fb" role="status" aria-live="polite" hidden></div>
     </div></div>
 
+  <section class="lecture" data-lecture="eph" aria-labelledby="lg-eph-t"></section>
+
   <div class="geste" data-geste="5" data-gt="Tracer et lire un diagramme E-pH" data-yr="tombé en 2022, 2023 et 2024">
     <span class="k">Geste 5 <span class="y">tombé en 2022, 2023 et 2024</span></span>
     <h3>Tracer et lire un diagramme E-pH</h3>
@@ -2914,6 +2918,8 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
     </ol>
     <p style="margin-top:12px"><b>La frontière verticale à <span class="f">pH = 7,45</span> sépare donc les deux régimes</b>, et ce n'est pas une coïncidence : c'est exactement la frontière de précipitation de <span class="f">Fe(OH)<sub>2</sub></span> calculée à l'étape 14. Le diagramme n'a pas servi à faire un calcul de plus — il a servi à <b>lire une réponse</b>.</p>
   </div>
+
+  <section class="lecture" data-lecture="eau" aria-labelledby="lg-eau-t"></section>
 
   <h2>La corrosion du fer, en pratique</h2>
   <p>Au départ, la corrosion du fer est due à la seule présence d'eau : le métal et les protons forment une pile, dont les deux couples sont <span class="f"><span class="ox">Fe<sup>2+</sup></span>/<span class="rd">Fe</span></span> et <span class="f"><span class="ox">H<sup>+</sup></span>/<span class="rd">H<sub>2</sub></span></span>.</p>
@@ -4702,7 +4708,7 @@ tiRep.addEventListener('input',tiDraw);
    (E° nul quand le couple n'est pas dans la table du cours) */
 var EQUIL = [
  ['MnO<sub>4</sub><sup>−</sup>','Mn<sup>2+</sup>',5,8,4,1.51,'MnO4-/Mn2+'],
- ['Cr<sub>2</sub>O<sub>7</sub><sup>2−</sup>','Cr<sup>3+</sup>',6,14,7,1.33,'Cr2O7/Cr3+'],
+ ['Cr<sub>2</sub>O<sub>7</sub><sup>2−</sup>','Cr<sup>3+</sup>',6,14,7,1.33,'Cr2O7/Cr3+',2],   /* deux Cr³⁺ pour un Cr₂O₇²⁻ */
  ['O<sub>2</sub>','H<sub>2</sub>O',4,4,2,1.23,'O2/H2O'],
  ['NO<sub>3</sub><sup>−</sup>','NO',3,4,2,0.96,'NO3-/NO'],
  ['H<sub>2</sub>O<sub>2</sub>','H<sub>2</sub>O',2,2,2,1.77,'H2O2/H2O'],
@@ -4714,6 +4720,7 @@ var EQUIL = [
  ['SO<sub>4</sub><sup>2−</sup>','SO<sub>2</sub>',2,4,2,null,null],
  ['NO<sub>3</sub><sup>−</sup>','NO<sub>2</sub>',1,2,1,null,null]
 ].map(function(r){ return {ox:r[0],rd:r[1],n:r[2],h:r[3],w:r[4],e0:r[5],key:r[6],
+  c: r[7]||1,                            /* coefficient du réducteur — 1, sauf pour le dichromate */
   rdEau: r[1]==='H<sub>2</sub>O',        /* l'eau réduite est le produit lui-même */
   oxProton: r[0]==='H<sup>+</sup>'};});  /* l'oxydant EST le proton : il est déjà compté */
 
@@ -4721,7 +4728,7 @@ function demiEq(q){
   return (q.oxProton ? '' : '<span class="ox">'+q.ox+'</span>')
     + (q.h? (q.oxProton?'<span class="ox">':' + ')+(q.h>1?q.h+' ':'')+'H<sup>+</sup>'+(q.oxProton?'</span>':'') : '')
     + ' + <span class="el">'+(q.n>1?q.n+' ':'')+'e<sup>−</sup></span> = <span class="rd">'
-    + (q.rdEau && q.w>1 ? q.w+' ' : '') + q.rd + '</span>'
+    + (q.rdEau && q.w>1 ? q.w+' ' : (q.c>1 ? q.c+' ' : '')) + q.rd + '</span>'
     + (q.w && !q.rdEau ? ' + '+(q.w>1?q.w+' ':'')+'H<sub>2</sub>O' : '');
 }
 /* les nombres d'oxydation à trouver */
@@ -4833,11 +4840,11 @@ GEN['2b'] = function(mode){
   return {
     q: 'Équilibre la demi-équation du couple <span class="f" style="font-size:1.05em">'
       + q.ox+' / '+q.rd+'</span> en <b>milieu acide</b>.',
-    champs: [
+    champs: (q.c>1 ? [{k:'c', lab:'coefficient devant '+plainF(q.rd), type:'num', tol:0}] : []).concat([
       {k:'h', lab:'nombre de H+', type:'num', tol:0},
       {k:'n', lab:'nombre d\'électrons', type:'num', tol:0},
-      {k:'w', lab:'nombre de H2O', type:'num', tol:0}],
-    sol: {h:q.h, n:q.n, w:q.w},
+      {k:'w', lab:'nombre de H2O', type:'num', tol:0}]),
+    sol: (q.c>1 ? {c:q.c, h:q.h, n:q.n, w:q.w} : {h:q.h, n:q.n, w:q.w}),
     corr: '<div class="eqs"><div class="row"><span class="e f">'+demiEq(q)+'</span>'
       + '<span class="lab">l\'ordre : éléments,<br>puis O, puis H, puis les charges</span></div></div>'
       + '<p style="margin-top:9px">Contrôle des charges : la différence entre les deux côtés vaut <b>'+q.n+'</b>, '
@@ -6331,6 +6338,397 @@ function lgPile(o){
   };
 })();
 
+/* ── l'échelle des couples avec le γ, pour les étapes 13 et 15 ──────
+   o = {couples:[{e0, ox, rd, cls}], gamma:[iHaut, iBas] ou null,
+        envers:true pour dessiner le trajet interdit, lo, hi}           */
+function lgGamma(o){
+  var lo=o.lo, hi=o.hi, H=o.h||190, top=18, bot=H-26, x=110;
+  function y(v){ return bot-(v-lo)/(hi-lo)*(bot-top); }
+  var s='<line class="ax" x1="'+x+'" y1="'+top+'" x2="'+x+'" y2="'+bot+'"/>';
+  s+=lgArrow(x,top+6,x,top-2,'mut',1)+lgTxt(x+8,top+2,'E° croissant','mt','start');
+  o.couples.forEach(function(c,i){
+    var yy=y(c.e0);
+    s+='<line class="gr" x1="'+(x+8)+'" y1="'+yy.toFixed(1)+'" x2="'+(x+180)+'" y2="'+yy.toFixed(1)+'"/><line class="ax" x1="'+(x-5)+'" y1="'+yy.toFixed(1)+'" x2="'+(x+5)+'" y2="'+yy.toFixed(1)+'"/>';
+    s+=lgTxt(x-9,yy+3.5,fr(c.e0,2)+' V','mt','end');
+    s+=lgTxt(x+16,yy+4.5,c.ox,'sp','start','fill:var(--ox)'+(c.dimOx?';opacity:.35':''))+lgTxt(x+196,yy+4.5,c.rd,'sp','end','fill:var(--rd)'+(c.dimRd?';opacity:.35':''));
+  });
+  if(o.gamma){
+    var a=o.couples[o.gamma[0]], b=o.couples[o.gamma[1]], ya=y(a.e0), yb=y(b.e0), xm=x+108;
+    if(o.envers){
+      s+='<path d="M'+(x+150)+' '+yb.toFixed(1)+' L'+xm+' '+yb.toFixed(1)+' L'+xm+' '+ya.toFixed(1)+' L'+(x+60)+' '+ya.toFixed(1)+'" style="stroke:var(--mark);stroke-width:2;fill:none;stroke-dasharray:6 4"/>';
+      s+=lgTxt(xm+8,(ya+yb)/2+4,'?','lb','start','fill:var(--mark);font-size:18px;font-weight:600');
+    }else{
+      s+='<path d="M'+(x+60)+' '+ya.toFixed(1)+' L'+xm+' '+ya.toFixed(1)+' L'+xm+' '+yb.toFixed(1)+'" style="stroke:var(--acc);stroke-width:2;fill:none"/>'+lgArrow(xm,yb,x+150,yb,'acc',2);
+      s+=lgTxt(xm+8,(ya+yb)/2+5,'γ','lb','start','fill:var(--acc);font-size:16px;font-weight:600');
+    }
+  }
+  if(o.note) s+=lgTxt(160,H-7,o.note,'lbs','middle');
+  return lgSvg(H,o.aria||'Deux couples sur l\'échelle des potentiels, et le trajet des électrons',s);
+}
+
+/* ── lecture · pourquoi le γ — étape 13 ──────────────────────────── */
+(function(){
+  var MNFE=[{e0:1.51,ox:'MnO₄⁻',rd:'Mn²⁺'},{e0:0.77,ox:'Fe³⁺',rd:'Fe²⁺'}];
+  LECTURES['gamma'] = {
+    titre: 'Pourquoi le γ',
+    intro: {t:'Ce qu\'on va apprendre à lire',
+      setup:'<p>« Ces deux espèces peuvent-elles réagir ? » tombe chaque année. Le cours répond par une règle et un dessin. Six questions pour que la règle se déduise de ce que mesure un potentiel, que le dessin se lise dans le bon sens, et que la dismutation de l\'étape 6 devienne une prédiction.</p>',
+      cta:'Première question'},
+    beats: [
+      {t:'Qui tire le plus fort',
+       setup:'<p>Deux couples : <span class="f">MnO<sub>4</sub><sup>−</sup>/Mn<sup>2+</sup></span> à 1,51 V et <span class="f">Fe<sup>3+</sup>/Fe<sup>2+</sup></span> à 0,77 V. On met ensemble <span class="f">MnO<sub>4</sub><sup>−</sup></span> et <span class="f">Fe<sup>2+</sup></span>.</p>',
+       uses:['potentiel:1','couple:5'],
+       q:'Que se passe-t-il entre les deux ?',
+       opts:[
+         {t:'MnO₄⁻ prend des électrons à Fe²⁺ : le couple du haut tire plus fort', ok:true},
+         {t:'Fe²⁺ prend des électrons à MnO₄⁻', why:'Fe²⁺ est ici un réducteur — il donne. Et son couple est plus bas : il tire moins.'},
+         {t:'Rien : ils sont dans deux couples différents', why:'C\'est justement la condition d\'une réaction rédox — deux couples, l\'un qui prend, l\'autre qui donne.'},
+         {t:'Ils échangent des protons', why:'Les protons interviennent dans l\'écriture, mais ce qui passe d\'un couple à l\'autre, ce sont des électrons.'}],
+       ok:'<b>L\'oxydant du couple le plus haut prend les électrons ; le réducteur du couple le plus bas les donne.</b> C\'est la règle du cours — « l\'oxydant le plus fort réagit avec le réducteur le plus fort » — et elle se déduit de ce que mesure E, rien de plus.',
+       note:'L\'oxydant du couple le plus haut prend les électrons au réducteur du couple le plus bas : c\'est ce que mesure E.'},
+
+      {t:'Le dessin qui le dit',
+       setup:'<p>On place les deux couples sur l\'échelle, l\'oxydant à gauche et le réducteur à droite, et on relie les deux espèces qui réagissent.</p>',
+       uses:['gamma:1'],
+       q:'Quel trait relie <span class="f">MnO<sub>4</sub><sup>−</sup></span> à <span class="f">Fe<sup>2+</sup></span> ?',
+       opts:[
+         {t:'De l\'oxydant du haut, à gauche, vers le réducteur du bas, à droite : il descend', ok:true},
+         {t:'De Fe²⁺ vers MnO₄⁻ : il monte', why:'Il relie les mêmes espèces, mais le sens compte : c\'est l\'oxydant qui <b>prend</b>, le trait part de lui et descend.'},
+         {t:'Horizontal, entre les deux membres du même couple', why:'Un couple ne réagit pas avec lui-même. Le trait va d\'un couple à l\'autre.'},
+         {t:'Il n\'y a pas de trait : la réaction est impossible', why:'Elle est possible — l\'oxydant est au-dessus du réducteur. Le trait se trace.'}],
+       ok:'Le trait part de l\'oxydant du haut, descend, et arrive au réducteur du bas : <b>en forme de γ</b>. Les deux espèces qu\'il touche réagissent ; les deux autres regardent.',
+       note:'Le γ part de l\'oxydant du couple du haut et descend vers le réducteur du couple du bas.'},
+
+      {t:'Les deux espèces, pas les deux couples',
+       setup:'<p>Mêmes couples. Cette fois on met ensemble <span class="f">Mn<sup>2+</sup></span> et <span class="f">Fe<sup>3+</sup></span> — le réducteur du haut et l\'oxydant du bas.</p>',
+       uses:['gamma:2'],
+       q:'Réagissent-ils ?',
+       opts:[
+         {t:'Non : le trait devrait monter, et il n\'y a pas de γ à l\'envers', ok:true},
+         {t:'Oui : ce sont les mêmes couples qu\'avant', why:'La question porte sur les espèces <b>données</b>, pas sur les couples. Fe³⁺ tire moins que MnO₄⁻ : il ne prend rien à Mn²⁺.'},
+         {t:'Oui, mais lentement', why:'Pas lentement — pas du tout. Ce sens est interdit, pas ralenti.'},
+         {t:'On ne peut pas savoir sans les concentrations', why:'À 1 mol·L⁻¹, un écart de 0,74 V tranche largement. Les concentrations ne renversent pas un tel écart.'}],
+       ok:'<b>Un γ ne se trace que dans un sens.</b> Si le trait devait remonter, la réaction proposée ne se fait pas. Le piège de chaque sujet : l\'énoncé donne deux espèces précises — vérifie que c\'est l\'oxydant du haut et le réducteur du bas, pas l\'inverse.',
+       note:'La question porte sur les deux espèces données : si le trait devait monter, la réaction ne se fait pas.'},
+
+      {t:'L\'écart, et la préférence',
+       setup:'<p><span class="f">MnO<sub>4</sub><sup>−</sup></span> peut réagir avec <span class="f">Br<sup>−</sup></span>, dont le couple est à 1,06 V, et avec <span class="f">Fe<sup>2+</sup></span>, à 0,77 V. Les deux γ se tracent.</p>',
+       uses:['gamma:2','fem:4'],
+       q:'Laquelle des deux réactions est la plus favorisée ?',
+       opts:[
+         {t:'Celle avec Fe²⁺ : l\'écart 1,51 − 0,77 est le plus grand', ok:true},
+         {t:'Celle avec Br⁻ : 1,06 est plus proche de 1,51', why:'Proche, c\'est <b>moins</b> de différence de traction. Plus l\'écart est grand, plus la réaction est favorisée.'},
+         {t:'Les deux également, puisque les deux sont possibles', why:'Possibles toutes deux, mais pas à égalité : l\'écart les classe.'},
+         {t:'Aucune : on ne peut pas mettre trois espèces ensemble', why:'On peut. C\'est justement la question de l\'exercice 10 du cours.'}],
+       ok:'<b>Plus les deux couples sont éloignés, plus l\'écart de potentiel est grand, plus la réaction est favorisée.</b> C\'est la fem de la pile qu\'on ferait avec ces deux couples : l\'énergie disponible.',
+       note:'Plus l\'écart de E° entre les deux couples est grand, plus la réaction est favorisée.'},
+
+      {t:'Une espèce contre elle-même',
+       setup:'<p><span class="f">H<sub>2</sub>O<sub>2</sub></span> est l\'oxydant de <span class="f">H<sub>2</sub>O<sub>2</sub>/H<sub>2</sub>O</span> à 1,77 V, et le réducteur de <span class="f">O<sub>2</sub>/H<sub>2</sub>O<sub>2</sub></span> à 0,68 V. Dans un flacon, il n\'y a que de l\'eau oxygénée.</p>',
+       uses:['gamma:1','couple:5'],
+       q:'Que peut-il se passer ?',
+       opts:[
+         {t:'Une molécule prend à une autre : le couple où H₂O₂ est oxydant est le plus haut', ok:true},
+         {t:'Rien : une espèce ne réagit pas avec elle-même', why:'Elle le peut, si elle est oxydant dans un couple et réducteur dans un autre — et que le premier est au-dessus du second.'},
+         {t:'H₂O₂ est stable : 1,77 V est très haut', why:'1,77 est le couple où elle <b>prend</b>. Il y a aussi 0,68, où elle <b>donne</b>. Le γ se trace entre les deux.'},
+         {t:'Il faut un métal pour déclencher la réaction', why:'Rien d\'autre n\'est nécessaire — c\'est la dismutation, et elle se fait seule dans la bouteille.'}],
+       ok:'C\'est la dismutation de l\'étape 6, maintenant <b>prédite</b> : elle est favorisée quand le couple où l\'espèce est oxydant est au-dessus de celui où elle est réducteur. ΔE° = 1,77 − 0,68 = 1,09 V, largement positif.',
+       note:'Une dismutation est favorisée si le couple où l\'espèce est oxydant est au-dessus de celui où elle est réducteur.'},
+
+      {t:'Standard, ou pas',
+       setup:'<p>Tout ce qui précède utilise E°, les potentiels à 1 mol·L⁻¹. L\'énoncé, lui, donne des concentrations très différentes.</p>',
+       uses:['nernst:2','potentiel:4'],
+       q:'Que faut-il comparer ?',
+       opts:[
+         {t:'Les potentiels E calculés par Nernst dans ces conditions', ok:true},
+         {t:'Toujours les E° : le sens ne dépend pas des concentrations', why:'Il en dépend. Deux couples proches peuvent s\'inverser quand les concentrations bougent beaucoup.'},
+         {t:'Les concentrations directement', why:'Ce sont les potentiels qui décident ; les concentrations n\'agissent qu\'à travers eux.'},
+         {t:'Rien : hors des conditions standard, on ne peut rien prédire', why:'On peut — Nernst donne E dans n\'importe quelles conditions, et le γ se trace sur ces E-là.'}],
+       ok:'La règle du γ compare des potentiels. Dans les conditions standard, ce sont les E° ; ailleurs, les E de Nernst. <b>Et le sens favorisé ne dit rien de la vitesse</b> : une réaction possible peut être lente.',
+       note:'Hors des conditions standard, le γ se trace sur les E de Nernst ; le sens favorisé ne dit rien de la vitesse.'}
+    ],
+    final: {t:'Lis maintenant la règle à voix haute',
+      html:'<ol>'
+        +'<li>E mesure la traction sur les électrons : <b>le couple du haut prend, celui du bas donne.</b></li>'
+        +'<li>Sur l\'échelle, le trait part de l\'oxydant du haut et descend vers le réducteur du bas : <b>le γ</b>.</li>'
+        +'<li>Il ne se trace que dans ce sens : <b>vérifie les deux espèces données</b>, pas les deux couples.</li>'
+        +'<li><b>L\'écart</b> classe les réactions possibles : plus grand, plus favorisée.</li>'
+        +'<li>Une espèce dans deux couples se <b>dismute</b> si son couple oxydant est au-dessus.</li>'
+        +'<li>Hors des conditions standard, on trace le γ sur <b>les E de Nernst</b> — et il ne dit rien de la vitesse.</li>'
+        +'</ol><p>Une règle, un dessin, et une seule idée derrière les deux : ce que mesure un potentiel.</p>'},
+    fig: function(i){
+      var body='', cap='';
+      switch(i){
+        case 0: body=lgGamma({lo:0.5,hi:1.8,couples:MNFE}); cap='Deux couples, à leur hauteur sur l\'échelle.'; break;
+        case 1: body=lgGamma({lo:0.5,hi:1.8,couples:[{e0:1.51,ox:'MnO₄⁻',rd:'Mn²⁺',dimRd:true},{e0:0.77,ox:'Fe³⁺',rd:'Fe²⁺',dimOx:true}],note:'MnO₄⁻ tire plus fort que Fe³⁺ : il prend à Fe²⁺'}); cap='Le couple du haut tire plus fort.'; break;
+        case 2: body=lgGamma({lo:0.5,hi:1.8,couples:MNFE,gamma:[0,1],note:'de l\'oxydant du haut au réducteur du bas'}); cap='Le trait descend : c\'est le γ.'; break;
+        case 3: body=lgGamma({lo:0.5,hi:1.8,couples:[{e0:1.51,ox:'MnO₄⁻',rd:'Mn²⁺',dimOx:true},{e0:0.77,ox:'Fe³⁺',rd:'Fe²⁺',dimRd:true}],gamma:[0,1],envers:true,note:'le trait devrait monter : pas de γ à l\'envers'}); cap='Mn²⁺ et Fe³⁺ : les mauvaises espèces, le trait ne se trace pas.'; break;
+        case 4: body=lgGamma({lo:0.5,hi:1.8,couples:[{e0:1.51,ox:'MnO₄⁻',rd:'Mn²⁺'},{e0:1.06,ox:'Br₂',rd:'Br⁻'},{e0:0.77,ox:'Fe³⁺',rd:'Fe²⁺'}],gamma:[0,2],note:'écart 0,74 V avec Fe²⁺, 0,45 V avec Br⁻'}); cap='Deux γ possibles : le plus long l\'emporte.'; break;
+        case 5: body=lgGamma({lo:0.4,hi:2,couples:[{e0:1.77,ox:'H₂O₂',rd:'H₂O'},{e0:0.68,ox:'O₂',rd:'H₂O₂'}],gamma:[0,1],note:'la même espèce aux deux bouts du γ : dismutation'}); cap='H₂O₂ contre H₂O₂ : le γ se trace sur elle-même.'; break;
+        case 6: body=lgGamma({lo:0.5,hi:1.8,couples:[{e0:1.51,ox:'MnO₄⁻',rd:'Mn²⁺'},{e0:0.77,ox:'Fe³⁺',rd:'Fe²⁺'}],gamma:[0,1],note:'à 1 mol·L⁻¹ : les E° · ailleurs : les E de Nernst'}); cap='Le γ compare des potentiels — standard ou calculés.'; break;
+        default: body=lgGamma({lo:0.5,hi:1.8,couples:MNFE,gamma:[0,1]}); cap='Le couple du haut prend, celui du bas donne.';
+      }
+      return {html:body, cap:cap};
+    }
+  };
+})();
+
+/* ── le plan E-pH en petit, pour les étapes 14 et 15 ──────────────
+   o = {lo, hi, segs:[[ph1,E1,ph2,E2,cls]], labs:[[ph,E,txt,cls]],
+        pts:[{ph,E,lab,cls}], dash:[…segs en pointillé]}               */
+function lgPlan(o){
+  var W=320, H=o.h||200, L=40, R=10, T=14, B=28, lo=o.lo, hi=o.hi;
+  var X=function(ph){ return L+ph/14*(W-L-R); }, Y=function(E){ return T+(hi-E)/(hi-lo)*(H-T-B); };
+  var s='';
+  [0,2,4,6,8,10,12,14].forEach(function(p){ s+='<line class="gr" x1="'+X(p).toFixed(1)+'" y1="'+T+'" x2="'+X(p).toFixed(1)+'" y2="'+(H-B)+'"/>'; });
+  for(var E=Math.ceil(lo*2)/2; E<=hi+1e-9; E+=0.5){ s+='<line class="gr" x1="'+L+'" y1="'+Y(E).toFixed(1)+'" x2="'+(W-R)+'" y2="'+Y(E).toFixed(1)+'"/>'+lgTxt(L-4,Y(E)+3,fr(E,1),'mt','end'); }
+  s+='<line class="ax" x1="'+L+'" y1="'+T+'" x2="'+L+'" y2="'+(H-B)+'"/><line class="ax" x1="'+L+'" y1="'+(H-B)+'" x2="'+(W-R)+'" y2="'+(H-B)+'"/>';
+  [0,2,4,6,8,10,12,14].forEach(function(p){ s+=lgTxt(X(p),H-B+11,String(p),'mt','middle'); });
+  s+=lgTxt(W-R,H-3,'pH','mt','end')+lgTxt(L-4,9,'E (V)','mt','end');
+  (o.segs||[]).forEach(function(g){
+    var st = g[4]==='eau' ? 'stroke:var(--rd);stroke-width:1.4;stroke-dasharray:5 3;fill:none'
+           : g[4]==='faux' ? 'stroke:var(--mark);stroke-width:1.6;stroke-dasharray:4 3;fill:none'
+           : g[4]==='pale' ? 'stroke:var(--acc);stroke-width:1.2;fill:none;opacity:.35'
+           : 'stroke:var(--acc);stroke-width:1.8;fill:none';
+    s+='<line x1="'+X(g[0]).toFixed(1)+'" y1="'+Y(g[1]).toFixed(1)+'" x2="'+X(g[2]).toFixed(1)+'" y2="'+Y(g[3]).toFixed(1)+'" style="'+st+'"/>';
+  });
+  (o.labs||[]).forEach(function(l){ s+=lgTxt(X(l[0]),Y(l[1]),l[2],l[3]||'sp','middle',l[4]||''); });
+  (o.pts||[]).forEach(function(p){
+    s+='<circle cx="'+X(p.ph).toFixed(1)+'" cy="'+Y(p.E).toFixed(1)+'" r="4.2" style="fill:var(--'+(p.cls||'el')+')"/>';
+    if(p.lab) s+=lgTxt(X(p.ph)+(p.dx||7),Y(p.E)+(p.dy||-6),p.lab,'lbs',p.anchor||'start');
+  });
+  return lgSvg(H,o.aria||'Le plan potentiel-pH',s);
+}
+/* les sept frontières du fer, en coordonnées (pH, E) */
+var FER=[[0,0.77,2,0.77],[2,0.77,2,1.6],[2,0.77,7.45,-0.211],[7.45,-0.211,7.45,-0.5],[7.45,-0.211,14,-0.604],[0,-0.5,7.45,-0.5],[7.45,-0.5,14,-0.893]];
+var FERLAB=[[1,1.3,'Fe³⁺'],[9,0.75,'Fe(OH)₃'],[3.5,0.05,'Fe²⁺'],[11.5,-0.35,'Fe(OH)₂'],[3.5,-0.85,'Fe']];
+var EAU=[[0,0,14,-0.84,'eau'],[0,1.23,14,0.39,'eau']];
+
+/* ── lecture · lire un diagramme E-pH — étape 14 ─────────────────── */
+(function(){
+  var FE3=function(extra){ return lgPlan(Object.assign({lo:-1,hi:1.6,h:210},extra||{})); };
+  LECTURES['eph'] = {
+    titre: 'Lire un diagramme E-pH',
+    intro: {t:'Ce qu\'on va apprendre à lire',
+      setup:'<p>Le diagramme du fer a cinq domaines et sept frontières. Huit questions pour qu\'il cesse d\'être un dessin à recopier : ce qu\'est un point du plan, ce que Nernst dit de ce point, pourquoi l\'oxydant est en haut, d\'où viennent les trois formes de frontière, et où une droite s\'arrête.</p>',
+      cta:'Première question'},
+    beats: [
+      {t:'Un point, deux nombres',
+       setup:'<p>Le plan a le pH en abscisse et le potentiel E en ordonnée. Une solution y est repérée par un point.</p>',
+       q:'Que représente un point du plan ?',
+       opts:[
+         {t:'Deux conditions imposées à la solution : son acidité et la traction sur ses électrons', ok:true},
+         {t:'Une espèce chimique', why:'Une espèce n\'est pas un point : c\'est une <b>zone</b>, son domaine. Le point, c\'est là où l\'on est.'},
+         {t:'Une concentration', why:'Les concentrations sont fixées par ailleurs — 10⁻² mol·L⁻¹ ici. Le point ne dit que le pH et E.'},
+         {t:'Le résultat d\'une réaction', why:'Rien n\'a réagi. Le point est un état, pas un événement.'}],
+       ok:'Un point, ce sont deux conditions : <b>l\'acidité, et la traction exercée sur les électrons</b>. Le diagramme répond à une question : dans ces conditions, quelle forme de l\'élément existe ?',
+       note:'Un point du plan E-pH, ce sont deux conditions imposées : le pH et le potentiel.'},
+
+      {t:'Ce que Nernst dit d\'un point',
+       setup:'<p>Pour <span class="f">Fe<sup>3+</sup>/Fe<sup>2+</sup></span>, <span class="f">E = 0,77 + 0,06 · <span class="op">log</span>([Fe<sup>3+</sup>]/[Fe<sup>2+</sup>])</span>. On impose à la solution un potentiel <b>E = 0,83 V</b>.</p>',
+       uses:['nernst:3','eph:1'],
+       q:'Que vaut alors le rapport <span class="f">[Fe<sup>3+</sup>]/[Fe<sup>2+</sup>]</span> ?',
+       opts:[
+         {t:'10 : la loi lue à l\'envers, 0,06 × log(rapport) = 0,06', ok:true},
+         {t:'0,1', why:'0,83 est <b>au-dessus</b> de 0,77 : le log est positif, le rapport dépasse 1.'},
+         {t:'1 : les deux concentrations sont toujours égales', why:'Elles ne le sont qu\'à E = E°. À 0,83 V, l\'oxydant domine dix fois.'},
+         {t:'On ne peut pas le savoir', why:'Nernst relie E et le rapport dans les deux sens. E fixé, le rapport est fixé.'}],
+       ok:'<b>Imposer E, c\'est imposer le rapport.</b> À 0,83 V, il y a dix fois plus de Fe³⁺ que de Fe²⁺ : la solution est tirée vers la forme oxydée. C\'est ce qui donne un sens à tout le diagramme.',
+       note:'Nernst lue à l\'envers : imposer E, c\'est imposer le rapport [Ox]/[Red].'},
+
+      {t:'La frontière',
+       setup:'<p>On fait varier E. À 0,77 V le rapport vaut 1. Au-dessus, Fe³⁺ l\'emporte ; au-dessous, Fe²⁺.</p>',
+       uses:['eph:2'],
+       q:'Où le diagramme place-t-il la frontière entre Fe³⁺ et Fe²⁺ ?',
+       opts:[
+         {t:'À E = 0,77 V : là où les deux formes sont à égalité', ok:true},
+         {t:'À E = 0 V', why:'0 V est le zéro de l\'échelle, pas une propriété du fer. La frontière est là où le rapport vaut 1.'},
+         {t:'Là où Fe²⁺ disparaît complètement', why:'Il ne disparaît jamais tout à fait : le log tend vers −∞. On trace à l\'égalité, pas à la disparition.'},
+         {t:'Il n\'y a pas de frontière : les deux coexistent partout', why:'Ils coexistent, mais l\'un domine. La frontière est la ligne d\'égalité.'}],
+       ok:'<b>Une frontière rédox est la ligne où [Ox] = [Red]</b> : le log vaut zéro, E = E°. Au-dessus, la forme oxydée domine — domaine de Fe³⁺ ; au-dessous, la forme réduite — domaine de Fe²⁺. Voilà pourquoi les espèces oxydées sont en haut.',
+       note:'Une frontière rédox est la ligne [Ox] = [Red] ; au-dessus domine l\'oxydant, au-dessous le réducteur.'},
+
+      {t:'Horizontale, ou pas',
+       setup:'<p><span class="f">Fe<sup>3+</sup> + e<sup>−</sup> = Fe<sup>2+</sup></span> ne contient pas de H⁺ : la frontière est à 0,77 V quel que soit le pH.</p>',
+       uses:['eph:3','nernst:9'],
+       q:'Que devient la frontière pour un couple dont la demi-équation contient des H⁺ ?',
+       opts:[
+         {t:'Elle penche : Nernst contient alors un terme en −pH', ok:true},
+         {t:'Elle reste horizontale : le pH ne change pas E°', why:'E° non, mais E oui — le terme −(0,06/n)·h·pH le déplace à chaque pH.'},
+         {t:'Elle devient verticale', why:'Verticale, c\'est une frontière sans électrons. Ici il y a des électrons <b>et</b> des protons : oblique.'},
+         {t:'Elle disparaît', why:'Elle existe toujours ; elle n\'est simplement plus horizontale.'}],
+       ok:'Sans H⁺, E ne dépend pas du pH : horizontale. Avec H⁺ et e⁻, <b>E = b − (0,06·h/n)·pH : une droite qui descend</b>. C\'est le calcul de l\'étape 12, laissé en fonction du pH.',
+       note:'Sans H⁺, la frontière est horizontale ; avec H⁺ et e⁻, c\'est une droite de pente −0,06·h/n.'},
+
+      {t:'La pente, et son signe',
+       setup:'<p><span class="f">Fe(OH)<sub>3</sub>(s) + 3 H<sup>+</sup> + e<sup>−</sup> = Fe<sup>2+</sup> + 3 H<sub>2</sub>O</span>. Trois protons du côté de l\'oxydant, un électron.</p>',
+       uses:['eph:4','nernst:7'],
+       q:'Quelle est la pente de cette frontière ?',
+       opts:[
+         {t:'−0,18 V par unité de pH : −0,06 × 3/1', ok:true},
+         {t:'−0,06', why:'C\'est le rapport h/n qui compte, et il vaut 3 : trois fois plus raide.'},
+         {t:'+0,18', why:'Les H⁺ sont du côté de l\'oxydant : le terme est soustrait, la pente est négative. Positive, ce serait des H⁺ du côté du réducteur — rare, mais ça tombe : sujet 2022.'},
+         {t:'−0,02 : 0,06 divisé par 3', why:'C\'est h <b>sur</b> n, pas n sur h : trois protons pour un électron, la pente est trois fois plus raide.'}],
+       ok:'<b>Pente = −0,06 × (H⁺ / e⁻)</b>, négative quand les protons sont du côté de l\'oxydant. Compter deux nombres sur la demi-équation suffit : l\'inclinaison d\'une frontière ne demande aucun calcul.',
+       note:'La pente vaut −0,06·(H⁺/e⁻), négative si les H⁺ sont du côté de l\'oxydant, positive sinon.'},
+
+      {t:'Verticale : sans électron',
+       setup:'<p><span class="f">Fe<sup>3+</sup> + 3 OH<sup>−</sup> = Fe(OH)<sub>3</sub>(s)</span>. Aucun électron : ce n\'est pas une réaction rédox, c\'est une précipitation.</p>',
+       uses:['eph:1'],
+       q:'Quelle forme a cette frontière ?',
+       opts:[
+         {t:'Verticale : elle ne dépend que du pH, pas de E', ok:true},
+         {t:'Horizontale', why:'Horizontale, c\'est E constant : une réaction avec électrons et sans H⁺. Ici c\'est l\'inverse.'},
+         {t:'Oblique', why:'Oblique demande des électrons <b>et</b> des protons. Sans électron, le potentiel n\'intervient pas.'},
+         {t:'Il n\'y a pas de frontière entre un ion et son précipité', why:'Il y en a une, et elle est nette : le pH où le précipité apparaît, calculé avec K<sub>s</sub>.'}],
+       ok:'Pas d\'électron, pas de potentiel : la frontière est <b>une valeur de pH</b>, calculée avec le produit de solubilité et pH + pOH = 14. Trois formes de frontière, et rien d\'autre : horizontale sans H⁺, oblique avec les deux, verticale sans e⁻.',
+       note:'Sans électron, la frontière est verticale : un pH fixé par le produit de solubilité.'},
+
+      {t:'Où s\'arrête une droite',
+       setup:'<p>La frontière Fe³⁺/Fe²⁺ est à 0,77 V. Mais au-delà de pH 2, Fe³⁺ a précipité en Fe(OH)₃ : il n\'existe plus en solution.</p>',
+       uses:['eph:3','eph:6'],
+       q:'Jusqu\'où tracer la frontière horizontale ?',
+       opts:[
+         {t:'Jusqu\'à pH 2 : au-delà, l\'une des deux espèces qu\'elle sépare n\'existe plus', ok:true},
+         {t:'Sur toute la largeur, de 0 à 14', why:'À pH 10, il n\'y a plus de Fe³⁺ à séparer de Fe²⁺. La droite y sépare des espèces absentes : elle est fausse sur les trois quarts de sa longueur.'},
+         {t:'Jusqu\'à pH 7', why:'7 n\'est rien pour le fer(III). Sa limite, c\'est sa précipitation : pH 2.'},
+         {t:'Elle ne s\'arrête pas : une droite est infinie', why:'En maths. En chimie, une frontière n\'existe qu\'entre deux domaines voisins.'}],
+       ok:'<b>Une frontière ne vit qu\'entre les deux domaines qu\'elle sépare.</b> Quand l\'un des deux disparaît, elle s\'arrête, et une autre prend le relais. C\'est l\'erreur qui fait rater un tracé entier.',
+       note:'Une frontière s\'arrête là où l\'un des deux domaines qu\'elle sépare disparaît.'},
+
+      {t:'Les raccords',
+       setup:'<p>À pH 2, trois frontières se rencontrent : Fe³⁺/Fe²⁺ à 0,77 V, la verticale Fe³⁺/Fe(OH)₃, et Fe(OH)₃/Fe²⁺, d\'équation <span class="f">E = 1,13 − 0,18 · pH</span>.</p>',
+       uses:['eph:7'],
+       q:'Que vaut la troisième à pH 2 ?',
+       opts:[
+         {t:'0,77 V : elle rejoint exactement la première', ok:true},
+         {t:'1,13 V', why:'C\'est sa valeur à pH 0, pas à pH 2. Il faut retirer 0,18 × 2.'},
+         {t:'0,95 V', why:'1,13 − 0,18 = 0,95, c\'est pH 1. À pH 2, on retire 0,36.'},
+         {t:'N\'importe quoi : les frontières sont indépendantes', why:'Elles ne le sont pas : elles décrivent le même fer. Au point triple, elles doivent coïncider.'}],
+       ok:'1,13 − 0,36 = 0,77. <b>Les trois frontières se rejoignent en un point</b> : c\'est la vérification de fin de tracé. Un diagramme dont les frontières ne se raccordent pas est faux quelque part.',
+       note:'Aux points triples, les frontières se rejoignent exactement : c\'est la vérification d\'un tracé.'}
+    ],
+    final: {t:'Lis maintenant le diagramme à voix haute',
+      html:'<ol>'
+        +'<li>Un point, c\'est <b>un pH et un potentiel imposés</b>.</li>'
+        +'<li>Nernst à l\'envers : ce point <b>fixe le rapport</b> [Ox]/[Red].</li>'
+        +'<li>La frontière est la ligne <b>[Ox] = [Red]</b> : au-dessus l\'oxydant, au-dessous le réducteur.</li>'
+        +'<li>Sans H⁺, <b>horizontale</b>. Avec H⁺ et e⁻, <b>oblique</b>, pente −0,06·h/n. Sans e⁻, <b>verticale</b>, au pH de la précipitation.</li>'
+        +'<li>Une frontière <b>s\'arrête</b> quand un de ses deux domaines disparaît.</li>'
+        +'<li>Aux <b>points triples</b>, tout se rejoint : c\'est la vérification.</li>'
+        +'</ol><p>Sept frontières, trois formes, une seule loi derrière : celle de l\'étape 12.</p>'},
+    fig: function(i){
+      var body='', cap='';
+      switch(i){
+        case 0: body=FE3({segs:FER,labs:FERLAB}); cap='Le diagramme du fer : cinq domaines, sept frontières.'; break;
+        case 1: body=FE3({pts:[{ph:4,E:0.5,lab:'pH 4, E = 0,50 V'}]}); cap='Un point : deux conditions imposées.'; break;
+        case 2: body=FE3({segs:[[0,0.77,14,0.77,'pale']],pts:[{ph:4,E:0.83,lab:'E = 0,83 V → dix fois plus de Fe³⁺'}],labs:[[4,1.2,'Fe³⁺'],[4,0.35,'Fe²⁺']]}); cap='Imposer E, c\'est imposer le rapport.'; break;
+        case 3: body=FE3({segs:[[0,0.77,14,0.77]],labs:[[7,1.2,'Fe³⁺ domine'],[7,0.35,'Fe²⁺ domine']],pts:[{ph:7,E:0.77,lab:'[Fe³⁺] = [Fe²⁺] : E = E°',dy:-8}]}); cap='La frontière : la ligne d\'égalité.'; break;
+        case 4: body=FE3({segs:[[0,0.77,14,0.77,'pale'],[0,1.13,7.45,-0.211]],labs:[[3,1.3,'sans H⁺ : horizontale','lbs'],[8,0.6,'avec H⁺ : elle penche','lbs']]}); cap='Le terme en pH incline la frontière.'; break;
+        case 5: body=FE3({segs:[[2,0.77,7.45,-0.211]],pts:[{ph:2,E:0.77,lab:'pH 2 : 0,77 V'},{ph:7.45,E:-0.211,lab:'pH 7,45 : −0,21 V',dy:14}],labs:[[9,0.55,'pente −0,18 : 3 H⁺ pour 1 e⁻','lbs']]}); cap='Trois protons pour un électron : trois fois plus raide.'; break;
+        case 6: body=FE3({segs:[[2,-1,2,1.6]],labs:[[1,0.3,'Fe³⁺'],[5,0.3,'Fe(OH)₃'],[6.5,1.3,'pH = 2 : aucun électron','lbs']]}); cap='Sans électron, le potentiel n\'intervient pas.'; break;
+        case 7: body=FE3({segs:[[0,0.77,2,0.77],[2,0.77,14,0.77,'faux'],[2,0.77,2,1.6],[2,0.77,7.45,-0.211]],labs:[[1,1.3,'Fe³⁺'],[8,1.1,'Fe(OH)₃'],[5,0.2,'Fe²⁺'],[9,0.9,'faux : plus de Fe³⁺ ici','lbs']]}); cap='Au-delà de pH 2, la droite sépare des espèces absentes.'; break;
+        case 8: body=FE3({segs:FER,pts:[{ph:2,E:0.77,lab:'pH 2 : trois frontières se rejoignent'},{ph:7.45,E:-0.211,lab:'pH 7,45',dy:14},{ph:7.45,E:-0.5,lab:'',dy:14}]}); cap='Les raccords : la vérification d\'un tracé.'; break;
+        default: body=FE3({segs:FER,labs:FERLAB}); cap='Sept frontières, trois formes, une seule loi.';
+      }
+      return {html:body, cap:cap};
+    }
+  };
+})();
+
+/* ── lecture · le diagramme comme prédicteur — étape 15 ──────────── */
+(function(){
+  var P=function(extra){ return lgPlan(Object.assign({lo:-1,hi:1.6,h:210},extra||{})); };
+  LECTURES['eau'] = {
+    titre: 'Le diagramme comme prédicteur',
+    intro: {t:'Ce qu\'on va apprendre à lire',
+      setup:'<p>Un diagramme E-pH ne sert pas qu\'à être tracé : il répond, en une lecture, à la question « ces deux espèces peuvent-elles coexister ? ». Cinq questions pour y superposer l\'eau, lire le sort du fer, et comprendre pourquoi le cuivre, lui, ne craint pas l\'acide.</p>',
+      cta:'Première question'},
+    beats: [
+      {t:'Deux domaines disjoints',
+       setup:'<p>On superpose sur un même diagramme les domaines de deux espèces : le fer métal, et le proton H⁺ — dont le domaine, à pH 0, est au-dessus de 0 V. Les deux zones ne se recouvrent nulle part.</p>',
+       uses:['eph:3','gamma:1'],
+       q:'Que peut-on en conclure ?',
+       opts:[
+         {t:'Elles ne peuvent pas coexister : elles réagissent', ok:true},
+         {t:'Elles coexistent sans problème', why:'Coexister demanderait un point commun aux deux domaines — des conditions où les deux existent. Il n\'y en a pas.'},
+         {t:'Rien : les domaines ne parlent pas des réactions', why:'Deux espèces sans point commun ne peuvent pas exister ensemble : l\'une transforme l\'autre. C\'est la lecture rédox du diagramme.'},
+         {t:'Elles réagissent seulement à pH 0', why:'À tout pH où les domaines sont disjoints — ici, tous.'}],
+       ok:'<b>Deux espèces dont les domaines ne se recouvrent pas ne peuvent pas coexister : celle du haut oxyde celle du bas.</b> C\'est la règle du γ, lue sur le diagramme au lieu de l\'échelle.',
+       note:'Deux espèces à domaines disjoints réagissent : celle du haut oxyde celle du bas — le γ, lu sur le diagramme.'},
+
+      {t:'Les deux droites de l\'eau',
+       setup:'<p>L\'eau a deux couples : <span class="f">H<sup>+</sup>/H<sub>2</sub></span>, E° = 0 V, deux H⁺ pour deux électrons ; et <span class="f">O<sub>2</sub>/H<sub>2</sub>O</span>, E° = 1,23 V, quatre H⁺ pour quatre électrons.</p>',
+       uses:['eph:5'],
+       q:'Que sont leurs frontières ?',
+       opts:[
+         {t:'Deux droites parallèles de pente −0,06, à 1,23 V l\'une de l\'autre', ok:true},
+         {t:'Deux horizontales', why:'Chacune contient des H⁺ : elles penchent.'},
+         {t:'Deux droites de pentes différentes', why:'2/2 et 4/4 valent tous deux 1 : même pente, −0,06.'},
+         {t:'Une seule droite', why:'Deux couples, deux droites — et entre elles, la zone où l\'eau est stable.'}],
+       ok:'Même rapport H⁺/e⁻, même pente. <b>Entre les deux, l\'eau est stable</b> ; au-dessus elle est oxydée en O₂, au-dessous réduite en H₂. Toute espèce hors de cette bande réagit avec l\'eau elle-même.',
+       note:'Les deux droites de l\'eau sont parallèles, pente −0,06, séparées de 1,23 V ; entre elles l\'eau est stable.'},
+
+      {t:'Le fer sous la ligne',
+       setup:'<p>À tout pH, le domaine du fer métal est sous la droite <span class="f">H<sup>+</sup>/H<sub>2</sub></span>.</p>',
+       uses:['eau:1','eau:2'],
+       q:'Que fait l\'eau au fer ?',
+       opts:[
+         {t:'Elle l\'oxyde : le fer n\'est immune à aucun pH', ok:true},
+         {t:'Rien : le fer est un métal solide', why:'Solide ou non, son domaine ne touche pas celui de l\'eau : ils ne coexistent pas.'},
+         {t:'Elle le protège', why:'Elle l\'attaque — H⁺ ou H₂O lui prend ses électrons.'},
+         {t:'Elle l\'oxyde seulement en milieu acide', why:'La droite du proton reste au-dessus du domaine du fer jusqu\'à pH 14 : elles sont parallèles, séparées de 0,053 V.'}],
+       ok:'Domaines disjoints : réaction. <b>Le fer est oxydé à tout pH</b> — il n\'est jamais immune dans l\'eau. La question suivante est : <em>en quoi</em> ?',
+       note:'Le fer est sous la droite du proton à tout pH : il est toujours oxydé par l\'eau, jamais immune.'},
+
+      {t:'Corrosion ou passivation',
+       setup:'<p>À pH 4, le fer devient Fe²⁺, un ion dissous. À pH 10, il devient Fe(OH)₂, un solide.</p>',
+       uses:['eau:3'],
+       q:'Comment nomme-t-on chaque cas ?',
+       opts:[
+         {t:'pH 4 : corrosion, le produit part ; pH 10 : passivation, le produit reste et protège', ok:true},
+         {t:'L\'inverse', why:'Soluble → le métal s\'en va : corrosion. Insoluble → une couche qui le recouvre : passivation.'},
+         {t:'Les deux sont des corrosions', why:'La réaction est la même, mais le devenir du produit change tout : une couche solide arrête la suite.'},
+         {t:'Aucun des deux : le fer est immune', why:'Il est oxydé dans les deux cas — la question précédente vient de l\'établir.'}],
+       ok:'Même réaction, deux devenirs. <b>Soluble, le produit part et le métal s\'use : corrosion. Insoluble, il forme une couche qui arrête la suite : passivation.</b> La frontière entre les deux est celle de Fe²⁺/Fe(OH)₂ : pH 7,45, calculée à l\'étape 14.',
+       note:'Produit soluble : corrosion. Produit solide qui recouvre : passivation. Le fer bascule à pH 7,45.'},
+
+      {t:'Un métal au-dessus',
+       setup:'<p>Le cuivre : <span class="f">E°(Cu<sup>2+</sup>/Cu) = 0,34 V</span>, au-dessus de la droite <span class="f">H<sup>+</sup>/H<sub>2</sub></span> à pH 0.</p>',
+       uses:['eau:1'],
+       q:'L\'acide chlorhydrique attaque-t-il le cuivre ?',
+       opts:[
+         {t:'Non : le domaine du cuivre métal recouvre celui de H⁺, ils coexistent', ok:true},
+         {t:'Oui : tous les métaux sont attaqués par les acides', why:'Seuls ceux dont le domaine est sous la droite du proton. Le cuivre est au-dessus.'},
+         {t:'Oui, mais lentement', why:'Pas lentement : pas du tout. C\'est la réponse du sujet 2022.'},
+         {t:'Seulement si l\'acide est concentré', why:'La concentration déplace la droite de quelques centièmes de volt ; elle ne fait pas passer 0,34 V sous zéro.'}],
+       ok:'<b>Le cuivre est immune face au proton</b> : son domaine recouvre celui de H⁺. Le zinc et le fer, eux, sont sous la droite : attaqués. Le diagramme répond en une lecture à une question qui demanderait un calcul.',
+       note:'Un métal dont le domaine recouvre celui de H⁺ est immune face à l\'acide ; sous la droite, il est attaqué.'}
+    ],
+    final: {t:'Lis maintenant le sort d\'un métal à voix haute',
+      html:'<ol>'
+        +'<li>Deux espèces à <b>domaines disjoints</b> réagissent : celle du haut oxyde celle du bas.</li>'
+        +'<li>L\'eau a <b>deux droites parallèles</b> ; entre elles, elle est stable.</li>'
+        +'<li>Un métal <b>sous la droite du proton</b> est oxydé par l\'eau : jamais immune.</li>'
+        +'<li>Produit <b>soluble</b> : corrosion. Produit <b>solide</b> : passivation. Le fer bascule à pH 7,45.</li>'
+        +'<li>Un métal <b>au-dessus</b> de la droite coexiste avec H⁺ : le cuivre est immune.</li>'
+        +'</ol><p>Le diagramme n\'a pas servi à faire un calcul de plus. Il a servi à lire une réponse.</p>'},
+    fig: function(i){
+      var body='', cap='';
+      switch(i){
+        case 0: body=P({segs:FER.concat(EAU),labs:FERLAB}); cap='Le fer, et les deux droites de l\'eau par-dessus.'; break;
+        case 1: body=P({segs:[[0,-0.5,7.45,-0.5],[7.45,-0.5,14,-0.893],[0,0,14,-0.84,'eau']],labs:[[4,-0.85,'Fe'],[4,0.4,'H⁺','sp','fill:var(--rd)'],[9,-0.2,'les deux zones ne se touchent pas','lbs']]}); cap='Le domaine du fer et celui du proton : aucun point commun.'; break;
+        case 2: body=P({segs:EAU,labs:[[7,1.35,'O₂','sp','fill:var(--rd)'],[7,0.35,'H₂O stable','sp','fill:var(--rd)'],[7,-0.75,'H₂','sp','fill:var(--rd)']]}); cap='Deux droites parallèles ; entre elles, l\'eau est stable.'; break;
+        case 3: body=P({segs:FER.concat(EAU),labs:[[4,-0.85,'Fe'],[11,-0.2,'toujours sous la droite du proton','lbs']]}); cap='Le fer ne rejoint jamais la bande de stabilité de l\'eau.'; break;
+        case 4: body=P({segs:FER.concat(EAU),labs:[[3.5,0.05,'Fe²⁺ · soluble'],[11.5,-0.35,'Fe(OH)₂ · solide'],[3.5,-0.85,'Fe']],pts:[{ph:7.45,E:-0.5,lab:'pH 7,45',dy:14}]}); cap='À gauche corrosion, à droite passivation.'; break;
+        case 5: body=P({segs:[[0,0.34,14,0.34],[0,0,14,-0.84,'eau'],[0,-0.5,7.45,-0.5,'pale']],labs:[[7,0.8,'Cu²⁺'],[7,-0.15,'Cu','sp',''],[10,0.55,'le cuivre est au-dessus de H⁺/H₂','lbs'],[3,-0.7,'le fer est dessous','lbs']]}); cap='Au-dessus de la droite : immune. Dessous : attaqué.'; break;
+        default: body=P({segs:FER.concat(EAU),labs:FERLAB}); cap='Un diagramme se lit : il répond avant tout calcul.';
+      }
+      return {html:body, cap:cap};
+    }
+  };
+})();
+
 /* ── lecture · lire la loi de Nernst — étape 12 ───────────────────── */
 (function(){
   var P=function(part,html){ return '<span class="lg-part" data-part="'+part+'">'+html+'</span>'; };
@@ -6514,7 +6912,7 @@ LG_ORDER.forEach(lgRender);
 window.__redox = {COUPLES:COUPLES, BYKEY:BYKEY, EQUIL:EQUIL, NOX:NOX, DISM:DISM,
                   METAUX:METAUX, GEN:GEN, demiEq:demiEq, nernst:nernst,
                   verifieEquation:verifieEquation, parseEspece:parseEspece, eqNorm:eqNorm, fr:fr, fv:fv, plainF:plainF,
-                  LECTURES:LECTURES, lgFait:lgFait, lgEtape:lgEtape};
+                  LECTURES:LECTURES, lgFait:lgFait, lgEtape:lgEtape, sigEspece:sigEspece};
 
 /* ═══ les annales : navigation, corrections repliées, chronomètre ═══ */
 var annBtns=$$('.ann-nav button'), anns=$$('.ann');
