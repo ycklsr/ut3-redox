@@ -311,6 +311,25 @@ numéro de diapositive** (73 pages pour 59 diapositives, à cause des animations
 la diapositive 53 y est page 60. Le site renvoie aux **numéros imprimés**, et le
 dit à l'étape 1.
 
+### Les deux diagrammes des annales, redessinés
+
+Le manganèse (2024) et le chrome (2023) sont tracés dans leurs corrigés, à
+partir des figures des sujets et de leurs seules données, comme le cuivre
+(2022). Deux choses à savoir :
+
+- **2024 : l'énoncé écrit MnO₄²⁻, la figure trace MnO₄⁻.** La frontière
+  G → H descend de 1,65 à 0,61 V sur treize unités de pH : pente −0,08,
+  soit 4 H⁺ pour 3 e⁻ — le permanganate (+VII), que le corrigé manuscrit
+  place bien en haut. Le manganate (+VI) donnerait −0,12. Coquille de
+  l'énoncé (qui parle aussi de « l'élément chrome » dans l'exercice du
+  manganèse), sans effet sur les questions posées. Le site le signale dans
+  la légende.
+- **2023 : la verticale Cr₂O₇²⁻ / CrO₄²⁻ n'a pas de constante dans
+  l'énoncé.** Elle est placée à pH 6, lue sur la figure du sujet ; tout le
+  reste se calcule avec les quatre E° et les deux Kₛ donnés, à 10⁻¹ :
+  Cr³⁺ précipite à pH 4,33, Cr²⁺ à pH 5, A (0 ; 1,34), B (4,33 ; 0,73),
+  C (5 ; −0,94).
+
 ### Les 7 frontières du fer, calculées et vérifiées
 
 Pour `[Fe2+] = [Fe3+] = 10⁻²`, `Ks3 = 10⁻³⁸`, `Ks2 = 8·10⁻¹⁶` :
@@ -504,7 +523,7 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 
 ## 10 bis. L'état des tests
 
-**104 tests**, répartis en huit fichiers, tous branchés en `pre-commit` et en CI :
+**105 tests**, répartis en huit fichiers, tous branchés en `pre-commit` et en CI :
 
 | Fichier | Ce qu'il garde |
 |---|---|
@@ -512,19 +531,19 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 | `paillasse.test.mjs` | les quatre outils, avec les valeurs de contrôle des exercices 12 et 13 et du sujet 2024 |
 | `gestes.test.mjs` | les dix entraîneurs, les bilans de charge, d'oxygène et d'hydrogène des douze demi-équations recopiés d'une vérification à la main, **chaque demi-équation rendue passée au vérificateur d'équations** (tous les éléments), et les vingt n.o. |
 | `equilibre.test.mjs` | le moteur d'équilibrage sur 28 équations de référence, l'outil de la paillasse, et le mode « équation entière » du geste 2b **sur les douze demi-équations du banc, tirage forcé** |
-| `annales.test.mjs` | les quatre annales, le chronomètre, et les valeurs des quatre corrigés officiels |
+| `annales.test.mjs` | les quatre annales, le chronomètre, les valeurs des quatre corrigés officiels, et les trois diagrammes E-pH redessinés — cuivre 2022, manganèse 2024, chrome 2023 — dont les points lettrés se recalculent depuis les seules données des sujets |
 | `controle.test.mjs` | la couverture, les formes déclarées, **la garde de la convention 6**, et la garde de la garde |
 | `pedagogie.test.mjs` | l'ordre exemple → essai → contrôle, les 26 réponses des onze essais recalculées par des oracles indépendants, les indices, la réinitialisation, l'apparence des commandes, et le fait qu'un entraîneur ne livre pas sa propre réponse |
 | `lectures.test.mjs` | **la chaîne du raisonnement** — aucun fait utilisé avant d'être établi —, la forme de chaque lecture, la convention 6 sur ses questions, le moteur (diagnostic, abandon au troisième essai, registre, persistance, remise à zéro), l'absence de débordement sur chaque question à 320, 375 et 1280 px, et le registre de la paillasse |
 
-`npm run captures` rend 48 vues clair/sombre pour la relecture à l'œil.
+`npm run captures` rend 50 vues clair/sombre pour la relecture à l'œil.
 
 ---
 
 ## 11. Pour reprendre
 
 > **L'ordre des travaux est terminé.** Les sept points sont faits, le site
-> couvre tout le dossier, et 104 tests le gardent.
+> couvre tout le dossier, et 105 tests le gardent.
 >
 > S'il faut y revenir, trois choses valent d'être sues avant de toucher au
 > fichier :

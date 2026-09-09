@@ -110,6 +110,11 @@ await shot('48-registre-complet', { after: async p => {
       L.beats.forEach((b, k) => { sec.querySelector('[data-lg-go="' + (k + 1) + '"]').click(); sec.querySelector('[data-lg-opt="' + b.opts.findIndex(o => o.ok) + '"]').click(); }); } });
   await p.click('.dock .tab[data-tool="etabli"]'); } });
 
+await shot('49-annale-manganese', { hash: 'e16', after: async p => { await p.click('.ann-nav button[data-ann="2024"]');
+                                await p.evaluate(() => { document.getElementById('c24-5').hidden = false; document.querySelector('#c24-5 .fig').scrollIntoView(); }); } });
+await shot('50-annale-chrome',    { hash: 'e16', scheme: 'dark', after: async p => { await p.click('.ann-nav button[data-ann="2023"]');
+                                await p.evaluate(() => { document.getElementById('c23-5').hidden = false; document.querySelector('#c23-5 .fig').scrollIntoView(); }); } });
+
 await b.close();
 srv.close();
 console.log('captures dans ' + OUT);

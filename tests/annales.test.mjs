@@ -172,3 +172,43 @@ test('le chronomètre reste visible quand on change d\'étape', async () => {
   assert.match(await page.textContent('#chr-rail'), /^\d\d:\d\d$/);
   await ctx.close();
 });
+
+/* ── les deux diagrammes redessinés, manganèse 2024 et chrome 2023 ────
+   Chaque point lettré porte ses coordonnées ; on les recalcule ici à
+   partir des seules données de l'énoncé, sans lire le dessin.            */
+test('les diagrammes du manganèse et du chrome sont tracés, et leurs points se recalculent', async () => {
+  const { ctx, page } = await open();
+  await page.evaluate(() => { location.hash = 'e16'; });
+  await page.waitForFunction(() => !document.getElementById('e16').hidden);
+  const pts = await page.evaluate(() => {
+    const out = {};
+    for (const cid of ['c24-5', 'c23-5']) {
+      const fig = document.querySelector('#' + cid + ' .fig svg');
+      out[cid] = fig ? Object.fromEntries([...fig.querySelectorAll('[data-pt]')].map(c => [c.dataset.pt, { ph: +c.dataset.ph, e: +c.dataset.e }])) : null;
+      out[cid + '-cap'] = (document.querySelector('#' + cid + ' .fig .cap') || {}).textContent || '';
+    }
+    return out;
+  });
+  const prox = (a, b, tol, m) => assert.ok(Math.abs(a - b) <= tol, `${m} : ${a} contre ${b}`);
+  /* 2024 · Mn : c = 10⁻², Ks = 2·10⁻¹³ */
+  const mn = pts['c24-5']; assert.ok(mn, 'le diagramme du manganèse est dessiné');
+  assert.deepEqual(Object.keys(mn).sort(), ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']);
+  const pHB = 14 + 0.5 * Math.log10(2e-13 / 1e-2);
+  prox(mn.B.ph, pHB, 0.005, 'B : verticale de précipitation'); prox(mn.B.ph, 8.65, 0.01, 'B : la valeur du corrigé');
+  prox(mn.E.ph, pHB, 0.005, 'E : même verticale'); prox(mn.E.e, 1.29 - 0.12 * pHB, 0.002, 'E : sur D → E');
+  prox(mn.A.e, -1.24, 1e-9, 'A donné'); prox(mn.D.e, 1.29, 1e-9, 'D donné'); prox(mn.G.e, 1.65, 1e-9, 'G donné');
+  prox((mn.C.e - mn.B.e) / (mn.C.ph - mn.B.ph), -0.06, 1e-3, 'B → C : 2 H⁺ pour 2 e⁻');
+  prox((mn.F.e - mn.E.e) / (mn.F.ph - mn.E.ph), -0.06, 1e-3, 'E → F : 2 H⁺ pour 2 e⁻');
+  prox((mn.H.e - mn.G.e) / (mn.H.ph - mn.G.ph), -0.08, 1e-3, 'G → H : 4 H⁺ pour 3 e⁻, le permanganate');
+  assert.match(pts['c24-5-cap'], /MnO₄⁻/); assert.match(pts['c24-5-cap'], /coquille/);
+  /* 2023 · Cr : c = 10⁻¹, E°(Cr²⁺/Cr) = −0,91, E°(Cr₂O₇²⁻/Cr³⁺) = 1,33, Ks = 10⁻¹⁹ et 10⁻³⁰ */
+  const cr = pts['c23-5']; assert.ok(cr, 'le diagramme du chrome est dessiné');
+  assert.deepEqual(Object.keys(cr).sort(), ['A', 'B', 'C']);
+  prox(cr.C.ph, 14 + 0.5 * Math.log10(1e-19 / 0.1), 1e-6, 'C : abscisse'); prox(cr.C.e, -0.91 + 0.03 * Math.log10(0.1), 1e-6, 'C : ordonnée');
+  prox(cr.C.ph, 5, 1e-9, 'C : la valeur du corrigé'); prox(cr.C.e, -0.94, 1e-9, 'C : la valeur du corrigé');
+  const pH3 = 14 + Math.log10(1e-30 / 0.1) / 3;
+  prox(cr.B.ph, pH3, 0.005, 'B : précipitation de Cr(OH)₃');
+  prox((cr.B.e - cr.A.e) / (cr.B.ph - cr.A.ph), -0.14, 1e-3, 'A → B : le coefficient directeur demandé');
+  prox(cr.A.e, 1.33 + 0.01 * Math.log10(0.1 / 0.01), 1e-6, 'A : Nernst à 10⁻¹');
+  await ctx.close();
+});
