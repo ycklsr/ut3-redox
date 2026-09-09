@@ -1880,6 +1880,8 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
     <p class="note">La <b>barre simple</b> marque une frontière entre deux phases — le métal et sa solution. La <b>double barre</b> marque la jonction assurée par le pont salin.</p>
   </div>
 
+  <section class="lecture" data-lecture="pile" aria-labelledby="lg-pile-t"></section>
+
   <div class="geste" data-geste="3a" data-gt="Annoter un schéma de pile" data-yr="tombé en 2022, 2023 et 2025">
     <span class="k">Geste 3a <span class="y">tombé en 2022, 2023 et 2025</span></span>
     <h3>Annoter un schéma de pile</h3>
@@ -1999,14 +2001,16 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
     <p class="note">C'est exactement la valeur affichée par le voltmètre du schéma de l'étape 7, dans les conditions standard. Le calcul et la mesure se rejoignent.</p>
   </div>
 
+  <section class="lecture" data-lecture="fem" aria-labelledby="lg-fem-t"></section>
+
   <div class="geste" data-geste="3b" data-gt="Calculer la fem et écrire la pile" data-yr="tombé en 2022, 2023 et 2025">
     <span class="k">Geste 3b <span class="y">tombé en 2022, 2023 et 2025</span></span>
     <h3>Calculer la fem et écrire la pile symboliquement</h3>
     <ol>
       <li><b>Repère la cathode</b> : c'est le couple au <span class="f">E°</span> le plus élevé.</li>
-      <li><b>Applique</b> <span class="f">fem = E<sub>cathode</sub> − E<sub>anode</sub></span>.</li>
+      <li><b>Applique</b> <span class="f">fem = E<sub>cathode</sub></span> <span class="f">− E<sub>anode</sub></span>.</li>
       <li><b>Vérifie qu'elle est positive.</b> Si elle ne l'est pas, tu as interverti les rôles.</li>
-      <li><b>Écris la pile</b> : <span class="f">⊖ anode | son ion ‖ ion de la cathode | cathode ⊕</span>.</li>
+      <li><b>Écris la pile</b> : <span class="f">⊖ anode | son ion</span> ‖ <span class="f">ion de la cathode | cathode ⊕</span>.</li>
     </ol>
     <div class="piege"><b>Le piège —</b> Une fem négative n'est <b>pas</b> une erreur de soustraction : c'est une erreur d'attribution des rôles. Ne change pas le signe, reprends le schéma.</div>
     <button class="go" data-entr="3b" type="button">S'entraîner — tirage au hasard</button>
@@ -2156,6 +2160,8 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
 
   <div class="piege"><span class="k">Deux valeurs pour le dioxygène — ce n'est pas une faute</span>
     <p><span class="f"><span class="ox">O<sub>2</sub></span>/<span class="rd">H<sub>2</sub>O</span></span> vaut <b>1,23 V</b> et <span class="f"><span class="ox">O<sub>2</sub></span>/<span class="rd">H<sub>2</sub>O<sub>2</sub></span></span> vaut <b>0,68 V</b>. Ce sont deux couples différents : dans le premier l'oxygène descend jusqu'à <span class="f">−II</span>, dans le second il s'arrête à <span class="f">−I</span>. Lis toujours le couple en entier avant de prendre une valeur — cette confusion précise se retrouve à l'étape 15.</p></div>
+
+  <section class="lecture" data-lecture="potentiel" aria-labelledby="lg-potentiel-t"></section>
 
   <div class="def"><span class="k">Ce que la table permet déjà de faire</span>
     <p>Avec ces vingt-cinq valeurs et rien d'autre, tu peux calculer la <b>fem</b> de n'importe quelle pile — étape 9 — et prévoir si une réaction se fait, c'est l'objet de l'<b>étape 13</b>. Le potentiel <span class="f">E</span> hors des conditions standard, lui, demande l'étape 12.</p></div>
@@ -5942,6 +5948,389 @@ function lgCompte(rows){
   };
 })();
 
+/* ── la pile Daniell en petit, pour les lectures des étapes 7 et 9 ──
+   o = {el: flèches d'électrons, cur: flèche du courant, signes, pont,
+        ions, gen: générateur à la place du voltmètre, an: 'g'|'d'}     */
+function lgPile(o){
+  o=o||{}; var s='';
+  /* béchers et solutions */
+  s+='<path style="fill:var(--acc);opacity:.07" d="M22 96 L22 158 Q22 164 28 164 L128 164 Q134 164 134 158 L134 96 Z"/>';
+  s+='<path style="fill:var(--acc);opacity:.07" d="M186 96 L186 158 Q186 164 192 164 L292 164 Q298 164 298 158 L298 96 Z"/>';
+  s+='<path style="stroke:var(--mut);stroke-width:1.1;fill:none" d="M22 70 L22 158 Q22 164 28 164 L128 164 Q134 164 134 158 L134 70"/>';
+  s+='<path style="stroke:var(--mut);stroke-width:1.1;fill:none" d="M186 70 L186 158 Q186 164 192 164 L292 164 Q298 164 298 158 L298 70"/>';
+  /* électrodes */
+  s+='<rect x="58" y="52" width="9" height="86" rx="1" style="fill:var(--mut);opacity:.55"/>';
+  s+='<rect x="253" y="52" width="9" height="86" rx="1" style="fill:var(--acc);opacity:.55"/>';
+  s+=lgTxt(50,104,'Zn','sp','end')+lgTxt(270,104,'Cu','sp','start');
+  s+=lgTxt(78,150,'Zn²⁺','mt','middle')+lgTxt(242,150,'Cu²⁺','mt','middle');
+  /* fil et appareil */
+  s+='<path style="stroke:var(--ink);stroke-width:1.3;fill:none" d="M62 52 L62 24 L146 24 M174 24 L258 24 L258 52"/>';
+  if(o.gen){
+    s+='<line x1="146" y1="14" x2="146" y2="34" style="stroke:var(--ink);stroke-width:2.2"/><line x1="174" y1="18" x2="174" y2="30" style="stroke:var(--ink);stroke-width:1.2"/>';
+    s+=lgTxt(160,12,'générateur','mt','middle');
+  }else{
+    s+='<circle cx="160" cy="24" r="14" style="fill:var(--paper);stroke:var(--ink);stroke-width:1.3"/>'+lgTxt(160,28,'V','lb','middle','font-size:11px');
+  }
+  /* pont salin */
+  if(o.pont!==false){
+    s+='<path d="M96 100 L96 66 Q96 58 104 58 L216 58 Q224 58 224 66 L224 100" style="stroke:var(--mut);stroke-width:7;fill:none;opacity:.3;stroke-linecap:round"/>';
+    if(o.ions){ s+=lgArrow(150,58,124,58,'mut',1.2)+lgArrow(170,58,196,58,'mut',1.2)+lgTxt(140,50,'NO₃⁻','mt','middle')+lgTxt(184,50,'K⁺','mt','middle'); }
+  }
+  /* électrons dans le fil */
+  if(o.el){
+    var g=(o.an!=='d');
+    s+= g ? lgArrow(90,24,124,24,'el',1.7)+lgArrow(196,24,230,24,'el',1.7) : lgArrow(230,24,196,24,'el',1.7)+lgArrow(124,24,90,24,'el',1.7);
+    s+=lgTxt(107,17,'e⁻','mt','middle','fill:var(--el)')+lgTxt(213,17,'e⁻','mt','middle','fill:var(--el)');
+  }
+  if(o.cur){
+    var g2=(o.an!=='d');
+    s+= g2 ? lgArrow(124,38,94,38,'ink',1.1) : lgArrow(94,38,124,38,'ink',1.1);
+    s+=lgTxt(109,47,'i','lbs','middle');
+  }
+  if(o.signes){
+    var an=(o.an!=='d');
+    s+=lgTxt(62,44,an?'⊖':'⊕','lb','middle','font-size:13px;fill:var(--'+(an?'mut':'acc')+')')+lgTxt(258,44,an?'⊕':'⊖','lb','middle','font-size:13px;fill:var(--'+(an?'acc':'mut')+')');
+  }
+  if(o.roles){
+    var an2=(o.an!=='d');
+    s+=lgTxt(78,180,an2?'anode · oxydation':'cathode · réduction','lbs','middle')+lgTxt(242,180,an2?'cathode · réduction':'anode · oxydation','lbs','middle');
+  }
+  if(o.q){ s+=lgTxt(o.q[0],o.q[1],'?','lb','middle','font-size:22px;fill:var(--mark);font-weight:600'); }
+  return lgSvg(o.h||190, o.aria||'La pile Daniell : zinc à gauche, cuivre à droite, un fil et un pont salin', s);
+}
+
+/* ── lecture · lire un schéma de pile — étape 7 ───────────────────── */
+(function(){
+  LECTURES['pile'] = {
+    titre: 'Lire un schéma de pile',
+    intro: {t:'Ce qu\'on va apprendre à lire',
+      setup:'<p>Le schéma de pile tombe trois années sur quatre, et il se corrige sur des détails : un signe, deux flèches, le sens d\'un ion. Sept questions pour que chaque détail se déduise du seul fait que tu connais déjà — le zinc donne ses électrons.</p>',
+      cta:'Première question'},
+    beats: [
+      {t:'Deux couples, séparés',
+       setup:'<p>Un morceau de zinc dans une solution de Zn²⁺ à gauche, un morceau de cuivre dans une solution de Cu²⁺ à droite. Les deux béchers sont séparés ; un fil relie les deux métaux.</p>',
+       uses:['couple:6'],
+       q:'Pourquoi séparer les deux couples au lieu de tout mettre dans un bécher ?',
+       opts:[
+         {t:'Pour obliger les électrons à passer par le fil, où l\'on peut s\'en servir', ok:true},
+         {t:'Parce que les solutions réagiraient violemment', why:'Elles réagiraient, oui — mais tranquillement, à l\'intérieur du bécher : les électrons iraient directement du zinc au cuivre, sans fil. Rien à récupérer.'},
+         {t:'Pour empêcher toute réaction', why:'Au contraire : la réaction a lieu, mais à distance, par le fil. C\'est exactement ce qu\'on veut.'},
+         {t:'Parce que le zinc et le cuivre ne se mélangent pas', why:'Ce sont des métaux solides, la question ne se pose pas. Ce sont les <b>électrons</b> qu\'on veut détourner.'}],
+       ok:'Mélangés, le zinc donnerait ses électrons à Cu²⁺ sur place, et l\'énergie partirait en chaleur. Séparés, le transfert n\'a qu\'un chemin : le fil. <b>Une pile, c\'est une réaction rédox dont on a détourné les électrons.</b>',
+       note:'Une pile sépare les deux couples pour obliger les électrons à passer par le fil.'},
+
+      {t:'Où ça s\'oxyde',
+       setup:'<p>Quand la pile débite, l\'électrode de zinc perd de la masse et la solution de gauche s\'enrichit en Zn²⁺.</p>',
+       uses:['couple:1'],
+       q:'Que se passe-t-il à l\'électrode de zinc ?',
+       opts:[
+         {t:'Une oxydation : Zn devient Zn²⁺ en donnant deux électrons', ok:true},
+         {t:'Une réduction : le zinc se dissout', why:'Se dissoudre en Zn²⁺, c\'est perdre deux électrons — c\'est donner, donc s\'oxyder. La dissolution est la conséquence, pas le verbe.'},
+         {t:'Rien : c\'est le cuivre qui réagit', why:'L\'électrode de zinc maigrit. Elle réagit — et le cuivre aussi, en face.'},
+         {t:'Une oxydation, parce qu\'elle touche l\'air', why:'L\'air n\'y est pour rien : le zinc donne ses électrons au fil, pas à l\'oxygène.'}],
+       ok:'Le métal qui maigrit se transforme en ions : il donne des électrons, il <b>s\'oxyde</b>. Cette électrode s\'appelle l\'<b>anode</b> — anode, oxydation, deux mots qui commencent par une voyelle. En face, le cuivre se dépose : réduction, cathode.',
+       note:'L\'électrode où le métal se dissout en ions s\'oxyde : c\'est l\'anode. L\'autre est la cathode.'},
+
+      {t:'Pourquoi l\'anode est le pôle ⊖',
+       setup:'<p>Les électrons donnés par le zinc arrivent dans le métal de l\'électrode avant de partir dans le fil.</p>',
+       uses:['pile:2'],
+       q:'Quel signe porte l\'électrode de zinc ?',
+       opts:[
+         {t:'⊖ : elle est le point de départ des électrons, qui s\'y accumulent', ok:true},
+         {t:'⊕ : elle perd des ions positifs', why:'Elle <b>libère</b> des ions positifs dans la solution et garde les électrons. Ce qui reste dans le métal est négatif.'},
+         {t:'⊕ : l\'anode est toujours positive', why:'Dans une électrolyse, oui. Dans une pile, non. Le signe suit les électrons, pas le nom.'},
+         {t:'Aucun : les signes sont une convention arbitraire', why:'Le signe dit d\'où partent les électrons. Il n\'a rien d\'arbitraire : il se déduit.'}],
+       ok:'<b>L\'anode produit les électrons : c\'est le pôle négatif de la pile.</b> En face, le cuivre les consomme — Cu²⁺ + 2 e⁻ = Cu — il en manque : c\'est le pôle positif, la cathode. Les signes ne se retiennent pas, ils se déduisent du sens des électrons.',
+       note:'L\'anode produit les électrons : pôle ⊖. La cathode les consomme : pôle ⊕. Le signe se déduit, il ne se retient pas.'},
+
+      {t:'Deux flèches, deux sens',
+       setup:'<p>Dans le fil, les électrons vont du zinc vers le cuivre. Le schéma demande aussi le sens du courant.</p>',
+       uses:['pile:3'],
+       q:'Dans quel sens va le courant, dans le fil ?',
+       opts:[
+         {t:'Du cuivre vers le zinc : à l\'opposé des électrons, par convention', ok:true},
+         {t:'Du zinc vers le cuivre, comme les électrons', why:'Le courant est défini comme un déplacement de charges <b>positives</b>. Les électrons sont négatifs : le courant conventionnel va à l\'envers.'},
+         {t:'Il n\'y a pas de courant dans le fil, seulement des électrons', why:'Un déplacement d\'électrons <b>est</b> un courant. Il a un sens conventionnel, opposé au leur.'},
+         {t:'Dans les deux sens, alternativement', why:'Une pile débite en continu, dans un seul sens. L\'alternatif, c\'est le secteur.'}],
+       ok:'Le courant conventionnel va du ⊕ vers le ⊖ dans le circuit extérieur : du cuivre vers le zinc. Les électrons font l\'inverse. <b>Deux flèches, deux sens</b> — une seule flèche sur un schéma coûte des points, deux dans le même sens en coûtent davantage.',
+       note:'Le courant va du ⊕ au ⊖ dans le fil, à l\'opposé des électrons : deux flèches, deux sens.'},
+
+      {t:'Pourquoi la pile s\'arrêterait',
+       setup:'<p>Sans pont salin, la solution de gauche accumule des Zn²⁺ et celle de droite perd ses Cu²⁺. Chacune se charge : positive à gauche, négative à droite.</p>',
+       uses:['pile:2'],
+       q:'Pourquoi cela arrête-t-il le courant ?',
+       opts:[
+         {t:'Une solution ne peut pas se charger : l\'accumulation bloque la réaction qui la produit', ok:true},
+         {t:'Parce que le fil chauffe', why:'Le fil n\'y est pour rien ; c\'est dans les béchers que ça coince.'},
+         {t:'Parce que le zinc est épuisé', why:'Il en reste plein. Il n\'est pas épuisé, il est bloqué.'},
+         {t:'Ça ne l\'arrête pas : la pile débite jusqu\'à épuisement', why:'Sans pont salin, elle s\'arrête presque aussitôt — c\'est même l\'expérience qui montre à quoi il sert.'}],
+       ok:'Chaque électron parti du zinc laisse un Zn²⁺ de trop à gauche ; chaque électron arrivé au cuivre retire un Cu²⁺ de trop à droite. Les solutions se chargent, et <b>une charge accumulée repousse la suivante</b> : la réaction s\'arrête. Il faut fermer le circuit dans les solutions aussi.',
+       note:'Sans pont salin, les solutions se chargent et bloquent la réaction : le circuit doit aussi se fermer dans les liquides.'},
+
+      {t:'Ce que fait le pont',
+       setup:'<p>Le pont salin contient un sel, K⁺ et NO₃⁻, dont les ions peuvent migrer vers l\'un ou l\'autre bécher.</p>',
+       uses:['pile:5'],
+       q:'Vers quel bécher vont les anions NO₃⁻ ?',
+       opts:[
+         {t:'Vers le zinc : ils compensent l\'excès de Zn²⁺ du côté de l\'anode', ok:true},
+         {t:'Vers le cuivre : ils remplacent les Cu²⁺ disparus', why:'Remplacer des ions positifs par des négatifs aggraverait la charge négative de droite. Ce sont les K⁺ qui y vont.'},
+         {t:'Ils ne bougent pas : le pont est un conducteur passif', why:'Un pont qui ne laisserait rien passer ne fermerait aucun circuit. Ses ions migrent, c\'est tout son rôle.'},
+         {t:'Vers les deux, en quantités égales', why:'Chaque bécher a un déséquilibre de signe opposé ; chaque ion va où il compense.'}],
+       ok:'<b>Anions vers l\'anode, cations vers la cathode</b> — les mots le disent. Le pont ferme le circuit par une conduction ionique, et maintient chaque solution neutre. Deux conductions : les électrons dans le fil, les ions dans les solutions.',
+       note:'Anions vers l\'anode, cations vers la cathode : le pont salin ferme le circuit et garde les solutions neutres.'},
+
+      {t:'L\'écriture symbolique',
+       setup:'<p>Le cours résume la pile en une ligne, avec des barres verticales.</p>',
+       uses:['pile:3'],
+       q:'Laquelle est correcte ?',
+       opts:[
+         {t:'<span class="f">⊖ Zn | Zn<sup>2+</sup> ‖ Cu<sup>2+</sup> | Cu ⊕</span>', ok:true},
+         {t:'<span class="f">⊕ Zn | Zn<sup>2+</sup> ‖ Cu<sup>2+</sup> | Cu ⊖</span>', why:'Le zinc est l\'anode, le pôle ⊖. Les signes sont inversés.'},
+         {t:'<span class="f">⊖ Cu | Cu<sup>2+</sup> ‖ Zn<sup>2+</sup> | Zn ⊕</span>', why:'L\'anode s\'écrit à gauche par convention — et c\'est le zinc, pas le cuivre.'},
+         {t:'<span class="f">Zn | Cu ‖ Zn<sup>2+</sup> | Cu<sup>2+</sup></span>', why:'Une barre simple sépare un métal de <b>sa</b> solution ; la double barre est le pont. Ici tout est mélangé.'}],
+       ok:'Anode à gauche, cathode à droite ; <b>une barre entre un métal et sa solution, deux barres pour le pont salin.</b> C\'est le schéma, en une ligne — et il se lit dans le même sens que les électrons.',
+       note:'⊖ anode | son ion ‖ ion de la cathode | cathode ⊕ : une barre par frontière, deux pour le pont.'}
+    ],
+    final: {t:'Lis maintenant le schéma à voix haute',
+      html:'<ol>'
+        +'<li><b>Deux couples séparés</b>, reliés par un fil : les électrons n\'ont que ce chemin.</li>'
+        +'<li><b>Le zinc se dissout</b> : il donne ses électrons, il s\'oxyde, c\'est l\'anode.</li>'
+        +'<li>Les électrons partent de là : <b>l\'anode est le pôle ⊖</b>. Le cuivre les consomme : cathode, pôle ⊕.</li>'
+        +'<li>Dans le fil, <b>électrons du ⊖ vers le ⊕, courant du ⊕ vers le ⊖</b>. Deux flèches.</li>'
+        +'<li><b>Le pont salin</b> ferme le circuit dans les liquides : anions vers l\'anode, cations vers la cathode.</li>'
+        +'<li>En une ligne : <span class="f">⊖ Zn | Zn<sup>2+</sup> ‖ Cu<sup>2+</sup> | Cu ⊕</span>.</li>'
+        +'</ol><p>Tout le schéma découle d\'un seul fait : le zinc donne. Le reste n\'est que conséquence.</p>'},
+    fig: function(i){
+      var body='', cap='';
+      switch(i){
+        case 0: body=lgPile({pont:false}); cap='Deux béchers, deux métaux, un fil.'; break;
+        case 1: body=lgPile({pont:false,q:[160,120]}); cap='Séparés : le seul chemin des électrons est le fil.'; break;
+        case 2: body=lgPile({pont:false,roles:true}); cap='À gauche le zinc se dissout : oxydation, anode.'; break;
+        case 3: body=lgPile({pont:false,roles:true,signes:true,el:true}); cap='Les électrons partent de l\'anode : elle est négative.'; break;
+        case 4: body=lgPile({pont:false,signes:true,el:true,cur:true}); cap='Électrons dans un sens, courant dans l\'autre.'; break;
+        case 5: body=lgPile({pont:false,signes:true,el:true})+'<p class="lg-cap" style="margin-top:2px">gauche : Zn²⁺ en excès · droite : Cu²⁺ en défaut — les solutions se chargent</p>'; cap='Sans pont, les solutions se chargent et tout s\'arrête.'; break;
+        case 6: body=lgPile({signes:true,el:true,ions:true}); cap='Le pont ferme le circuit : anions vers l\'anode, cations vers la cathode.'; break;
+        case 7: body=lgPile({signes:true,el:true,cur:true,ions:true,roles:true})+'<div class="lg-eq f" style="font-size:15px">⊖ Zn | Zn<sup>2+</sup> ‖ Cu<sup>2+</sup> | Cu ⊕</div>'; cap='Le schéma, et sa ligne.'; break;
+        default: body=lgPile({signes:true,el:true,cur:true,ions:true,roles:true}); cap='Tout se déduit du sens des électrons.';
+      }
+      return {html:body, cap:cap};
+    }
+  };
+})();
+
+/* ── lecture · ce que mesure le voltmètre — étape 9 ──────────────── */
+(function(){
+  LECTURES['fem'] = {
+    titre: 'Ce que mesure le voltmètre',
+    intro: {t:'Ce qu\'on va apprendre à lire',
+      setup:'<p>Le voltmètre affiche 1,10 V. Cinq questions pour dire d\'où vient ce nombre : ce que classe le potentiel standard, pourquoi la fem est une différence, pourquoi elle est positive, et ce qui change quand on force le courant à l\'envers.</p>',
+      cta:'Première question'},
+    beats: [
+      {t:'Un nombre par couple',
+       setup:'<p>L\'énoncé donne <span class="f">E°(Cu<sup>2+</sup>/Cu) = 0,34 V</span> et <span class="f">E°(Zn<sup>2+</sup>/Zn) = −0,76 V</span>. Ce nombre classe les couples : plus il est haut, plus l\'oxydant du couple prend fort les électrons.</p>',
+       uses:['couple:2','pile:2'],
+       q:'Lequel des deux métaux donnera ses électrons à l\'autre couple ?',
+       opts:[
+         {t:'Le zinc : son couple est le plus bas, son oxydant retient le moins', ok:true},
+         {t:'Le cuivre : 0,34 est positif', why:'Positif ou négatif ne dit rien tout seul : c\'est la <b>comparaison</b> qui compte. 0,34 est au-dessus de −0,76, donc Cu²⁺ tire plus fort que Zn²⁺.'},
+         {t:'Aucun : ce sont deux métaux', why:'Les deux peuvent donner. Celui qui donne est celui dont le couple tire le moins : le plus bas.'},
+         {t:'Il faut la loi de Nernst pour le savoir', why:'À 1 mol·L⁻¹, E° suffit. La loi de Nernst servira hors de ces conditions, à l\'étape 12.'}],
+       ok:'Le couple le plus haut a l\'oxydant le plus fort : Cu²⁺ prend les électrons. Le couple le plus bas fournit le réducteur : Zn les donne. <b>L\'anode est le couple du bas, la cathode celui du haut</b> — c\'est ainsi qu\'on lit un schéma quand l\'énoncé donne les E°.',
+       note:'Le couple au E° le plus haut est la cathode, le plus bas l\'anode : le classement des E° dit qui donne à qui.'},
+
+      {t:'La fem, une différence',
+       setup:'<p>Le voltmètre entre les deux électrodes affiche 1,10 V.</p>',
+       uses:['fem:1'],
+       q:'D\'où vient ce nombre ?',
+       opts:[
+         {t:'0,34 − (−0,76) : l\'écart entre les deux couples', ok:true},
+         {t:'0,34 + 0,76 : la somme des deux', why:'Numériquement c\'est pareil ici, mais ce n\'est pas une somme : c\'est une différence, cathode moins anode. Sur deux potentiels positifs, la somme serait fausse.'},
+         {t:'0,34 : le potentiel de la cathode', why:'Un voltmètre mesure un écart entre ses deux bornes, jamais un seul point.'},
+         {t:'−0,76 : le potentiel de l\'anode', why:'Même raison — et une fem négative n\'existe pas.'}],
+       ok:'<b>fem = E<sub>cathode</sub> − E<sub>anode</sub>.</b> Un voltmètre ne sait mesurer qu\'une différence entre ses deux bornes. Soustraire un négatif, c\'est ajouter : 0,34 + 0,76 = 1,10 V — la valeur du schéma de l\'étape 7.',
+       note:'fem = E_cathode − E_anode : le voltmètre mesure l\'écart entre les deux couples.'},
+
+      {t:'Pourquoi elle est positive',
+       setup:'<p>Tu calcules une fem et tu trouves −1,10 V.</p>',
+       uses:['fem:2'],
+       q:'Qu\'est-ce qui s\'est passé ?',
+       opts:[
+         {t:'Le couple du bas a été pris pour la cathode : les rôles sont inversés', ok:true},
+         {t:'Le calcul est juste, la pile est montée à l\'envers', why:'Une pile n\'est jamais « à l\'envers » : la cathode est <b>par définition</b> le couple qui tire le plus. Un signe moins dit que tu l\'as mal nommée.'},
+         {t:'Il suffit d\'enlever le signe', why:'Ça masquerait l\'erreur. Ton schéma porte les mauvais noms ; corrige le schéma, pas le signe.'},
+         {t:'Les concentrations ne sont pas standard', why:'Elles déplacent les potentiels de quelques dixièmes de volt ; elles n\'inversent pas deux couples éloignés de 1,1 V.'}],
+       ok:'<b>La fem est positive par construction</b> : la cathode est le couple le plus haut. Un résultat négatif n\'est pas une erreur de soustraction, c\'est une erreur d\'attribution — reprends le schéma.',
+       note:'Une fem est positive par construction ; négative, c\'est que cathode et anode ont été interverties.'},
+
+      {t:'Loin dans la table, forte fem',
+       setup:'<p>On remplace le zinc par du magnésium, <span class="f">E°(Mg<sup>2+</sup>/Mg) = −2,37 V</span>, face au même cuivre.</p>',
+       uses:['fem:2'],
+       q:'Que devient la fem ?',
+       opts:[
+         {t:'Elle monte à 2,71 V : les deux couples sont plus éloignés', ok:true},
+         {t:'Elle baisse : le magnésium est plus négatif', why:'Plus négatif, donc plus <b>loin</b> du cuivre : l\'écart grandit, et la fem avec lui.'},
+         {t:'Elle ne change pas : c\'est le cuivre qui fixe la tension', why:'La tension est un écart entre deux couples. Changer l\'un des deux la change.'},
+         {t:'On ne peut pas la calculer sans Nernst', why:'À 1 mol·L⁻¹, E° suffit : 0,34 − (−2,37) = 2,71 V.'}],
+       ok:'<b>Plus les deux couples sont éloignés sur l\'échelle, plus la pile a de tension.</b> La fem, c\'est la distance verticale entre les deux couples — lue directement dans la table de l\'étape 11.',
+       note:'La fem est la distance entre les deux couples sur l\'échelle des E° : plus ils sont éloignés, plus elle est grande.'},
+
+      {t:'Et si on force à l\'envers',
+       setup:'<p>On branche un générateur de 3 V contre la pile Daniell, pour imposer le courant dans l\'autre sens.</p>',
+       uses:['pile:3'],
+       q:'Que devient l\'électrode de cuivre ?',
+       opts:[
+         {t:'Elle s\'oxyde : c\'est maintenant l\'anode, reliée au ⊕ du générateur', ok:true},
+         {t:'Elle reste la cathode, mais devient ⊖', why:'La cathode est l\'électrode de réduction. Si le cuivre s\'oxyde, il n\'est plus la cathode — quel que soit son signe.'},
+         {t:'Elle reste la cathode ⊕', why:'Le générateur retire les électrons du cuivre : Cu → Cu²⁺ + 2 e⁻. C\'est une oxydation, donc une anode.'},
+         {t:'Rien : 3 V ne suffisent pas', why:'3 V dépassent 1,10 V : le générateur l\'emporte sur la pile.'}],
+       ok:'Le générateur impose le sens des électrons, donc les signes. <b>Les définitions ne bougent pas</b> : l\'anode reste l\'électrode où l\'on s\'oxyde — mais c\'est désormais le cuivre, relié au ⊕. L\'électrolyse est une pile inversée.',
+       note:'En électrolyse, le générateur impose signes et sens ; anode et cathode gardent leur définition, mais changent d\'électrode.'}
+    ],
+    final: {t:'Lis maintenant le voltmètre à voix haute',
+      html:'<ol>'
+        +'<li>Chaque couple a son <b>E°</b>, qui classe les couples : le plus haut prend le plus fort.</li>'
+        +'<li>Le couple du haut est la <b>cathode</b>, celui du bas l\'<b>anode</b>.</li>'
+        +'<li><b>fem = E<sub>cathode</sub> − E<sub>anode</sub></b> : l\'écart entre les deux, et rien d\'autre.</li>'
+        +'<li>Elle est <b>positive</b> par construction ; négative, tu as interverti les rôles.</li>'
+        +'<li>Plus les couples sont loin l\'un de l\'autre, plus la pile a de tension.</li>'
+        +'<li>Un générateur plus fort <b>inverse tout</b>, sauf les définitions.</li>'
+        +'</ol><p>D\'où vient ce nombre E°, et pourquoi l\'hydrogène vaut zéro : c\'est l\'étape 11.</p>'},
+    fig: function(i){
+      var body='', cap='';
+      var sc=function(o){ return lgEchelle(Object.assign({lo:-1,hi:0.5,step:0.25,h:170},o)); };
+      switch(i){
+        case 0: body=sc({marks:[{v:0.34,lab:'Cu²⁺/Cu · 0,34 V',cls:'acc',big:true},{v:-0.76,lab:'Zn²⁺/Zn · −0,76 V',cls:'mut',big:true}]}); cap='Deux couples, deux hauteurs sur l\'échelle des E°.'; break;
+        case 1: body=sc({marks:[{v:0.34,lab:'Cu²⁺/Cu — l\'oxydant tire le plus fort',cls:'acc',big:true},{v:-0.76,lab:'Zn²⁺/Zn — le réducteur donne',cls:'mut',big:true}],fleches:[[-0.76,0.34]]}); cap='Les électrons montent du couple du bas vers celui du haut.'; break;
+        case 2: body=sc({marks:[{v:0.34,lab:'cathode · 0,34 V',cls:'acc',big:true},{v:-0.76,lab:'anode · −0,76 V',cls:'mut',big:true},{v:-0.21,lab:'fem = 0,34 − (−0,76) = 1,10 V',cls:'el'}]}); cap='La fem est l\'écart entre les deux.'; break;
+        case 3: body=sc({marks:[{v:0.34,lab:'pris pour l\'anode ?',cls:'mark',big:true},{v:-0.76,lab:'pris pour la cathode ?',cls:'mark',big:true},{v:-0.21,lab:'−0,76 − 0,34 = −1,10 V : les rôles sont inversés',cls:'mark'}]}); cap='Un signe moins ne se corrige pas, il se comprend.'; break;
+        case 4: body=lgEchelle({lo:-2.5,hi:0.5,step:0.5,h:190,marks:[{v:0.34,lab:'Cu²⁺/Cu · 0,34 V',cls:'acc',big:true},{v:-0.76,lab:'Zn²⁺/Zn : fem 1,10 V',cls:'mut'},{v:-2.37,lab:'Mg²⁺/Mg : fem 2,71 V',cls:'mut',big:true}],fleches:[[-2.37,0.34]]}); cap='Plus loin sur l\'échelle, plus de tension.'; break;
+        case 5: body=lgPile({gen:true,signes:true,el:true,an:'d',roles:true}); cap='Le générateur retire les électrons du cuivre : il s\'oxyde, il est devenu l\'anode.'; break;
+        default: body=sc({marks:[{v:0.34,lab:'cathode',cls:'acc',big:true},{v:-0.76,lab:'anode',cls:'mut',big:true},{v:-0.21,lab:'fem = 1,10 V',cls:'el'}],fleches:[[-0.76,0.34]]}); cap='Un écart, lu sur l\'échelle.';
+      }
+      return {html:body, cap:cap};
+    }
+  };
+})();
+
+/* ── lecture · le potentiel, une envie d'électrons — étape 11 ─────── */
+(function(){
+  LECTURES['potentiel'] = {
+    titre: 'Le potentiel, une envie d\'électrons',
+    intro: {t:'Ce qu\'on va apprendre à lire',
+      setup:'<p>La table des potentiels donne vingt-cinq nombres. Sept questions pour savoir ce qu\'ils mesurent, pourquoi on ne peut pas les mesurer seuls, ce que vaut le zéro, ce qu\'exige le mot « standard » — et comment lire la table dans les deux sens.</p>',
+      cta:'Première question'},
+    beats: [
+      {t:'Ce que le nombre mesure',
+       setup:'<p>Un oxydant prend des électrons. Certains les prennent avidement, d\'autres à peine. Le potentiel d\'un couple est un nombre qui mesure cette avidité.</p><p>Deux couples : l\'un à <span class="f">E° = 1,36 V</span>, l\'autre à <span class="f">E° = −0,44 V</span>.</p>',
+       uses:['couple:2','fem:1'],
+       q:'Lequel a l\'oxydant le plus fort ?',
+       opts:[
+         {t:'Celui à 1,36 V : plus le potentiel est haut, plus l\'oxydant tire', ok:true},
+         {t:'Celui à −0,44 V : un potentiel négatif est plus réactif', why:'Un potentiel négatif dit un oxydant <b>faible</b> — et, en face, un réducteur fort. Le signe n\'est pas une intensité.'},
+         {t:'On ne peut pas comparer deux couples différents', why:'C\'est précisément à ça que sert une échelle commune : tout comparer à tout.'},
+         {t:'Les deux également : 1,36 et 0,44 sont proches', why:'Le signe compte. −0,44 est à 1,80 V sous 1,36 : ce sont deux extrêmes.'}],
+       ok:'<b>Plus E est haut, plus l\'oxydant du couple prend fort.</b> Et symétriquement, plus E est bas, plus le réducteur du couple donne facilement. Un seul nombre par couple, lu dans les deux sens.',
+       note:'E mesure la force avec laquelle l\'oxydant du couple prend les électrons : plus haut, plus fort ; plus bas, meilleur réducteur.'},
+
+      {t:'Pourquoi on ne peut pas le mesurer seul',
+       setup:'<p>Tu plonges une lame de zinc dans une solution de Zn²⁺ et tu veux mesurer « son » potentiel avec un voltmètre.</p>',
+       uses:['fem:2'],
+       q:'Où brancher la deuxième borne ?',
+       opts:[
+         {t:'Sur une autre électrode : un voltmètre ne mesure qu\'un écart entre deux points', ok:true},
+         {t:'Dans la solution, avec le fil nu', why:'Le fil nu devient lui-même une électrode, d\'un potentiel inconnu. Tu mesures un écart avec quelque chose que tu ne connais pas.'},
+         {t:'Nulle part : une borne suffit', why:'Une borne seule n\'affiche rien. Un voltmètre compare, il ne mesure pas dans l\'absolu.'},
+         {t:'Sur la même lame, plus bas', why:'Deux points du même métal sont au même potentiel : le voltmètre afficherait zéro.'}],
+       ok:'<b>Un potentiel seul ne se mesure pas</b> — comme une altitude sans niveau de la mer. Il faut une seconde électrode, et convenir de la prendre comme zéro.',
+       note:'Un potentiel seul ne se mesure pas : on mesure toujours un écart avec une seconde électrode.'},
+
+      {t:'Le zéro choisi',
+       setup:'<p>La chimie a choisi une électrode de référence, la même pour tout le monde : le couple <span class="f">H<sup>+</sup>/H<sub>2</sub></span> dans les conditions standard, l\'ESH.</p>',
+       uses:['potentiel:2'],
+       q:'Que veut dire <span class="f">E°(H<sup>+</sup>/H<sub>2</sub>) = 0 V</span> ?',
+       opts:[
+         {t:'Que c\'est l\'origine de l\'échelle, par convention — comme le niveau de la mer', ok:true},
+         {t:'Que le proton n\'a aucun pouvoir oxydant', why:'Il en a : il attaque le zinc et le fer. Zéro est une origine, pas une absence.'},
+         {t:'Qu\'on a mesuré zéro', why:'On n\'a rien mesuré : on a <b>décidé</b>. Tout le reste est mesuré par rapport à ce choix.'},
+         {t:'Que H₂ ne réagit avec rien', why:'Il réagit avec les oxydants plus hauts que 0. Zéro ne dit rien sur sa réactivité, seulement sur sa place.'}],
+       ok:'L\'ESH vaut zéro par décision. <b>Chaque E° de la table est la fem d\'une pile entre ce couple et l\'ESH</b> — positive si le couple tire plus fort que H⁺, négative sinon. Un potentiel négatif ne signifie rien d\'autre que « plus réducteur que l\'hydrogène ».',
+       note:'L\'ESH vaut 0 V par convention ; chaque E° est la fem mesurée contre elle, négative sous l\'hydrogène.'},
+
+      {t:'Ce que « standard » exige',
+       setup:'<p>La table donne <span class="f">E° = 0,34 V</span> pour Cu²⁺/Cu. Ta solution est à <span class="f">10<sup>−3</sup> mol·L⁻¹</span> en Cu²⁺.</p>',
+       uses:['potentiel:3'],
+       q:'Ton électrode est-elle à 0,34 V ?',
+       opts:[
+         {t:'Non : E° ne vaut qu\'à 1 mol·L⁻¹ ; ailleurs, le potentiel bouge', ok:true},
+         {t:'Oui : la table donne le potentiel du couple', why:'Elle donne le potentiel <b>standard</b>, à 1 mol·L⁻¹ et 1 bar. À 10⁻³, il faut corriger.'},
+         {t:'Oui, si le pH vaut 0', why:'Le pH ne concerne pas ce couple, qui n\'a pas de H⁺. C\'est la concentration en Cu²⁺ qui n\'est pas standard.'},
+         {t:'Non : il faut refaire la mesure contre l\'ESH', why:'Pas besoin de mesurer — la loi de Nernst, à l\'étape 12, calcule l\'écart.'}],
+       ok:'<b>E° est la valeur à 1 mol·L⁻¹, 1 bar, 25 °C.</b> Dès qu\'une concentration s\'en écarte, le potentiel bouge — et la loi de Nernst dit de combien. La table est le point de départ, pas la réponse.',
+       note:'E° est le potentiel à 1 mol·L⁻¹ et 1 bar : hors de là, le potentiel bouge et Nernst le calcule.'},
+
+      {t:'Lire la table dans les deux sens',
+       setup:'<p>La table est rangée du haut, <span class="f">F<sub>2</sub>/F<sup>−</sup></span> à 2,87 V, vers le bas, <span class="f">Li<sup>+</sup>/Li</span> à −3,05 V.</p>',
+       uses:['potentiel:1'],
+       q:'Où est le meilleur réducteur de la table ?',
+       opts:[
+         {t:'En bas à droite : Li, la forme réduite du couple le plus bas', ok:true},
+         {t:'En haut à gauche : F₂', why:'F₂ est le meilleur <b>oxydant</b>. Le meilleur réducteur est à l\'autre bout, et de l\'autre côté de la barre.'},
+         {t:'En bas à gauche : Li⁺', why:'Li⁺ est l\'oxydant du couple — un oxydant très faible. Le réducteur, c\'est Li, à droite de la barre.'},
+         {t:'En haut à droite : F⁻', why:'F⁻ est la forme réduite du meilleur oxydant : c\'est le réducteur le plus <b>faible</b> de la table.'}],
+       ok:'Deux lectures : en montant, les oxydants de gauche sont de plus en plus forts ; en descendant, les réducteurs de droite le sont. <b>Le lithium, en bas à droite, donne ses électrons plus facilement que tout autre.</b>',
+       note:'La table se lit dans les deux sens : oxydants forts en haut à gauche, réducteurs forts en bas à droite.'},
+
+      {t:'Un état physique change tout',
+       setup:'<p><span class="f">Cu<sup>2+</sup>/Cu</span> et <span class="f">Fe<sup>3+</sup>/Fe<sup>2+</sup></span> sont deux couples de la table. Dans le premier, la forme réduite est un solide ; dans le second, un ion dissous.</p>',
+       q:'Qu\'est-ce que cela changera dans la loi de Nernst, à l\'étape suivante ?',
+       opts:[
+         {t:'Un solide compte pour 1 : il disparaît du logarithme', ok:true},
+         {t:'Rien : la loi ne regarde que les concentrations', why:'Justement — un solide n\'a pas de concentration. Il compte pour 1, et 1 ne change rien dans un rapport.'},
+         {t:'Le couple avec un solide n\'obéit pas à la loi', why:'Il y obéit, avec un terme de moins : le log se réduit à log[Cu²⁺].'},
+         {t:'Le solide compte pour 0 et annule le log', why:'Pour 1, pas pour 0. Diviser par 1 ne change rien ; diviser par 0 serait absurde.'}],
+       ok:'Repère dès maintenant l\'état de chaque espèce : <b>(aq)</b> → sa concentration entre dans le log ; <b>(s), (l), le solvant</b> → 1, hors du log ; <b>(g)</b> → sa pression. C\'est ce qui décide de la forme de la loi de Nernst.',
+       note:'L\'état physique décide de ce qui entre dans le log : les dissous par leur concentration, les solides et l\'eau comptent pour 1.'},
+
+      {t:'Deux dioxygènes',
+       setup:'<p>La table donne <span class="f">O<sub>2</sub>/H<sub>2</sub>O</span> à 1,23 V et <span class="f">O<sub>2</sub>/H<sub>2</sub>O<sub>2</sub></span> à 0,68 V.</p>',
+       uses:['nox:3','couple:5'],
+       q:'Pourquoi deux valeurs pour le même oxydant ?',
+       opts:[
+         {t:'Ce sont deux couples différents : l\'oxygène ne descend pas au même n.o.', ok:true},
+         {t:'C\'est une erreur de la table', why:'La table est juste. Une diapositive du cours, elle, se trompe — mais c\'est une autre histoire, à l\'étape 15.'},
+         {t:'Le premier vaut en milieu acide, le second en milieu basique', why:'Le milieu ne change pas E°. Ce qui change, c\'est le produit : H₂O ou H₂O₂.'},
+         {t:'Le second est une valeur approchée du premier', why:'0,68 et 1,23 ne sont pas approximativement égaux. Ce sont deux réactions distinctes.'}],
+       ok:'Dans O₂/H₂O, l\'oxygène descend de 0 à −II. Dans O₂/H₂O₂, il s\'arrête à −I. <b>Un couple, c\'est un oxydant et un réducteur</b> : le même oxydant avec deux réducteurs différents fait deux couples, et deux potentiels. Lis toujours le couple en entier avant de prendre une valeur.',
+       note:'Un couple est défini par ses deux formes : le même oxydant avec deux réducteurs différents donne deux couples, deux E°.'}
+    ],
+    final: {t:'Lis maintenant la table à voix haute',
+      html:'<ol>'
+        +'<li><b>E</b> mesure la force avec laquelle l\'oxydant d\'un couple prend les électrons.</li>'
+        +'<li>Il ne se mesure jamais seul : <b>toujours un écart</b> avec une seconde électrode.</li>'
+        +'<li>Cette seconde électrode, c\'est l\'<b>ESH, à 0 V par convention</b>. Chaque E° est une fem contre elle.</li>'
+        +'<li><b>Standard</b> = 1 mol·L⁻¹, 1 bar, 25 °C. Ailleurs, Nernst.</li>'
+        +'<li>La table se lit <b>dans les deux sens</b> : oxydants forts en haut, réducteurs forts en bas.</li>'
+        +'<li>Un <b>solide compte pour 1</b> ; un couple se lit en entier, ses deux formes comprises.</li>'
+        +'</ol><p>Vingt-cinq nombres, une seule idée : une échelle d\'avidité pour les électrons, avec un zéro choisi.</p>'},
+    fig: function(i){
+      var body='', cap='';
+      var sc=function(o){ return lgEchelle(Object.assign({lo:-1,hi:1.5,step:0.5,h:180},o)); };
+      switch(i){
+        case 0: body=sc({marks:[{v:1.36,lab:'Cl₂/Cl⁻ · 1,36 V',cls:'ox',big:true},{v:0,lab:'H⁺/H₂ · 0 V',cls:'mut'},{v:-0.44,lab:'Fe²⁺/Fe · −0,44 V',cls:'rd',big:true}]}); cap='Une échelle, un zéro, des couples à leur hauteur.'; break;
+        case 1: body=sc({marks:[{v:1.36,lab:'l\'oxydant Cl₂ tire fort',cls:'ox',big:true},{v:-0.44,lab:'le réducteur Fe donne facilement',cls:'rd',big:true}],fleches:[[-0.44,1.36]]}); cap='Haut : oxydant fort. Bas : réducteur fort.'; break;
+        case 2: body=lgPile({pont:false,q:[258,110],h:190,aria:'Une seule électrode et un voltmètre : où brancher la seconde borne ?'}).replace('Cu²⁺','?').replace('>Cu<','> <'); cap='Une seule électrode : le voltmètre n\'a rien à comparer.'; break;
+        case 3: body=sc({marks:[{v:0,lab:'ESH · 0 V par convention',cls:'acc',big:true},{v:0.34,lab:'Cu²⁺/Cu : fem +0,34 V contre l\'ESH',cls:'ox'},{v:-0.76,lab:'Zn²⁺/Zn : fem −0,76 V contre l\'ESH',cls:'rd'}],fleches:[[0,0.34],[0,-0.76]]}); cap='Chaque E° est un écart avec le zéro choisi.'; break;
+        case 4: body=lgEchelle({lo:0.1,hi:0.4,step:0.05,h:150,marks:[{v:0.34,lab:'E° = 0,34 V, à 1 mol·L⁻¹',cls:'mut'},{v:0.25,lab:'E à 10⁻³ mol·L⁻¹ : plus bas',cls:'acc',big:true}],fleches:[[0.34,0.25]]}); cap='Hors des conditions standard, le potentiel bouge.'; break;
+        case 5: body=lgEchelle({lo:-3.5,hi:3,step:1,h:200,marks:[{v:2.87,lab:'F₂/F⁻ · l\'oxydant le plus fort',cls:'ox',big:true},{v:0,lab:'H⁺/H₂',cls:'mut'},{v:-3.05,lab:'Li⁺/Li · le réducteur le plus fort',cls:'rd',big:true}]}); cap='De haut en bas : les oxydants faiblissent, les réducteurs forcissent.'; break;
+        case 6: body='<div class="lg-eq f" style="font-size:15px"><span class="ox">Cu<sup>2+</sup></span><span class="st"> (aq)</span> / <span class="rd">Cu</span><span class="st"> (s)</span></div><div class="lg-eq f" style="font-size:15px"><span class="ox">Fe<sup>3+</sup></span><span class="st"> (aq)</span> / <span class="rd">Fe<sup>2+</sup></span><span class="st"> (aq)</span></div><p class="lg-cap" style="margin-top:4px">(aq) : sa concentration entre dans le log · (s) : compte pour 1</p>'; cap='L\'état physique de chaque espèce décide de ce qui entre dans le log.'; break;
+        case 7: body=sc({marks:[{v:1.23,lab:'O₂/H₂O : O de 0 à −II',cls:'ox',big:true},{v:0.68,lab:'O₂/H₂O₂ : O de 0 à −I',cls:'ox',big:true}]}); cap='Le même oxydant, deux réducteurs : deux couples.'; break;
+        default: body=sc({marks:[{v:1.36,lab:'oxydants forts',cls:'ox'},{v:0,lab:'ESH, 0 V',cls:'acc',big:true},{v:-0.76,lab:'réducteurs forts',cls:'rd'}]}); cap='Une échelle d\'avidité pour les électrons.';
+      }
+      return {html:body, cap:cap};
+    }
+  };
+})();
+
 /* ── lecture · lire la loi de Nernst — étape 12 ───────────────────── */
 (function(){
   var P=function(part,html){ return '<span class="lg-part" data-part="'+part+'">'+html+'</span>'; };
@@ -5970,6 +6359,7 @@ function lgCompte(rows){
     beats: [
       {t:'Pourquoi E° est dedans',
        setup:'<p>Tu prépares une solution du couple <span class="f"><span class="ox">Fe<sup>3+</sup></span>/<span class="rd">Fe<sup>2+</sup></span></span> où les deux ions sont exactement à <b>1 mol·L⁻¹</b> chacun. Tu regardes la ligne, morceau par morceau.</p>',
+       uses:['potentiel:4'],
        q:'Que vaut le logarithme, et que vaut E ?',
        opts:[
          {t:'Le log vaut 0, donc E = E°', ok:true},
@@ -5981,7 +6371,7 @@ function lgCompte(rows){
 
       {t:'Dans quel sens la correction pousse',
        setup:'<p>Un oxydant est une espèce qui <b>capte</b> les électrons, et le potentiel mesure la force avec laquelle le couple les capte. Maintenant on ajoute de l\'oxydant : <span class="f">[Fe<sup>3+</sup>]</span> passe de 1 à <b>10 mol·L⁻¹</b>, <span class="f">[Fe<sup>2+</sup>]</span> reste à 1.</p>',
-       uses:['nernst:1','couple:2'],
+       uses:['nernst:1','couple:2','potentiel:1'],
        q:'Que fait E ?',
        opts:[
          {t:'Il monte : avec plus d\'oxydant, le couple capte davantage', ok:true},
@@ -6017,6 +6407,7 @@ function lgCompte(rows){
 
       {t:'D\'où viennent les exposants',
        setup:'<p>Dans le log, chaque concentration est élevée à la puissance de son <b>coefficient</b> dans la demi-équation. Pour <span class="f">Cl<sub>2</sub> + 2 e<sup>−</sup> = 2 Cl<sup>−</sup></span>, on écrit <span class="f">[Cl<sub>2</sub>]</span> en haut et <span class="f">[Cl<sup>−</sup>]<sup>2</sup></span> en bas.</p>',
+       uses:['potentiel:6'],
        q:'Pour <span class="f">Cr<sub>2</sub>O<sub>7</sub><sup>2−</sup></span> + <span class="f">14 H<sup>+</sup></span> + <span class="f">6 e<sup>−</sup></span> = <span class="f">2 Cr<sup>3+</sup></span> + <span class="f">7 H<sub>2</sub>O</span>, quel est le dénominateur du log ?',
        opts:[
          {t:'<span class="f">[Cr<sup>3+</sup>]<sup>2</sup></span>', ok:true},
