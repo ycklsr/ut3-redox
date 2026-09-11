@@ -320,3 +320,60 @@ test('chaque demi-équation rendue porte le proton une seule fois', async () => 
   for (const k of Object.keys(attendu)) assert.equal(rendu[k], attendu[k], k);
   await ctx.close();
 });
+
+/* ═══════════════════════════════════════════════════════════════════
+   Un énoncé doit déterminer sa réponse.
+   L'entraîneur 2d tirait deux COUPLES et n'affichait que les deux
+   ESPÈCES. O₂ étant l'oxydant de deux couples de la table, l'un
+   au-dessus de Br₂/Br⁻ et l'autre en dessous, le même énoncé rendu
+   attendait tantôt « oui », tantôt « non ».
+   ═══════════════════════════════════════════════════════════════════ */
+test('deux tirages au même énoncé ont la même réponse attendue', async () => {
+  const { ctx, page } = await open();
+  const collision = await page.evaluate(() => {
+    const vus = new Map();
+    for (let i = 0; i < 200000; i++) {
+      const Q = window.__redox.GEN['2d']();
+      const vu = vus.get(Q.q);
+      if (!vu) { vus.set(Q.q, Q.sol); continue; }
+      if (vu.ok !== Q.sol.ok || Math.abs(vu.d - Q.sol.d) > 1e-9)
+        return { q: Q.q.replace(/<[^>]+>/g, ''), a: vu, b: Q.sol };
+    }
+    return null;
+  });
+  assert.equal(collision, null, JSON.stringify(collision));
+  /* et l'énoncé nomme bien les deux couples, pas seulement les deux espèces */
+  const manque = await page.evaluate(() => {
+    for (let i = 0; i < 400; i++) {
+      const Q = window.__redox.GEN['2d']();
+      const couples = (Q.q.match(/\//g) || []).length;
+      if (couples < 2) return Q.q.replace(/<[^>]+>/g, '');
+    }
+    return null;
+  });
+  assert.equal(manque, null, 'chaque énoncé cite les deux couples');
+  await ctx.close();
+});
+
+/* La réserve de spéciation valait pour des cations métalliques ; elle était
+   servie aux neuf réducteurs du banc, donc à H₂, à Cl⁻, à SO₂ et à NO.     */
+test('la remarque d\'hydroxyde ne vise que les espèces qui en forment', async () => {
+  const { ctx, page } = await open();
+  const vu = await page.evaluate(() => {
+    const especes = {}; let sansReserve = 0;
+    for (let i = 0; i < 60000; i++) {
+      const Q = window.__redox.GEN['2c']();
+      if (Q.corr.indexOf('n\'affirme rien sur les espèces réellement présentes') < 0) sansReserve++;
+      const i2 = Q.corr.indexOf('</span> précipiterait');
+      if (i2 < 0) continue;
+      const avant = Q.corr.slice(0, i2);
+      const sp = avant.slice(avant.lastIndexOf('<span class="f">') + 16);
+      especes[sp] = (especes[sp] || 0) + 1;
+    }
+    return { especes: Object.keys(especes).sort(), sansReserve };
+  });
+  assert.deepEqual(vu.especes, ['Cr<sup>3+</sup>', 'Mn<sup>2+</sup>'],
+    'seuls les deux cations métalliques du banc');
+  assert.equal(vu.sansReserve, 0, 'la réserve générale, elle, est toujours là');
+  await ctx.close();
+});

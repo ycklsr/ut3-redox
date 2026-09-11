@@ -253,3 +253,71 @@ test('le mode choisi pour un geste survit au rechargement', async () => {
   assert.equal(await page.locator('.entr[data-entr-for="2b"] input.eqin').count(), 1, 'le mode équation est retenu');
   await ctx.close();
 });
+
+/* ═══════════════════════════════════════════════════════════════════
+   Conserver les atomes et les charges ne suffit pas : il faut transformer.
+   Le critère exigeait l'oxydant à gauche, le réducteur à droite et n
+   électrons à gauche. L'identité « MnO4- + Mn2+ + 5e- = MnO4- + Mn2+ +
+   5e- » remplit les trois et vaut 0 = 0 : elle était déclarée juste.
+   ═══════════════════════════════════════════════════════════════════ */
+test('une équation qui ne transforme rien est refusée', async () => {
+  const { ctx, page } = await open();
+  await page.evaluate(() => { location.hash = 'e4'; });
+  await page.waitForFunction(() => !document.getElementById('e4').hidden);
+  await page.click('.go[data-entr="2b"]');
+  await page.waitForSelector('.entr[data-entr-for="2b"] .ent-fields');
+  await page.click('.entr[data-entr-for="2b"] .ent-mode[data-mode="eq"]');
+  await page.waitForSelector('.entr[data-entr-for="2b"] input.eqin');
+  const box = '.entr[data-entr-for="2b"]';
+  /* MnO4−/Mn2+ : premier du banc, cinq électrons */
+  const cas = [
+    ['MnO4- + 8H+ + 5e- = Mn2+ + 4H2O', true, 'la demi-équation attendue'],
+    ['MnO4- + Mn2+ + 5e- = MnO4- + Mn2+ + 5e-', false, 'l\'identité : équilibrée, mais 0 = 0'],
+    ['MnO4- + 8H+ + 5e- + MnO4- = Mn2+ + 4H2O + MnO4-', true, 'un spectateur en trop ne change pas le bilan net'],
+    ['MnO4- + 8H+ + 5e- = Mn2+ + 4H2O + 5e- + 5e-', false, 'des électrons rendus à droite'],
+    ['5e- = 5e-', false, 'ni oxydant ni réducteur']
+  ];
+  const fautes = [];
+  for (const [saisie, attendu, quoi] of cas) {
+    await page.evaluate(() => { Math.random = () => 0.5 / window.__redox.EQUIL.length; });
+    await page.click(box + ' .ent-new');
+    await page.waitForFunction(() => {
+      const b = document.querySelector('.entr[data-entr-for="2b"]');
+      return !!(b.__Q && b.__Q.sol && b.__Q.sol.eq && b.querySelector('input.eqin'));
+    });
+    await page.evaluate(([s, v]) => {
+      const i = document.querySelector(s); i.value = v; i.dispatchEvent(new Event('input', { bubbles: true }));
+    }, [box + ' input.eqin', saisie]);
+    await page.click(box + ' .ent-ok');
+    const juste = (await page.getAttribute(box + ' .corr', 'class')).indexOf('bon') >= 0;
+    if (juste !== attendu) fautes.push(quoi + ' · « ' + saisie + ' » · ' + (juste ? 'acceptée' : 'refusée'));
+  }
+  assert.deepEqual(fautes, []);
+  await ctx.close();
+});
+
+test('l\'identité reçoit un diagnostic qui dit ce qui manque', async () => {
+  const { ctx, page } = await open();
+  await page.evaluate(() => { location.hash = 'e4'; });
+  await page.waitForFunction(() => !document.getElementById('e4').hidden);
+  await page.click('.go[data-entr="2b"]');
+  await page.click('.entr[data-entr-for="2b"] .ent-mode[data-mode="eq"]');
+  await page.waitForSelector('.entr[data-entr-for="2b"] input.eqin');
+  const box = '.entr[data-entr-for="2b"]';
+  await page.evaluate(() => { Math.random = () => 0.5 / window.__redox.EQUIL.length; });
+  await page.click(box + ' .ent-new');
+  await page.waitForSelector(box + ' input.eqin');
+  await page.fill(box + ' input.eqin', 'MnO4- + Mn2+ + 5e- = MnO4- + Mn2+ + 5e-');
+  await page.click(box + ' .ent-ok');
+  const c = await page.textContent(box + ' .corr');
+  assert.match(c, /Équilibrée/, 'le bilan reste juste, et le dire est honnête');
+  assert.match(c, /ne transforme rien/, 'mais l\'équation ne transforme rien');
+  /* et le message « hors sujet » reste réservé aux équations qui, elles,
+     transforment quelque chose */
+  await page.fill(box + ' input.eqin', 'Cu2+ + Zn = Cu + Zn2+');
+  await page.click(box + ' .ent-ok');
+  const c2 = await page.textContent(box + ' .corr');
+  assert.match(c2, /pas celle du couple demandé/);
+  assert.doesNotMatch(c2, /ne transforme rien/);
+  await ctx.close();
+});

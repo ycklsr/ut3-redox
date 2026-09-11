@@ -285,3 +285,21 @@ test('une ancienne validation ne valide pas automatiquement une question au sens
     }
   } finally { await ctx.close(); }
 });
+
+/* Une règle mémorisable doit être vraie hors de l'exemple qui la porte.
+   « Concentrations égales ⇒ le terme s'annule » ne vaut que si les deux
+   espèces ont le même coefficient : pour Cr₂O₇²⁻/Cr³⁺ à 10⁻² des deux
+   côtés, le rapport vaut 1/C et le terme pèse 0,02 V, pas zéro.         */
+test('la règle des concentrations égales pose sa condition sur les coefficients', async () => {
+  const { ctx, page } = await open();
+  const aides = await page.$$eval('.aide', n => n.map(x => x.textContent.replace(/\s+/g, ' ')));
+  const regle = aides.filter(t => /même concentration/.test(t));
+  assert.equal(regle.length, 1, 'la règle est énoncée une fois');
+  assert.doesNotMatch(regle[0], /s'annule toujours/, 'elle ne se dit pas universelle');
+  assert.match(regle[0], /coefficient/, 'elle nomme la condition qui la rend vraie');
+  /* et le moteur, lui, n'a jamais annulé ce terme sans raison */
+  const t = await page.evaluate(() =>
+    window.__redox.nernst(window.__redox.BYKEY['Cr2O7/Cr3+'], 1e-2, 1e-2, 0).t);
+  assert.equal(t, 2, 'le dichromate à concentrations égales garde son terme de concentration');
+  await ctx.close();
+});

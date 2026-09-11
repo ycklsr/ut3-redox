@@ -355,3 +355,164 @@ for (const w of [1280, 900, 430]) {
     await ctx.close();
   });
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   La séquence de touches et le moteur doivent dire le MÊME nombre.
+   L'ancien test comptait les touches : il voyait « 10ˣ », « ▶ » et deux
+   « ctrl », et déclarait la séquence cohérente. Elle ne l'était pas —
+   l'exposant stœchiométrique n'était jamais tapé, et pour Cl₂/Cl⁻ à
+   [Cl⁻] = 10⁻¹ les touches donnaient 1,39 V là où le moteur annonçait
+   1,42 V. On évalue donc l'expression que les touches construisent.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* traduit la séquence en expression : ^ ouvre un exposant, ▶ le referme,
+   ctrl + 10ˣ est le logarithme décimal, ctrl + enter clôt la saisie */
+function evalueTouches(keys) {
+  let e = '', i = 0;
+  while (i < keys.length) {
+    const k = keys[i];
+    if (k === 'ctrl') {
+      const suite = keys[i + 1];
+      if (suite === '10ˣ') { e += 'Math.log10('; i += 2; continue; }
+      if (suite === 'enter') { i += 2; continue; }
+      throw new Error('ctrl suivi de « ' + suite +' »');
+    }
+    if (k === '(−)') e += '-';
+    else if (k === '^') e += '**(';
+    else if (k === '▶') e += ')';
+    else if (k === '×') e += '*';
+    else if (k === '÷') e += '/';
+    else if (k === '−') e += '-';
+    else if (/^[0-9.()+]$/.test(k)) e += k;
+    else throw new Error('touche inconnue : « ' + k + ' »');
+    i++;
+  }
+  return { expr: e, valeur: Function('"use strict";return (' + e + ')')() };
+}
+
+/* remplit un champ s'il est à l'écran ; les champs cachés ne comptent pas
+   dans le calcul (activité 1, ou couple sans protons) */
+const setVisible = (page, sel, v) => page.evaluate(([s, val]) => {
+  const el = document.querySelector(s);
+  if (!el || !el.offsetParent) return false;
+  el.value = String(val); el.dispatchEvent(new Event('input', { bubbles: true })); return true;
+}, [sel, String(v)]);
+
+test('la séquence de touches calcule bien ce que le moteur annonce', async () => {
+  const { ctx, page, errors } = await open('ner');
+  const cles = await page.evaluate(() => window.__redox.COUPLES.map(c => c.key));
+  /* deux jeux de concentrations : des puissances nues, puis des mantisses —
+     c'est la mantisse au dénominateur qui révélait le groupement manquant */
+  const jeux = [
+    { oxm: 1, oxe: -2, rdm: 1, rde: -1, ph: 3 },
+    { oxm: 2, oxe: -1, rdm: 3, rde: -4, ph: 11 }
+  ];
+  const fautes = [];
+  for (const key of cles) {
+    for (const j of jeux) {
+      await pick(page, '#ner-c', key);
+      for (const [k, v] of Object.entries(j)) await setVisible(page, '#ner-' + (k === 'ph' ? 'phn' : k), v);
+      const moteur = await page.evaluate(() => {
+        const v = window.__redox.nerVals();
+        return window.__redox.nernst(v.c, v.ox, v.rd, v.ph).E;
+      });
+      await page.click('.dock .tab[data-tool="ti"]');
+      const keys = await page.$$eval('#ti-out .keys .key', k => k.map(x => x.textContent));
+      await page.click('.dock .tab[data-tool="ner"]');
+      let lu;
+      try { lu = evalueTouches(keys); }
+      catch (err) { fautes.push(key + ' · ' + JSON.stringify(j) + ' · ' + err.message); continue; }
+      if (Math.abs(lu.valeur - moteur) > 1e-9)
+        fautes.push(key + ' · ' + JSON.stringify(j) + ' · les touches donnent ' + lu.valeur
+          + ' quand le moteur annonce ' + moteur + ' · « ' + lu.expr + ' »');
+    }
+  }
+  assert.deepEqual(fautes, []);
+  assert.deepEqual(errors, []);
+  await ctx.close();
+});
+
+test('la séquence du couple saisi à la main suit elle aussi le moteur', async () => {
+  const { ctx, page } = await open('ner');
+  await pick(page, '#ner-c', '*');
+  /* protons du côté du réducteur : la pente devient positive */
+  for (const [sel, v] of [['#ner-e0', 0.203], ['#ner-n', 2], ['#ner-h', 2],
+                          ['#ner-oxp', 2], ['#ner-rdp', 0], ['#ner-oxm', 1],
+                          ['#ner-oxe', -2], ['#ner-phn', 3]])
+    await setVisible(page, sel, v);
+  await pick(page, '#ner-cote', 'rd');
+  const moteur = await page.evaluate(() => {
+    const v = window.__redox.nerVals();
+    return window.__redox.nernst(v.c, v.ox, v.rd, v.ph).E;
+  });
+  assert.ok(Math.abs(moteur - 0.263) < 1e-9, 'le moteur : ' + moteur);
+  await page.click('.dock .tab[data-tool="ti"]');
+  const keys = await page.$$eval('#ti-out .keys .key', k => k.map(x => x.textContent));
+  const lu = evalueTouches(keys);
+  assert.ok(Math.abs(lu.valeur - moteur) < 1e-9, 'les touches donnent ' + lu.valeur + ' · « ' + lu.expr + ' »');
+  await ctx.close();
+});
+
+/* Le panneau TI dépend des champs d'un AUTRE onglet. Il ne se reconstruisait
+   que s'il était déjà à l'écran : on revenait dessus sur le calcul d'avant. */
+test('l\'onglet TI se reconstruit à son ouverture', async () => {
+  const { ctx, page } = await open('ner');
+  await pick(page, '#ner-c', 'MnO4-/Mn2+');
+  await setVisible(page, '#ner-phn', 2);
+  await page.click('.dock .tab[data-tool="ti"]');
+  const avant = await page.textContent('#ti-out .cmp');
+  await page.click('.dock .tab[data-tool="ner"]');
+  await setVisible(page, '#ner-phn', 7);
+  const moteur = await page.evaluate(() => {
+    const v = window.__redox.nerVals();
+    return window.__redox.nernst(v.c, v.ox, v.rd, v.ph).E;
+  });
+  await page.click('.dock .tab[data-tool="ti"]');            /* sans toucher au champ de réponse */
+  const apres = await page.textContent('#ti-out .cmp');
+  assert.notEqual(apres.replace(/\s+/g, ' '), avant.replace(/\s+/g, ' '), 'le panneau a suivi le changement');
+  assert.match(apres, new RegExp(String(moteur.toFixed(3)).replace('.', ',')), 'il annonce ' + moteur);
+  await ctx.close();
+});
+
+/* Le conseil de signe était écrit pour des protons à gauche. Quand ils sont
+   à droite, la pente est positive et « le terme se retranche » renforce la
+   faute qu'il prétend diagnostiquer.                                       */
+test('le conseil sur le signe du pH suit le côté des protons', async () => {
+  const { ctx, page } = await open('ner');
+  await pick(page, '#ner-c', '*');
+  for (const [sel, v] of [['#ner-e0', 0.203], ['#ner-n', 2], ['#ner-h', 2],
+                          ['#ner-oxp', 2], ['#ner-rdp', 0], ['#ner-oxm', 1],
+                          ['#ner-oxe', -2], ['#ner-phn', 3]])
+    await setVisible(page, sel, v);
+  await pick(page, '#ner-cote', 'rd');
+  await page.click('.dock .tab[data-tool="ti"]');
+  await set(page, '#ti-rep', -0.097);                        /* la valeur du signe inversé */
+  const d = await page.textContent('#ti-out .diag');
+  assert.match(d, /signe du terme en pH inversé/, 'la faute est bien nommée');
+  assert.match(d, /s'ajoute/, 'et on lui dit que le terme s\'ajoute');
+  assert.doesNotMatch(d, /se retranche/, 'jamais le conseil inverse');
+  await ctx.close();
+});
+
+/* La séquence affichée sort déjà le pH du log : un ln pressé en la suivant
+   ne gonfle que le terme de concentration. Ce cas n'était pas modélisé.    */
+test('le ln pressé dans la séquence affichée est reconnu', async () => {
+  const { ctx, page } = await open('ner');
+  await pick(page, '#ner-c', 'MnO4-/Mn2+');
+  for (const [sel, v] of [['#ner-oxm', 1], ['#ner-oxe', -3], ['#ner-rdm', 1],
+                          ['#ner-rde', -1], ['#ner-phn', 2]])
+    await setVisible(page, sel, v);
+  const r = await page.evaluate(() => {
+    const v = window.__redox.nerVals();
+    return window.__redox.nernst(v.c, v.ox, v.rd, v.ph);
+  });
+  assert.ok(Math.abs(r.E - 1.294) < 1e-9, 'le calcul de référence : ' + r.E);
+  await page.click('.dock .tab[data-tool="ti"]');
+  /* ln à la place du log décimal, dans l'expression décomposée */
+  await set(page, '#ti-rep', (1.51 + 2.302585 * r.k * r.t + r.a * 2).toFixed(6));
+  assert.match(await page.textContent('#ti-out .diag'), /seul terme de concentration/);
+  /* et le ln du quotient entier, protons dedans, reste reconnu lui aussi */
+  await set(page, '#ti-rep', (1.51 + 2.302585 * (r.k * r.t + r.a * 2)).toFixed(6));
+  assert.match(await page.textContent('#ti-out .diag'), /protons compris/);
+  await ctx.close();
+});

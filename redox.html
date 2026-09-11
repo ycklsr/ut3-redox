@@ -2252,7 +2252,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
         <div class="expr"><span class="f">E = 0,16 + 0,03 × <span class="op">log</span> <span class="fr"><span class="n">10<sup>−2</sup></span><span class="d">10<sup>−2</sup></span></span> − 0,09 × 3</span></div>
         <div class="val">log(1) = <span class="v">0</span> : le terme de concentration <b>disparaît</b></div>
       </div>
-      <div class="aide"><span class="lvl">À repérer dans l'énoncé</span>Quand l'énoncé donne <b>la même concentration</b> aux deux espèces, ce terme s'annule toujours. Il ne reste que <span class="f">E°</span> et le pH.</div>
+      <div class="aide"><span class="lvl">À repérer dans l'énoncé</span>Quand l'énoncé donne <b>la même concentration</b> aux deux espèces, ce terme s'annule <b>si les deux portent le même coefficient</b> — un pour un, comme ici. Sinon il reste : pour <span class="f">Cr<sub>2</sub>O<sub>7</sub><sup>2−</sup>/Cr<sup>3+</sup></span>, deux chromes pour un dichromate, le rapport vaut <span class="f">1 / C</span> et non 1.</div>
     </div>
 
     <div class="link">
@@ -3921,7 +3921,7 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
           <p class="hint2">Le calcul repris est celui de l'onglet <b>Calculateur Nernst</b>, avec ses valeurs actuelles.</p>
           <div class="fld"><span class="k">ta réponse, en volts</span>
             <input type="number" id="ti-rep" step="0.001" placeholder="par exemple −0,11" aria-label="Ta réponse en volts"></div>
-          <p class="hint2">Si l'écart n'est pas nul, l'outil cherche <b>laquelle des six erreurs classiques</b> donne exactement ton nombre.</p>
+          <p class="hint2">Si l'écart n'est pas nul, l'outil cherche <b>laquelle des erreurs classiques</b> donne exactement ton nombre.</p>
         </div>
         <div class="tool-out" id="ti-out"></div>
       </div>
@@ -4164,6 +4164,11 @@ function paintDock(){
   tabs.forEach(function(t){ t.setAttribute('aria-pressed', t.dataset.tool===S.tool?'true':'false'); });
   panes.forEach(function(p){ p.hidden = (p.dataset.pane!==S.tool); });
   panel.hidden = !S.tool;
+  /* L'aide TI est le seul panneau qui dépend des champs d'un AUTRE onglet.
+     nerDraw() ne la reconstruisait que si elle était déjà à l'écran : on
+     revenait donc dessus sur la séquence et le résultat d'avant, jusqu'à la
+     saisie suivante. Elle se reconstruit maintenant à son ouverture.      */
+  if(S.tool==='ti') tiDraw();
 }
 
 /* ── tiroir du plan, sous 1000 px ─────────────────────────────────── */
@@ -4774,6 +4779,29 @@ function sigEspece(sp){
 function aCote(cote, sig){
   return cote.especes.some(function(x){ return sigEspece(x.sp) === sig; });
 }
+/* Une équation peut conserver les atomes et les charges sans rien transformer.
+   « MnO4- + Mn2+ + 5e- = MnO4- + Mn2+ + 5e- » équilibre, montre l'oxydant à
+   gauche, le réducteur à droite et cinq électrons à gauche — et vaut 0 = 0.
+   Être présent du bon côté ne suffit donc pas : on compare les coefficients
+   NETS, une fois les termes communs simplifiés.                            */
+var SIG_ELEC = sigEspece(parseEspece('e-'));
+function bilanNet(r){
+  var net = {};
+  r.G.especes.forEach(function(x){ var k=sigEspece(x.sp); net[k]=(net[k]||0)+x.coef; });
+  r.D.especes.forEach(function(x){ var k=sigEspece(x.sp); net[k]=(net[k]||0)-x.coef; });
+  return net;
+}
+/* tout se simplifie : l'équation se réduit à « 0 = 0 » */
+function rienDeNet(r){
+  var net = bilanNet(r);
+  return Object.keys(net).every(function(k){ return net[k]===0; });
+}
+function transformeBien(r, att){
+  var net = bilanNet(r);
+  return (net[SIG_ELEC]||0) === att.n    /* n électrons consommés, net   */
+      && (net[att.ox]||0) > 0            /* l'oxydant disparaît          */
+      && (net[att.rd]||0) < 0;           /* le réducteur apparaît        */
+}
 function eqRender(r){
   if(r.vide) return '<div class="eqv flou">Écris une équation à gauche : le bilan se fait à mesure.</div>';
   if(r.err) return '<div class="eqv mauvais">Je n\'arrive pas à lire l\'équation'
@@ -4830,23 +4858,43 @@ function numK(x){
   for(var i=0;i<s.length;i++) out+=K(s.charAt(i));
   return out;
 }
-function powK(m,e){
-  var out='';
-  if(Math.abs(m-1)>1e-12) out += numK(m)+K('×');
+/* La séquence doit construire la MÊME expression que le moteur. Deux pièges :
+   — l'exposant stœchiométrique manquait ; pour Cl₂/Cl⁻ à [Cl⁻] = 10⁻¹ les
+     touches donnaient 1,39 V quand le moteur annonçait 1,42 V ;
+   — un facteur devant la puissance de dix doit être parenthésé, sinon le
+     « ÷ » qui précède ne mord que sur lui : « 10^−2 ÷ 2 × 10^−3 » se lit de
+     gauche à droite et vaut 5 × 10⁻⁶, pas 5.
+   Le test « la séquence de touches calcule bien ce que le moteur annonce »
+   évalue l'expression produite ; il ne compte plus les touches.            */
+function powK(m,e,k){
+  var mant = Math.abs(m-1)>1e-12, par = mant || k>1, out='';
+  if(par) out += K('(');
+  if(mant) out += numK(m)+K('×');
   out += K('1')+K('0')+K('^');
   if(e<0) out += K('(−)');
   out += numK(Math.abs(e))+K('▶');
+  if(par) out += K(')');
+  if(k>1) out += K('^')+numK(k)+K('▶');
   return out;
 }
 var ERREURS = [
-  ['la touche ln au lieu de log',
-   "Tu as pris le logarithme <b>népérien</b>. C'est la touche <b>ln</b> ; le décimal est <b>ctrl + 10ˣ</b>. Le rapport entre les deux vaut 2,30 : ton terme logarithmique est 2,30 fois trop grand.",
+  ['la touche ln au lieu de log, protons compris',
+   "Tu as pris le logarithme <b>népérien</b> sur le quotient <b>entier</b>, protons dedans. C'est la touche <b>ln</b> ; le décimal est <b>ctrl + 10ˣ</b>. Le rapport entre les deux vaut 2,30 : ton terme logarithmique est 2,30 fois trop grand.",
    function(c,r,ph){ return c.e0 + 2.302585*(r.k*r.t + r.a*ph); }],
   ['le terme en pH oublié',
    "Tu as calculé le terme de concentration et tu t'es arrêté là. Les <b>H⁺</b> sont <i>dans</i> le log : ils en sortent avec le coefficient de la demi-équation.",
    function(c,r,ph){ return c.e0 + r.k*r.t; }],
   ['le signe du terme en pH inversé',
-   "Le terme en pH se <b>retranche</b>. Il vient de <span class='f'>log[H⁺] = − pH</span> : le signe moins est dans la définition du pH, pas ailleurs.",
+   /* le message dépend du côté des protons, comme la pente en dépend déjà :
+      à droite du couple ils passent au dénominateur et le terme s'AJOUTE.
+      L'ancien texte disait « se retranche » dans les deux cas, et renforçait
+      donc l'erreur exactement dans le cas où il la diagnostiquait.         */
+   function(c){ return c.hCote==='rd'
+     ? "Ici les protons sont du côté du <b>réducteur</b> : ils passent au <b>dénominateur</b> du log, "
+       + "et le terme en pH s'<b>ajoute</b>. Le signe moins de <span class='f'>log[H⁺] = − pH</span> "
+       + "s'annule contre celui du dénominateur — c'est la frontière de pente positive."
+     : "Le terme en pH se <b>retranche</b>. Il vient de <span class='f'>log[H⁺] = − pH</span> : "
+       + "le signe moins est dans la définition du pH, pas ailleurs."; },
    function(c,r,ph){ return c.e0 + r.k*r.t - r.a*ph; }],
   ['oubli de diviser par n',
    /* le seul message qui a besoin du couple : il est donc une fonction de c,
@@ -4860,7 +4908,14 @@ var ERREURS = [
    function(c,r,ph){ return c.e0 + r.k*(-r.t) + r.a*ph; }],
   ['E° oublié',
    "Tu n'as calculé que la <b>correction</b>. Le potentiel standard est le point de départ : la loi de Nernst dit de combien on s'en écarte, pas quelle est la valeur absolue.",
-   function(c,r,ph){ return r.k*r.t + r.a*ph; }]
+   function(c,r,ph){ return r.k*r.t + r.a*ph; }],
+  /* La séquence affichée par cet onglet sort DÉJÀ le terme en pH du log :
+     un ln pressé en la suivant ne gonfle que le terme de concentration. Ce
+     cas-là n'était pas modélisé, et l'outil répondait « aucune des erreurs
+     classiques » à la faute qu'il enseigne lui-même à commettre.          */
+  ['la touche ln au lieu de log, sur le seul terme de concentration',
+   "Tu as suivi la séquence ci-dessus — où le terme en pH est déjà sorti du log — en pressant <b>ln</b> à la place de <b>ctrl + 10ˣ</b>. Seul le terme de concentration est 2,30 fois trop grand ; le terme en pH, lui, est juste.",
+   function(c,r,ph){ return c.e0 + 2.302585*r.k*r.t + r.a*ph; }]
 ];
 function tiDraw(){
   var v=nerVals(), c=v.c, r=nernst(c,v.ox,v.rd,v.ph);
@@ -4868,14 +4923,15 @@ function tiDraw(){
   seq += numK(c.e0);
   if(has){
     seq += K('+')+numK(Math.round(r.k*1e6)/1e6)+K('×')+K('ctrl',1)+K('10ˣ');
-    if(c.oxP) seq += powK(v.oxm,v.oxe);
+    if(c.oxP) seq += powK(v.oxm,v.oxe,c.oxP);
     if(c.oxP && c.rdP) seq += K('÷');
     if(!c.oxP && c.rdP) seq += K('1')+K('÷');
-    if(c.rdP) seq += powK(v.rdm,v.rde);
+    if(c.rdP) seq += powK(v.rdm,v.rde,c.rdP);
     seq += K(')');
   }
   if(c.h) seq += K(r.a<0?'−':'+')+numK(Math.round(Math.abs(r.a)*1e6)/1e6)+K('×')+numK(v.ph);
   seq += K('ctrl',1)+K('enter',1);
+  var fleches = (seq.match(/▶/g)||[]).length;
 
   var rep = tiRep.value==='' ? null : +tiRep.value;
   var bloc='';
@@ -4898,7 +4954,7 @@ function tiDraw(){
       + (trouve
          ? '<b>'+trouve[0]+'</b> — ton nombre est exactement celui que donne cette erreur.<br>'
            + (typeof trouve[1]==='function' ? trouve[1](c) : trouve[1])
-         : 'Ton nombre ne correspond à aucune des six erreurs classiques. Reprends les maillons un par un dans l\'onglet <b>Calculateur Nernst</b> : c\'est là que l\'écart se verra.')
+         : 'Ton nombre ne correspond à aucune des '+ERREURS.length+' erreurs classiques. Reprends les maillons un par un dans l\'onglet <b>Calculateur Nernst</b> : c\'est là que l\'écart se verra.')
       + '</div>';
   }
 
@@ -4906,7 +4962,9 @@ function tiDraw(){
     '<span class="k">TI-Nspire CX CAS II — la séquence pour ce calcul</span>'
     + '<div class="keys" style="margin:8px 0 0">'+seq+'</div>'
     + '<div class="cmp">le CAS répond en fraction exacte &nbsp;→&nbsp; <span class="good">ctrl + enter</span> donne '
-    + '<b>'+fv(r.E)+'</b> &nbsp;·&nbsp; les deux <b>▶</b> sortent des exposants</div>'
+    + '<b>'+fv(r.E)+'</b>'+(fleches ? ' &nbsp;·&nbsp; '+(fleches===1
+        ? 'le <b>▶</b> sort de l\'exposant'
+        : 'les '+fleches+' <b>▶</b> sortent des exposants') : '')+'</div>'
     + bloc;
 }
 tiRep.addEventListener('input',tiDraw);
@@ -4914,6 +4972,12 @@ tiRep.addEventListener('input',tiDraw);
 /* ═══════════════════════════════════════════════════════════════════
    LES ENTRAÎNEURS — un tirage au hasard, une correction nommée
    ═══════════════════════════════════════════════════════════════════ */
+
+/* Les seuls réducteurs du banc qui précipitent vraiment en hydroxyde quand
+   on bascule en milieu basique : deux cations métalliques. La remarque de
+   spéciation était servie aux neuf, donc à H₂, à Cl⁻, à SO₂ et à NO — quatre
+   draws sur cinq portaient une affirmation fausse.                        */
+var RD_HYDROXYDE = ['Mn<sup>2+</sup>','Cr<sup>3+</sup>'];
 
 /* demi-équations d'entraînement : oxydant, réducteur, n, protons, eau, E°
    (E° nul quand le couple n'est pas dans la table du cours) */
@@ -4933,6 +4997,7 @@ var EQUIL = [
 ].map(function(r){ return {ox:r[0],rd:r[1],n:r[2],h:r[3],w:r[4],e0:r[5],key:r[6],
   c: r[7]||1,                            /* coefficient du réducteur — 1, sauf pour le dichromate */
   rdEau: r[1]==='H<sub>2</sub>O',        /* l'eau réduite est le produit lui-même */
+  rdHydroxyde: RD_HYDROXYDE.indexOf(r[1])>=0,
   oxProton: r[0]==='H<sup>+</sup>'};});  /* l'oxydant EST le proton : il est déjà compté */
 
 function demiEq(q){
@@ -5043,9 +5108,10 @@ GEN['2b'] = function(mode){
       sol: {eq: {n:q.n, ox:sigEspece(oxSp), rd:sigEspece(rdSp)}},
       corr: '<div class="eqs"><div class="row"><span class="e f">'+demiEq(q)+'</span>'
         + '<span class="lab">l\'écriture attendue</span></div></div>'
-        + '<p style="margin-top:9px">Toute écriture <b>équilibrée</b> qui fait apparaître '
-        + '<span class="f ox">'+q.ox+'</span> à gauche, <span class="f rd">'+q.rd+'</span> à droite '
-        + 'et <b>'+q.n+' électron'+(q.n>1?'s':'')+'</b> est acceptée — l\'ordre des termes est libre.</p>'
+        + '<p style="margin-top:9px">Toute écriture <b>équilibrée</b> qui <b>consomme</b> '
+        + '<span class="f ox">'+q.ox+'</span>, <b>forme</b> <span class="f rd">'+q.rd+'</span> '
+        + 'et échange <b>'+q.n+' électron'+(q.n>1?'s':'')+'</b> net'+(q.n>1?'s':'')
+        + ' est acceptée — l\'ordre des termes est libre.</p>'
     };
   }
   return {
@@ -5093,8 +5159,10 @@ GEN['2c'] = function(){
       + (cote==='droite'&&reste? ' + '+(reste>1?reste+' ':'')+'H<sub>2</sub>O':'')
       + ' + '+(q.h>1?q.h+' ':'')+'OH<sup>−</sup></span><span class="lab">plus aucun H⁺</span></div></div>'
       + '<p style="margin-top:9px" class="tool-note"><b>Un bilan formel.</b> Passer en milieu basique conserve les atomes et '
-      + 'les charges, mais n\'affirme rien sur les espèces réellement présentes : à ce pH, '
-      + '<span class="f">'+q.rd+'</span> précipiterait le plus souvent en hydroxyde. '
+      + 'les charges, mais n\'affirme rien sur les espèces réellement présentes'
+      + (q.rdHydroxyde
+         ? ' : à ce pH, <span class="f">'+q.rd+'</span> précipiterait le plus souvent en hydroxyde. '
+         : '. ')
       + 'L\'exercice demande l\'équilibrage, pas la spéciation.</p>'
   };
 };
@@ -5105,9 +5173,16 @@ GEN['2d'] = function(){
   while ((a.key===b.key || Math.abs(a.e0-b.e0)<0.15) && i<60);
   var oxDe = Math.random()<0.5 ? a : b, rdDe = (oxDe===a ? b : a);
   var possible = oxDe.e0 > rdDe.e0;
+  /* Nommer les seules espèces ne suffit pas : O₂ est l'oxydant de deux couples
+     de la table, l'un au-dessus de Br₂/Br⁻, l'autre en dessous. « Peut-on faire
+     réagir O₂ avec Br⁻ ? » attendait donc tantôt oui, tantôt non, et deux
+     écarts différents, pour le même énoncé rendu. Le couple fait partie de
+     la question.                                                          */
   return {
-    q: 'Peut-on faire réagir <span class="f ox" style="font-size:1.05em">'+oxDe.ox+'</span>'
-      + ' avec <span class="f rd" style="font-size:1.05em">'+rdDe.rd+'</span> ?',
+    q: 'Peut-on faire réagir <span class="f ox" style="font-size:1.05em">'+oxDe.ox+'</span>, '
+      + 'pris dans le couple <span class="f">'+oxDe.ox+'/'+oxDe.rd+'</span>, avec '
+      + '<span class="f rd" style="font-size:1.05em">'+rdDe.rd+'</span>, '
+      + 'pris dans le couple <span class="f">'+rdDe.ox+'/'+rdDe.rd+'</span> ?',
     champs: [
       {k:'ok', lab:'la réaction se fait ?', type:'sel', opts:[['oui','oui'],['non','non']]},
       {k:'d', lab:'écart entre les deux E°', type:'num', unit:'V', tol:0.005}],
@@ -5285,10 +5360,16 @@ function entrCorriger(id, box, force){
     if(c.type==='sel') ok = (el.value === String(att));
     else if(c.type==='eq'){
       var r = verifieEquation(el.value);
-      ok = !r.err && r.ok && r.elecG === att.n && aCote(r.G, att.ox) && aCote(r.D, att.rd);
+      ok = !r.err && r.ok && transformeBien(r, att);
       diag = eqRender(r);
-      if(!r.err && r.ok && !ok) diag += '<div class="eqp">L\'équation est équilibrée, mais ce n\'est pas '
-        + 'celle du couple demandé : vérifie les espèces de chaque côté et le nombre d\'électrons.</div>';
+      if(!r.err && r.ok && !ok) diag += '<div class="eqp">'
+        + (rienDeNet(r)
+           ? 'L\'équation est équilibrée, mais elle ne <b>transforme rien</b> : une fois les termes '
+             + 'communs simplifiés, il ne reste aucun électron échangé. Une demi-équation doit faire '
+             + 'disparaître l\'oxydant et apparaître le réducteur.'
+           : 'L\'équation est équilibrée, mais ce n\'est pas celle du couple demandé : vérifie les '
+             + 'espèces de chaque côté et le nombre d\'électrons.')
+        + '</div>';
     }
     else {
       var num=parseFloat(String(el.value).replace(',','.'));
@@ -7132,6 +7213,7 @@ LG_ORDER.forEach(lgRender);
 window.__redox = {COUPLES:COUPLES, BYKEY:BYKEY, EQUIL:EQUIL, NOX:NOX, DISM:DISM,
                   METAUX:METAUX, GEN:GEN, demiEq:demiEq, nernst:nernst,
                   verifieEquation:verifieEquation, parseEspece:parseEspece, eqNorm:eqNorm, fr:fr, fv:fv, plainF:plainF,
+                  ERREURS:ERREURS, nerVals:nerVals, transformeBien:transformeBien,
                   LECTURES:LECTURES, lgFait:lgFait, lgEtape:lgEtape, sigEspece:sigEspece};
 
 /* ═══ les annales : navigation, corrections repliées, chronomètre ═══ */

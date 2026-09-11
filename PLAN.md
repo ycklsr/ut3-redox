@@ -538,17 +538,17 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 
 ## 10 bis. L'état des tests
 
-**112 tests**, répartis en huit fichiers, tous branchés en `pre-commit` et en CI :
+**122 tests**, répartis en huit fichiers, tous branchés en `pre-commit` et en CI :
 
 | Fichier | Ce qu'il garde |
 |---|---|
 | `squelette.test.mjs` | le fil, le thème, l'impression, la casse chimique, les débordements de 375 à 1280 px, le contraste sur fond accent, l'intégrité des figures, l'absence de CSS mort, l'absence de coulisses dans le texte lu, l'homogénéité des apostrophes |
-| `paillasse.test.mjs` | les cinq outils, les valeurs de contrôle des exercices 12 et 13 et du sujet 2024, **la pente lue sur le chemin SVG du traceur**, le mode « autre couple » avec solide, coefficients et protons côté réducteur, et les exposants parenthésés |
-| `gestes.test.mjs` | les dix entraîneurs, les bilans de charge, d'oxygène et d'hydrogène des douze demi-équations recopiés d'une vérification à la main, **l'équation de chaque correction générée passée au vérificateur** — `demiEq`, geste 2b dans ses deux modes, geste 2c sur tous ses couples — et les vingt n.o. |
-| `equilibre.test.mjs` | le moteur d'équilibrage sur 28 équations de référence, l'outil de la paillasse, le mode « équation entière » du geste 2b **sur les douze demi-équations du banc, tirage forcé**, et **le côté des électrons sur six demi-équations, déduit de la chimie** |
+| `paillasse.test.mjs` | les cinq outils, les valeurs de contrôle des exercices 12 et 13 et du sujet 2024, **la pente lue sur le chemin SVG du traceur**, le mode « autre couple » avec solide, coefficients et protons côté réducteur, les exposants parenthésés, **la séquence de touches TI évaluée comme expression et confrontée au moteur sur les 25 couples** plus le couple saisi à la main, **la reconstruction du panneau TI à son ouverture**, et **le diagnostic de signe et les deux modèles de `ln`** |
+| `gestes.test.mjs` | les dix entraîneurs, les bilans de charge, d'oxygène et d'hydrogène des douze demi-équations recopiés d'une vérification à la main, **l'équation de chaque correction générée passée au vérificateur** — `demiEq`, geste 2b dans ses deux modes, geste 2c sur tous ses couples —, les vingt n.o., **l'unicité de la réponse attendue pour un même énoncé rendu de 2d**, et **le champ d'application de la remarque d'hydroxyde de 2c** |
+| `equilibre.test.mjs` | le moteur d'équilibrage sur 28 équations de référence, l'outil de la paillasse, le mode « équation entière » du geste 2b **sur les douze demi-équations du banc, tirage forcé**, **le côté des électrons sur six demi-équations, déduit de la chimie**, et **le bilan net : une équation équilibrée qui se simplifie en 0 = 0 est refusée, et son diagnostic le dit** |
 | `annales.test.mjs` | les quatre annales, le chronomètre, les valeurs des quatre corrigés officiels, et les trois diagrammes E-pH redessinés — cuivre 2022, manganèse 2024, chrome 2023 — dont les points lettrés se recalculent depuis les seules données des sujets |
 | `controle.test.mjs` | la couverture, les formes déclarées, **la garde de la convention 6**, **la garde qui confronte les nombres cités au couple nommé**, et la garde de chacune |
-| `pedagogie.test.mjs` | l'ordre exemple → essai → contrôle, les 26 réponses des onze essais recalculées par des oracles indépendants, les indices, la réinitialisation, l'apparence des commandes, et le fait qu'un entraîneur ne livre pas sa propre réponse |
+| `pedagogie.test.mjs` | l'ordre exemple → essai → contrôle, les 26 réponses des onze essais recalculées par des oracles indépendants, les indices, la réinitialisation, l'apparence des commandes, le fait qu'un entraîneur ne livre pas sa propre réponse, et **la condition sur les coefficients dans la règle des concentrations égales** |
 | `lectures.test.mjs` | **la chaîne du raisonnement** — aucun fait utilisé avant d'être établi —, la forme de chaque lecture, la convention 6 sur ses questions, le moteur (diagnostic, abandon au troisième essai, registre, persistance, remise à zéro), l'absence de débordement sur chaque question à 320, 375 et 1280 px, et le registre de la paillasse |
 
 `npm run captures` rend 50 vues clair/sombre pour la relecture à l'œil.
@@ -630,6 +630,55 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 >   désormais chaque droite citée au couple nommé — pente contre 0,06·h/n,
 >   ordonnée à portée de E°. **Quand on renomme l'objet d'une question, on
 >   relit ses quatre retours.**
+> - **Un test qui compte les touches ne vérifie pas le calcul.** Le test de
+>   l'aide TI cherchait « 10ˣ », « ▶ », deux « ctrl » et l'absence de « ln »,
+>   et déclarait la séquence cohérente. Elle ne l'était pas : l'exposant
+>   stœchiométrique n'était jamais tapé, et pour Cl₂/Cl⁻ à 10⁻¹ les touches
+>   donnaient 1,39 V là où le moteur annonçait 1,42 V — cinq couples de la
+>   table concernés, écart au-delà de la tolérance de correction. Un facteur
+>   au dénominateur n'était pas groupé non plus : `10⁻² ÷ 2 × 10⁻³` se lit de
+>   gauche à droite. Le test **traduit maintenant la séquence en expression et
+>   l'évalue**, sur les 25 couples et sur le couple saisi à la main. Devant
+>   deux chemins de code qui doivent dire le même nombre : comparer les
+>   nombres, jamais la forme.
+> - **Un énoncé doit déterminer sa réponse.** L'entraîneur 2d tirait deux
+>   *couples* et n'affichait que les deux *espèces*. O₂ étant l'oxydant de
+>   O₂/H₂O comme de O₂/H₂O₂, « Peut-on faire réagir O₂ avec Br⁻ ? » attendait
+>   tantôt oui, tantôt non, et deux écarts de potentiel différents, pour le
+>   même texte rendu. Le couple fait partie de la question. Une garde cherche
+>   la collision sur 200 000 tirages.
+> - **Équilibrer n'est pas transformer.** Le critère du geste 2b exigeait
+>   l'oxydant à gauche, le réducteur à droite et n électrons à gauche.
+>   `MnO4- + Mn2+ + 5e- = MnO4- + Mn2+ + 5e-` remplit les trois, conserve
+>   atomes et charges, et vaut 0 = 0 : le site la déclarait juste. On compare
+>   désormais les coefficients **nets**, termes communs simplifiés — oxydant
+>   consommé, réducteur formé, n électrons nets. Le message « ce n'est pas le
+>   couple demandé » reste réservé aux équations qui, elles, transforment.
+> - **Une règle dite « toujours » doit être vraie hors de son exemple.** « Mêmes
+>   concentrations ⇒ le terme s'annule » ne vaut que si les deux espèces
+>   portent le même coefficient. Pour Cr₂O₇²⁻/Cr³⁺ à 10⁻² des deux côtés le
+>   rapport vaut 1/C : le terme pèse +0,02 V. Un tirage sur quarante-trois du
+>   geste 4 punit l'élève qui a appliqué la règle apprise deux étapes plus tôt.
+> - **Un retour pédagogique doit suivre la même branche que le calcul.** Le
+>   moteur avait été étendu aux protons côté réducteur — pente positive — mais
+>   le diagnostic disait encore « le terme en pH se retranche », c'est-à-dire
+>   exactement la faute qu'il venait de nommer. Et la faute de `ln` était
+>   modélisée sur le quotient entier, protons dedans, alors que la séquence
+>   affichée sort déjà le pH du log : l'élève qui pressait `ln` en suivant les
+>   touches proposées s'entendait répondre « aucune des erreurs classiques ».
+>   Les deux textes sont maintenant des fonctions du couple, comme les calculs.
+> - **Une réserve juste pour une espèce est fausse pour les autres.** Après
+>   chaque passage en milieu basique, 2c affirmait que le réducteur
+>   « précipiterait le plus souvent en hydroxyde ». Neuf réducteurs au banc,
+>   deux cations métalliques : quatre tirages sur cinq annonçaient un
+>   précipité d'hydroxyde de H₂, de Cl⁻, de SO₂ ou de NO. La réserve générale
+>   reste partout ; la remarque de précipitation est passée sur liste.
+> - **Un panneau qui dépend d'un autre onglet doit se refaire à son ouverture.**
+>   `nerDraw` ne reconstruisait l'aide TI que si elle était déjà à l'écran, et
+>   le clic d'onglet ne faisait que l'afficher : on revenait dessus sur la
+>   séquence et le résultat d'avant. `paintDock` la reconstruit désormais. Les
+>   tests ne l'avaient pas vu parce qu'ils remplissaient le champ de réponse
+>   avant de lire — ce qui déclenchait justement la reconstruction.
 > - **`npm run captures` avant de conclure.** Les tests vérifient la mécanique,
 >   pas l'allure. Trois bugs de ce projet — le γ qui ne se dessinait pas, le
 >   proton compté deux fois, les étiquettes superposées — n'ont été trouvés
