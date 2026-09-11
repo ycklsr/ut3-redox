@@ -195,3 +195,71 @@ test('toute option, juste ou fausse, produit une explication', async () => {
   assert.deepEqual(fautes, []);
   await ctx.close();
 });
+
+/* ── 6 · les nombres d'un point de contrôle appartiennent à son couple ──
+   q12-3 nommait MnO₄⁻/Mn²⁺ dans sa question, donnait sa pente −0,096, puis
+   citait « E = 0,16 − 0,09 · pH » dans trois de ses quatre retours : les
+   valeurs de HSO₄⁻/SO₂, recopiées du maillon voisin. La réponse notée
+   restait juste, l'argument était faux — et aucune garde ne regardait si
+   les nombres cités appartenaient au couple nommé.
+
+   On relève donc, dans chaque question et ses retours, les droites de la
+   forme « E = b ± a · pH », et on les confronte au couple nommé :
+   — la pente doit valoir 0,06 × h / n, au signe près ;
+   — l'ordonnée doit rester à portée de E°, l'écart venant du terme de
+     concentration : |b − E°| ≤ 10 × 0,06/n couvre des concentrations de
+     10⁻⁵ à 10⁵ mol·L⁻¹, bien au-delà de tout énoncé du dossier.            */
+test('les nombres cités dans un point de contrôle sont ceux du couple nommé', async () => {
+  const { ctx, page } = await open();
+  const fautes = await page.evaluate(() => {
+    const R = window.__redox, out = [];
+    const compact = t => R.plainF(t).replace(/\s+/g, '');
+    for (const q of document.querySelectorAll('.q')) {
+      const enonce = (q.querySelector('.qq') || {}).textContent || '';
+      const retours = [...q.querySelectorAll('.opt')].map(o => o.getAttribute('data-fb') || '').join(' ');
+      const tout = (enonce + ' ' + retours).replace(/<[^>]+>/g, ' ');
+      const serre = compact(tout);
+      const nommes = R.COUPLES.filter(c => serre.includes(compact(c.ox) + '/' + compact(c.rd)));
+      if (nommes.length !== 1) continue;          /* zéro ou plusieurs couples : on ne tranche pas */
+      const c = nommes[0];
+      if (!c.h) continue;                          /* sans protons, pas de droite en pH à vérifier */
+      const droites = [...tout.matchAll(/E\s*=\s*(−?[\d]+,[\d]+)\s*([−+])\s*([\d]+,[\d]+)\s*[×·x]\s*pH/g)]
+        .map(m => ({ b: +m[1].replace(',', '.').replace('−', '-'),
+                     a: (m[2] === '−' ? -1 : 1) * +m[3].replace(',', '.') }));
+      const penteAttendue = -0.06 * c.h / c.n, tol = 10 * 0.06 / c.n;
+      for (const d of droites) {
+        if (Math.abs(Math.abs(d.a) - Math.abs(penteAttendue)) > 1e-9)
+          out.push(`${q.id} nomme ${c.key} mais cite la pente ${d.a} ; ce couple donne ${penteAttendue.toFixed(3)}`);
+        if (Math.abs(d.b - c.e0) > tol)
+          out.push(`${q.id} nomme ${c.key} (E° = ${c.e0} V) mais cite l'ordonnée ${d.b} ; le terme de concentration ne peut pas l'écarter de plus de ${tol.toFixed(2)} V`);
+      }
+    }
+    return out;
+  });
+  assert.deepEqual(fautes, []);
+  await ctx.close();
+});
+
+/* la garde de la garde : on glisse une question qui nomme un couple et cite
+   les nombres d'un autre — exactement la faute de q12-3 — elle doit tomber */
+test('cette garde attrape un retour qui cite les nombres d\'un autre couple', async () => {
+  const { ctx, page } = await open();
+  const attrape = await page.evaluate(() => {
+    const R = window.__redox;
+    const compact = t => R.plainF(t).replace(/\s+/g, '');
+    const c = R.BYKEY['MnO4-/Mn2+'];
+    const enonce = 'Pour le couple ' + R.plainF(c.ox) + '/' + R.plainF(c.rd) + ', que devient E ?';
+    const retours = 'Ici E = 0,16 − 0,09 · pH.';                 /* les nombres de HSO4−/SO2 */
+    const tout = enonce + ' ' + retours;
+    const serre = compact(tout);
+    const nommes = R.COUPLES.filter(x => serre.includes(compact(x.ox) + '/' + compact(x.rd)));
+    if (nommes.length !== 1) return 'le couple n\'a pas été reconnu';
+    const droites = [...tout.matchAll(/E\s*=\s*(−?[\d]+,[\d]+)\s*([−+])\s*([\d]+,[\d]+)\s*[×·x]\s*pH/g)];
+    if (!droites.length) return 'la droite n\'a pas été reconnue';
+    const b = +droites[0][1].replace(',', '.'), a = +droites[0][3].replace(',', '.');
+    const penteAttendue = 0.06 * c.h / c.n, tol = 10 * 0.06 / c.n;
+    return (Math.abs(a - penteAttendue) > 1e-9 && Math.abs(b - c.e0) > tol) ? 'attrapée' : 'passée entre les mailles';
+  });
+  assert.equal(attrape, 'attrapée');
+  await ctx.close();
+});

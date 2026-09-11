@@ -2278,10 +2278,10 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
 <div class="q" id="q12-3" data-forme="prediction" hidden>
     <span class="k qk">Point de contrôle</span>
     <p class="qq">Pour le couple MnO₄⁻/Mn²⁺, on garde les concentrations en MnO₄⁻ et Mn²⁺ constantes et on passe de <span class="f">pH = 3</span> à <span class="f">pH = 1</span>. Avec <span class="f">E = b − 0,096 × pH</span>, que devient E ?</p>
-    <button class="opt" data-ok="1" data-fb="La pente est <b>négative</b> : quand le pH baisse, E monte. Ici <span class='f'>E = 0,16 − 0,09 × 1 = 0,07 V</span>, contre −0,11 V à pH 3.">Plus grand — E remonte</button>
-    <button class="opt" data-ok="0" data-fb="C'est le réflexe inverse. Dans <span class='f'>E = 0,16 − 0,09 · pH</span>, le terme en pH est <b>soustrait</b> : moins de pH, moins de soustraction, donc E plus grand.">Plus petit — E descend encore</button>
+    <button class="opt" data-ok="1" data-fb="La pente est <b>négative</b> : quand le pH baisse, E monte. Deux unités de pH en moins, c'est <span class='f'>2 × 0,096 = 0,19 V</span> de plus. Sur la droite de l'exercice 13, <span class='f'>E = 1,486 − 0,096 · pH</span> : <span class='f'>1,20 V</span> à pH 3 et <span class='f'>1,39 V</span> à pH 1.">Plus grand — E remonte</button>
+    <button class="opt" data-ok="0" data-fb="C'est le réflexe inverse. Le terme en pH est <b>soustrait</b> : moins de pH, moins de soustraction, donc E plus grand. Acidifier renforce un oxydant qui consomme des protons.">Plus petit — E descend encore</button>
     <button class="opt" data-ok="0" data-fb="Non : le pH est la seule variable qui reste dans l'expression. S'il change, E change.">Inchangé — les concentrations n'ont pas bougé</button>
-    <button class="opt" data-ok="0" data-fb="Si : le maillon 5 a mis le calcul sous la forme <span class='f'>E = 0,16 − 0,09 · pH</span>. Il suffit d'y remplacer le pH.">On ne peut pas le dire sans refaire le calcul</button>
+    <button class="opt" data-ok="0" data-fb="Si : le maillon 5 a mis le calcul sous la forme <span class='f'>E = b − 0,096 · pH</span>. Il suffit d'y remplacer le pH, sans rien recalculer.">On ne peut pas le dire sans refaire le calcul</button>
     <div class="fb" role="status" aria-live="polite" hidden></div>
   </div></div>
 
@@ -4741,15 +4741,22 @@ function ephDraw(){
     + (hors ? '<p class="tool-note"><b>La droite sort du cadre.</b> Le trait s\'arrête au bord'
          + (a!==0 ? ', à pH '+fr(Math.max(0,Math.min(14,(( a<0?Em:EM )-b)/a)),2) : '')
          + ' ; sa pente est conservée, et le tableau ci-dessus donne les vraies valeurs à pH 0, 7 et 14.</p>' : '');
-  S.tools.eph={mode:ephMode,n:ephN.value,h:ephH.value,cote:$('#eph-cote').value,a:ephA.value,b:ephB.value,fer:ephFer.checked,eau:ephEau.checked};
+  /* on enregistre la pente RÉELLEMENT tracée, pas le champ manuel : en mode
+     auto les deux diffèrent, et c'est elle qui amorce la bascule à la main */
+  S.tools.eph={mode:ephMode,n:ephN.value,h:ephH.value,cote:$('#eph-cote').value,
+               a:Math.round(a*1e6)/1e6,b:ephB.value,fer:ephFer.checked,eau:ephEau.checked};
   save();
 }
 function ephSetMode(m){
+  /* la pente se lit AVANT de changer de mode : ephPente() renvoie le champ
+     manuel dès que le mode n'est plus « auto », ce qui rendait la reprise
+     ci-dessous sans effet — la bascule ramenait la valeur par défaut       */
+  var pente = ephPente();
   ephMode=m;
   ephM1.setAttribute('aria-pressed', m==='auto'?'true':'false');
   ephM2.setAttribute('aria-pressed', m==='auto'?'false':'true');
   ephAuto.hidden = (m!=='auto'); ephMan.hidden = (m==='auto');
-  if(m==='man') ephA.value = String(Math.round(ephPente()*1e6)/1e6);
+  if(m==='man') ephA.value = String(Math.round(pente*1e6)/1e6);
   ephDraw();
 }
 ephM1.addEventListener('click',function(){ ephSetMode('auto'); });
@@ -4842,7 +4849,11 @@ var ERREURS = [
    "Le terme en pH se <b>retranche</b>. Il vient de <span class='f'>log[H⁺] = − pH</span> : le signe moins est dans la définition du pH, pas ailleurs.",
    function(c,r,ph){ return c.e0 + r.k*r.t - r.a*ph; }],
   ['oubli de diviser par n',
-   "Tu as utilisé <b>0,06</b> et non <b>0,06 / n</b>. Le <i>n</i> est le nombre d'électrons de la demi-équation — ici "+'',
+   /* le seul message qui a besoin du couple : il est donc une fonction de c,
+      comme la troisième colonne. La phrase finissait sur « — ici » suivi
+      d'une chaîne vide : l'interpolation n'avait jamais été écrite.        */
+   function(c){ return "Tu as utilisé <b>0,06</b> et non <b>0,06 / n</b>. Le <i>n</i> est le nombre "
+     + "d'électrons de la demi-équation — ici <b>"+c.n+"</b>, donc le facteur vaut <b>"+fr(0.06/c.n,4)+"</b>."; },
    function(c,r,ph){ return c.e0 + 0.06*r.t + c.n*r.a*ph; }],
   ['oxydant et réducteur intervertis',
    "Tu as mis le <b>réducteur en haut</b> et l'oxydant en bas. La convention est l'inverse, et elle vient de l'écriture du couple <span class='f'>Ox / Red</span>.",
@@ -4885,7 +4896,8 @@ function tiDraw(){
     }
     bloc = '<div class="diag"><span class="k">Écart de '+fv(rep-r.E)+' V</span>'
       + (trouve
-         ? '<b>'+trouve[0]+'</b> — ton nombre est exactement celui que donne cette erreur.<br>'+trouve[1]
+         ? '<b>'+trouve[0]+'</b> — ton nombre est exactement celui que donne cette erreur.<br>'
+           + (typeof trouve[1]==='function' ? trouve[1](c) : trouve[1])
          : 'Ton nombre ne correspond à aucune des six erreurs classiques. Reprends les maillons un par un dans l\'onglet <b>Calculateur Nernst</b> : c\'est là que l\'écart se verra.')
       + '</div>';
   }
@@ -5057,14 +5069,17 @@ GEN['2c'] = function(){
      consommée par les OH− et le décompte mécanique ne tient plus */
   var q = alea(EQUIL.filter(function(x){ return !x.rdEau; }));
   var reste = Math.abs(q.h - q.w), cote = q.h > q.w ? 'gauche' : 'droite';
+  /* si autant de H⁺ que de H₂O, il ne reste pas d'eau et demander « de quel
+     côté » n'aurait pas de sens : le champ n'est alors pas posé            */
+  var demandeCote = reste > 0;
   return {
     q: 'On part de la demi-équation en milieu acide <span class="f">'+demiEq(q)+'</span>.<br>'
       + 'Fais-la passer en <b>milieu basique</b>.',
     champs: [
       {k:'oh', lab:'OH− ajoutés de chaque côté', type:'num', tol:0},
-      {k:'eau', lab:'H2O restants après simplification', type:'num', tol:0},
-      {k:'cote', lab:'de quel côté ?', type:'sel', opts:[['gauche','à gauche'],['droite','à droite']]}],
-    sol: {oh:q.h, eau:reste, cote: reste===0 ? cote : cote},
+      {k:'eau', lab:'H2O restants après simplification', type:'num', tol:0}].concat(
+      demandeCote ? [{k:'cote', lab:'de quel côté ?', type:'sel', opts:[['gauche','à gauche'],['droite','à droite']]}] : []),
+    sol: demandeCote ? {oh:q.h, eau:reste, cote:cote} : {oh:q.h, eau:reste},
     corr: '<p>On ajoute <b>'+q.h+' OH<sup>−</sup></b> des deux côtés — autant que de <span class="f">H<sup>+</sup></span>. '
       + 'À gauche, les '+q.h+' <span class="f">H<sup>+</sup></span> et les '+q.h+' <span class="f">OH<sup>−</sup></span> '
       + 'se recombinent en <b>'+q.h+' H<sub>2</sub>O</b>.</p>'

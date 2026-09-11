@@ -538,7 +538,7 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 
 ## 10 bis. L'état des tests
 
-**110 tests**, répartis en huit fichiers, tous branchés en `pre-commit` et en CI :
+**112 tests**, répartis en huit fichiers, tous branchés en `pre-commit` et en CI :
 
 | Fichier | Ce qu'il garde |
 |---|---|
@@ -547,7 +547,7 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 | `gestes.test.mjs` | les dix entraîneurs, les bilans de charge, d'oxygène et d'hydrogène des douze demi-équations recopiés d'une vérification à la main, **l'équation de chaque correction générée passée au vérificateur** — `demiEq`, geste 2b dans ses deux modes, geste 2c sur tous ses couples — et les vingt n.o. |
 | `equilibre.test.mjs` | le moteur d'équilibrage sur 28 équations de référence, l'outil de la paillasse, le mode « équation entière » du geste 2b **sur les douze demi-équations du banc, tirage forcé**, et **le côté des électrons sur six demi-équations, déduit de la chimie** |
 | `annales.test.mjs` | les quatre annales, le chronomètre, les valeurs des quatre corrigés officiels, et les trois diagrammes E-pH redessinés — cuivre 2022, manganèse 2024, chrome 2023 — dont les points lettrés se recalculent depuis les seules données des sujets |
-| `controle.test.mjs` | la couverture, les formes déclarées, **la garde de la convention 6**, et la garde de la garde |
+| `controle.test.mjs` | la couverture, les formes déclarées, **la garde de la convention 6**, **la garde qui confronte les nombres cités au couple nommé**, et la garde de chacune |
 | `pedagogie.test.mjs` | l'ordre exemple → essai → contrôle, les 26 réponses des onze essais recalculées par des oracles indépendants, les indices, la réinitialisation, l'apparence des commandes, et le fait qu'un entraîneur ne livre pas sa propre réponse |
 | `lectures.test.mjs` | **la chaîne du raisonnement** — aucun fait utilisé avant d'être établi —, la forme de chaque lecture, la convention 6 sur ses questions, le moteur (diagnostic, abandon au troisième essai, registre, persistance, remise à zéro), l'absence de débordement sur chaque question à 320, 375 et 1280 px, et le registre de la paillasse |
 
@@ -558,7 +558,7 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 ## 11. Pour reprendre
 
 > **L'ordre des travaux est terminé.** Les sept points sont faits, le site
-> couvre tout le dossier, et 110 tests le gardent.
+> couvre tout le dossier, et 112 tests le gardent.
 >
 > S'il faut y revenir, trois choses valent d'être sues avant de toucher au
 > fichier :
@@ -621,6 +621,15 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 >   s'écrivait `10⁻¹²`. Cinq couples de la table étaient concernés ; le
 >   terme des protons, lui, était déjà parenthésé. Toute puissance élevée à
 >   un exposant passe maintenant par `pwExp`, qui met les parenthèses.
+> - **Un point de contrôle peut citer les nombres du couple voisin.** `q12-3`
+>   nommait MnO₄⁻/Mn²⁺ et donnait sa pente −0,096, puis trois de ses quatre
+>   retours citaient « E = 0,16 − 0,09 · pH » : les valeurs de HSO₄⁻/SO₂,
+>   recopiées du maillon juste au-dessus. La réponse notée restait juste,
+>   l'argument était faux. C'est la branche pédagogique qui l'a introduit en
+>   renommant la question sans toucher aux retours. Une garde confronte
+>   désormais chaque droite citée au couple nommé — pente contre 0,06·h/n,
+>   ordonnée à portée de E°. **Quand on renomme l'objet d'une question, on
+>   relit ses quatre retours.**
 > - **`npm run captures` avant de conclure.** Les tests vérifient la mécanique,
 >   pas l'allure. Trois bugs de ce projet — le γ qui ne se dessinait pas, le
 >   proton compté deux fois, les étiquettes superposées — n'ont été trouvés
