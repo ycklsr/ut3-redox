@@ -100,14 +100,41 @@ test('les pistes se déduisent de l\'écart, elles ne s\'inventent pas', async (
   const { ctx, page } = await open();
   const p = await page.evaluate(() => ({
     eau: window.__redox.verifieEquation('MnO4- + 8H+ + 5e- = Mn2+ + 3H2O').pistes.join(' '),
-    elec: window.__redox.verifieEquation('MnO4- + 8H+ = Mn2+ + 4H2O').pistes.join(' '),
     prot: window.__redox.verifieEquation('MnO4- + 5e- = Mn2+ + 4H2O').pistes.join(' '),
     autre: window.__redox.verifieEquation('Cr2O72- + 14H+ + 6e- = Cr3+ + 7H2O').pistes.join(' ')
   }));
   assert.match(p.eau, /1 H<sub>2<\/sub>O<\/b> à droite/);
-  assert.match(p.elec, /5 e<sup>−<\/sup><\/b> à droite/);
   assert.match(p.prot, /8 H<sup>\+<\/sup><\/b> à gauche/);
   assert.match(p.autre, /autres que H et O/);
+  await ctx.close();
+});
+
+/* Le côté des électrons ne se lit pas dans la sortie du code : il se
+   déduit de la chimie. L'électron porte une charge négative, il va donc
+   du côté trop POSITIF — l'inverse d'un atome manquant. Le premier test
+   écrit ici affirmait « 5 e⁻ à droite » pour le permanganate : il avait
+   été recopié sur le bug au lieu d'être pensé.                          */
+const ELEC = [
+  ['Fe3+ = Fe2+',                'gauche', 1, 'une réduction : Fe³⁺ capte l\'électron'],
+  ['MnO4- + 8H+ = Mn2+ + 4H2O',  'gauche', 5, 'une réduction : Mn passe de +VII à +II'],
+  ['Cu2+ = Cu',                  'gauche', 2, 'une réduction : le cuivre se dépose'],
+  ['Zn = Zn2+',                  'droite', 2, 'une oxydation : le zinc cède'],
+  ['2Cl- = Cl2',                 'droite', 2, 'une oxydation : les chlorures cèdent'],
+  ['H2 = 2H+',                   'droite', 2, 'une oxydation : le dihydrogène cède']
+];
+test('les électrons vont du côté trop positif, jamais l\'inverse', async () => {
+  const { ctx, page } = await open();
+  const fautes = await page.evaluate(cas => cas.map(([eq, cote, n, pourquoi]) => {
+    const v = window.__redox.verifieEquation(eq);
+    const p = (v.pistes || []).join(' ');
+    const attendu = new RegExp(n + ' e<sup>−</sup></b> à ' + cote);
+    /* contrôle indépendant : le membre de gauche doit être le plus positif
+       quand les électrons y vont, et l'inverse sinon                      */
+    const sensAttendu = v.qG > v.qD ? 'gauche' : 'droite';
+    if (sensAttendu !== cote) return eq + ' : le cas de référence est mal posé';
+    return attendu.test(p) ? null : eq + ' (' + pourquoi + ') : attendu « ' + n + ' e⁻ à ' + cote + ' », obtenu « ' + p.replace(/<[^>]+>/g, '') + ' »';
+  }).filter(Boolean), ELEC);
+  assert.deepEqual(fautes, []);
   await ctx.close();
 });
 

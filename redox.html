@@ -3838,6 +3838,16 @@ input.eqin{font-family:var(--mono);font-size:14px;letter-spacing:.01em;padding:8
               <input type="number" id="ner-n" step="1" min="1" value="2" aria-label="Nombre d'électrons"></div>
             <div class="fld" style="margin-top:9px"><span class="k">nombre de protons</span>
               <input type="number" id="ner-h" step="1" min="0" value="3" aria-label="Nombre de protons"></div>
+            <div class="fld" style="margin-top:9px"><span class="k">côté des protons</span>
+              <select id="ner-cote" aria-label="Côté des protons">
+                <option value="ox">avec l'oxydant — le cas courant</option>
+                <option value="rd">avec le réducteur — pente positive</option>
+              </select></div>
+            <div class="fld" style="margin-top:9px"><span class="k">coefficient de l'oxydant</span>
+              <input type="number" id="ner-oxp" step="1" min="0" value="1" aria-label="Coefficient de l'oxydant"></div>
+            <div class="fld" style="margin-top:9px"><span class="k">coefficient du réducteur</span>
+              <input type="number" id="ner-rdp" step="1" min="0" value="1" aria-label="Coefficient du réducteur"></div>
+            <p class="hint2">Le coefficient d'une espèce dans la demi-équation devient son <b>exposant</b> dans le log. Mets <b>0</b> pour une espèce qui n'y figure pas : un solide, un liquide pur, le solvant, ou un gaz pris à 1 bar.</p>
           </div>
 
           <div class="fld" id="ner-ox-fld"><span class="k">Concentration de l'oxydant</span>
@@ -4419,8 +4429,10 @@ function pistes(lignes, dq){
   else if(els.length===1 && m.H)
     p.push('Ajuste l\'hydrogène avec <b>'+abs(m.H)+' H<sup>+</sup></b> '+cote(m.H)+'.');
   if(!els.length && dq)
+    /* l'électron porte une charge négative : il va du côté trop positif,
+       donc à l'opposé de ce que donnerait cote(dq) pour un atome        */
     p.push('Les atomes sont bons, seules les charges ne le sont pas : ajoute <b>'+abs(dq)
-           +' e<sup>−</sup></b> '+cote(dq)+'.');
+           +' e<sup>−</sup></b> '+cote(-dq)+'.');
   if(els.length && els.some(function(e){ return e!=='H' && e!=='O'; }))
     p.unshift('Commence par les éléments <b>autres que H et O</b> — ce sont eux qui fixent les coefficients.');
   return p;
@@ -4441,6 +4453,13 @@ function fv(x){
   if(d<0) t += '.00'; else if(t.length-d-1<2) t += '0';
   return (x<0?'−':'') + t.replace('.',',');
 }
+/* Une puissance élevée à un exposant doit être parenthésée : sans cela,
+   [F⁻]² à 10⁻¹ s'écrit « 10⁻¹² » — deux exposants collés, qui se lisent
+   comme un seul. Le terme des protons le faisait déjà.                 */
+function pwExp(m,e,k){
+  var base = pw(m,e);
+  return k>1 ? '('+base+')<sup>'+k+'</sup>' : base;
+}
 function pw(m,e){
   var mm = (Math.abs(m-1)<1e-12) ? '' : fr(m,3)+' × ';
   return mm + '10<sup>' + (e<0?'−':'') + Math.abs(e) + '</sup>';
@@ -4452,7 +4471,12 @@ function nernst(c,ox,rd,ph){
   var k = 0.06/c.n, t = 0;
   if(c.oxP) t += c.oxP*Math.log10(ox);
   if(c.rdP) t -= c.rdP*Math.log10(rd);
-  var b = c.e0 + k*t, a = -0.06*c.h/c.n;
+  var b = c.e0 + k*t;
+  /* Les protons sont presque toujours du côté de l'oxydant : ils passent au
+     numérateur du log, et la pente est négative. S'ils sont du côté du
+     réducteur, ils passent au dénominateur et elle devient positive — c'est
+     la frontière Cu²⁺/Cu₂O du sujet 2022, de coefficient directeur +0,06. */
+  var a = (c.hCote==='rd' ? 1 : -1) * 0.06*c.h/c.n;
   return {k:k, t:t, a:a, b:b, E:b + a*ph};
 }
 
@@ -4534,19 +4558,35 @@ echB.addEventListener('change',function(){ S.tools.echB=echB.value; save(); draw
 /* ═══ outil 2 · le calculateur de Nernst ═══════════════════════════ */
 var nerC=$('#ner-c'), nerCu=$('#ner-custom'), nerOut=$('#ner-out'),
     nerE0=$('#ner-e0'), nerN=$('#ner-n'), nerH=$('#ner-h'),
+    nerCote=$('#ner-cote'), nerOxP=$('#ner-oxp'), nerRdP=$('#ner-rdp'),
     nerOxM=$('#ner-oxm'), nerOxE=$('#ner-oxe'), nerRdM=$('#ner-rdm'), nerRdE=$('#ner-rde'),
     nerPhR=$('#ner-phr'), nerPhN=$('#ner-phn'),
     nerOxF=$('#ner-ox-fld'), nerRdF=$('#ner-rd-fld'), nerPhF=$('#ner-ph-fld');
 fillCouples(nerC);
 (function(){ var o=document.createElement('option'); o.value='*';
-  o.textContent='autre couple — saisir E°, n et les H⁺'; nerC.appendChild(o); })();
+  o.textContent='autre couple — tout saisir à la main'; nerC.appendChild(o); })();
 
 function curCouple(){
-  if(nerC.value==='*') return {
-    key:'*', ox:'Ox', rd:'Red',
-    e0:+nerE0.value||0, n:Math.max(1,+nerN.value||1), h:Math.max(0,+nerH.value||0),
-    oxP:1, rdP:1, half:'<span class="ox">Ox</span> + '+(+nerH.value||0)+' H<sup>+</sup> + '
-      +(+nerN.value||1)+' e<sup>−</sup> = <span class="rd">Red</span> + …', note:''};
+  if(nerC.value==='*'){
+    var n=Math.max(1,+nerN.value||1), h=Math.max(0,+nerH.value||0),
+        oxP=Math.max(0,+nerOxP.value||0), rdP=Math.max(0,+nerRdP.value||0),
+        cote=(nerCote.value==='rd' ? 'rd' : 'ox');
+    /* la demi-équation se reconstruit depuis les champs : coefficients
+       compris, et protons du côté choisi                              */
+    var co=function(k,f){ return (k>1?k+' ':'')+f; };
+    var g='<span class="ox">'+co(oxP||1,'Ox')+'</span>'
+        + (h && cote==='ox' ? ' + '+co(h,'H<sup>+</sup>') : '')
+        + ' + <span class="el">'+co(n,'e<sup>−</sup>')+'</span>';
+    var d='<span class="rd">'+co(rdP||1,'Red')+'</span>'
+        + (h && cote==='rd' ? ' + '+co(h,'H<sup>+</sup>') : '');
+    var notes=[];
+    if(!oxP && !rdP) notes.push("ni l'oxydant ni le réducteur ne figurent dans le log : solides, liquides purs ou gaz à 1 bar");
+    else if(!oxP) notes.push("l'oxydant ne figure pas dans le log : solide, liquide pur ou gaz à 1 bar");
+    else if(!rdP) notes.push('le réducteur ne figure pas dans le log : solide, liquide pur ou gaz à 1 bar');
+    if(cote==='rd') notes.push('les protons sont du côté du réducteur : ils passent au dénominateur et la pente devient positive');
+    return {key:'*', ox:'Ox', rd:'Red', e0:+nerE0.value||0, n:n, h:h,
+            oxP:oxP, rdP:rdP, hCote:cote, half:g+' = '+d, note:notes.join(' · ')};
+  }
   return BYKEY[nerC.value] || COUPLES[3];
 }
 function nerVals(){
@@ -4560,13 +4600,13 @@ function nerVals(){
 function nernstHTML(c,vals){
   var num=[], den=[];
   if(c.oxP) num.push('['+'<span class="ox">'+c.ox+'</span>]'+(c.oxP>1?'<sup>'+c.oxP+'</sup>':''));
-  if(c.h)   num.push('[H<sup>+</sup>]'+(c.h>1?'<sup>'+c.h+'</sup>':''));
+  if(c.h)   (c.hCote==='rd'?den:num).push('[H<sup>+</sup>]'+(c.h>1?'<sup>'+c.h+'</sup>':''));
   if(c.rdP) den.push('['+'<span class="rd">'+c.rd+'</span>]'+(c.rdP>1?'<sup>'+c.rdP+'</sup>':''));
   if(vals){
     num=[]; den=[];
-    if(c.oxP) num.push(pw(vals.oxm,vals.oxe)+(c.oxP>1?'<sup>'+c.oxP+'</sup>':''));
-    if(c.h)   num.push('(10<sup>−'+fr(vals.ph,1)+'</sup>)'+(c.h>1?'<sup>'+c.h+'</sup>':''));
-    if(c.rdP) den.push(pw(vals.rdm,vals.rde)+(c.rdP>1?'<sup>'+c.rdP+'</sup>':''));
+    if(c.oxP) num.push(pwExp(vals.oxm,vals.oxe,c.oxP));
+    if(c.h)   (c.hCote==='rd'?den:num).push('(10<sup>−'+fr(vals.ph,1)+'</sup>)'+(c.h>1?'<sup>'+c.h+'</sup>':''));
+    if(c.rdP) den.push(pwExp(vals.rdm,vals.rde,c.rdP));
   }
   if(!num.length && !den.length) return null;
   return frac(num.length?num.join(' · '):'1', den.length?den.join(' · '):'1');
@@ -4592,8 +4632,9 @@ function nerDraw(){
     link('Casser le log : les concentrations d\'un côté, le pH de l\'autre',
       'E = E° + '+fr(r.k,4)+' · <span class="op">log</span> '
       + (c.oxP||c.rdP ? nernstHTML({ox:c.ox,rd:c.rd,oxP:c.oxP,rdP:c.rdP,h:0},null) : '1')
-      + ' − '+fr(0.06*c.h/c.n,4)+' · pH',
-      fr(r.k,4)+' × '+c.h+' = <b>'+fr(0.06*c.h/c.n,4)+'</b> &nbsp; et &nbsp; log[H⁺] = <b>− pH</b>');
+      + (r.a<0 ? ' − ' : ' + ')+fr(Math.abs(r.a),4)+' · pH',
+      fr(r.k,4)+' × '+c.h+' = <b>'+fr(Math.abs(r.a),4)+'</b> &nbsp; et &nbsp; log[H⁺] = <b>− pH</b>'
+      + (c.hCote==='rd' ? ' &nbsp;·&nbsp; les protons sont <b>au dénominateur</b> : le signe se retourne' : ''));
   }
 
   var ex2 = nernstHTML(c,v);
@@ -4603,20 +4644,21 @@ function nerDraw(){
                       : 'aucun terme de concentration');
 
   if(c.h) link('Et en laissant le pH en lettre : c\'est une droite',
-       'E = '+fr(r.b,4)+' − '+fr(-r.a,4)+' · pH',
+       'E = '+fr(r.b,4)+(r.a<0?' − ':' + ')+fr(Math.abs(r.a),4)+' · pH',
        'forme <b>y = a·x + b</b> &nbsp;·&nbsp; pente <b>'+fr(r.a,4)+'</b> &nbsp;·&nbsp; ordonnée <b>'+fr(r.b,4)+'</b>');
 
   nerOut.innerHTML = ml.join('')
     + '<div class="out-res"><span class="v3">E = '+fv(r.E)+' V</span>'
-    + '<span class="c3">' + (c.h ? 'à pH = '+fr(v.ph,1)+'. Déplace le curseur : seul ce nombre change, la pente reste '+fr(r.a,4)+'.'
+    + '<span class="c3">' + (c.h ? 'à pH = '+fr(v.ph,1)+'. Déplace le curseur : seul ce nombre change, la pente reste '+fr(r.a,4)+(r.a>0?' — elle monte, les protons étant du côté du réducteur':'')+'.'
                                  : 'ce couple ne fait pas intervenir de protons : son potentiel ne dépend pas du pH.')
     + '</span></div>';
   S.tools.ner = {c:nerC.value, e0:nerE0.value, n:nerN.value, h:nerH.value,
+                 cote:nerCote.value, oxp:nerOxP.value, rdp:nerRdP.value,
                  oxm:nerOxM.value, oxe:nerOxE.value, rdm:nerRdM.value, rde:nerRdE.value, ph:nerPhN.value};
   save();
   if(S.tool==='ti') tiDraw();
 }
-[nerC,nerE0,nerN,nerH,nerOxM,nerOxE,nerRdM,nerRdE].forEach(function(el){
+[nerC,nerE0,nerN,nerH,nerCote,nerOxP,nerRdP,nerOxM,nerOxE,nerRdM,nerRdE].forEach(function(el){
   el.addEventListener('input',nerDraw); el.addEventListener('change',nerDraw); });
 nerPhR.addEventListener('input',function(){ nerPhN.value=nerPhR.value; nerDraw(); });
 nerPhN.addEventListener('input',function(){ nerPhR.value=nerPhN.value; nerDraw(); });
@@ -4637,6 +4679,27 @@ function ephDraw(){
   function X(p){ return L+p*(R-L)/14; }
   function Y(e){ return T+(EM-e)*(B-T)/(EM-Em); }
   function clip(e){ return Math.max(Em,Math.min(EM,e)); }
+  /* Découper un segment sur la bande [Em, EM] : on cherche les pH où la
+     droite franchit les bords, et on garde la portion visible — sans
+     jamais déplacer une ordonnée, ce qui changerait la pente.          */
+  function coupe(p1,e1,p2,e2){
+    var dedans = function(e){ return e>=Em-1e-9 && e<=EM+1e-9; };
+    if(dedans(e1) && dedans(e2)) return [p1,e1,p2,e2];
+    var de = e2-e1;
+    if(Math.abs(de) < 1e-12) return null;                 /* horizontale hors cadre */
+    var t = [], add = function(lim){ var x=(lim-e1)/de; if(x>=0 && x<=1) t.push(x); };
+    add(Em); add(EM);
+    if(dedans(e1)) t.push(0);
+    if(dedans(e2)) t.push(1);
+    if(t.length < 2) return null;                         /* entièrement hors cadre */
+    var a=Math.min.apply(null,t), b=Math.max.apply(null,t);
+    if(b-a < 1e-9) return null;
+    return [p1+(p2-p1)*a, e1+de*a, p1+(p2-p1)*b, e1+de*b];
+  }
+  function trait(p1,e1,p2,e2,style){
+    var c = coupe(p1,e1,p2,e2); if(!c) return '';
+    return '<path d="M'+X(c[0]).toFixed(1)+' '+Y(c[1]).toFixed(1)+' L'+X(c[2]).toFixed(1)+' '+Y(c[3]).toFixed(1)+'" style="'+style+'"/>';
+  }
   var g=[];
   for(var p=0;p<=14;p+=2) g.push('<line x1="'+X(p).toFixed(1)+'" y1="'+T+'" x2="'+X(p).toFixed(1)+'" y2="'+B+'" style="stroke:var(--line);stroke-width:.6"/>');
   [-1,-0.5,0,0.5,1,1.5].forEach(function(e){ g.push('<line x1="'+L+'" y1="'+Y(e).toFixed(1)+'" x2="'+R+'" y2="'+Y(e).toFixed(1)+'" style="stroke:var(--line);stroke-width:.6"/>'); });
@@ -4648,8 +4711,7 @@ function ephDraw(){
   if(ephFer.checked){
     var F=[[0,0.77,2,0.77],[2,0.77,2,1.6],[2,0.77,7.45,-0.211],[7.45,-0.211,7.45,-0.5],
            [7.45,-0.211,14,-0.604],[0,-0.5,7.45,-0.5],[7.45,-0.5,14,-0.893]];
-    F.forEach(function(f){ g.push('<path d="M'+X(f[0]).toFixed(1)+' '+Y(clip(f[1])).toFixed(1)
-      +' L'+X(f[2]).toFixed(1)+' '+Y(clip(f[3])).toFixed(1)+'" style="stroke:var(--mut);stroke-width:1.2;fill:none;opacity:.42"/>'); });
+    F.forEach(function(f){ g.push(trait(f[0],f[1],f[2],f[3],'stroke:var(--mut);stroke-width:1.2;fill:none;opacity:.42')); });
     g.push('<text class="mt" x="'+X(11).toFixed(1)+'" y="'+(Y(1.35)).toFixed(1)+'" text-anchor="middle" style="fill:var(--mut);opacity:.7;font-size:11px">diagramme du fer</text>');
   }
   if(ephEau.checked){
@@ -4657,9 +4719,11 @@ function ephDraw(){
     g.push('<path d="M'+X(0).toFixed(1)+' '+Y(1.23).toFixed(1)+' L'+X(14).toFixed(1)+' '+Y(0.39).toFixed(1)+'" style="stroke:var(--rd);stroke-width:1.3;fill:none;stroke-dasharray:5 3"/>');
   }
   var e0v=b, e14=b+14*a;
-  g.push('<path d="M'+X(0).toFixed(1)+' '+Y(clip(e0v)).toFixed(1)+' L'+X(14).toFixed(1)+' '+Y(clip(e14)).toFixed(1)+'" style="stroke:var(--acc);stroke-width:2;fill:none"/>');
-  g.push('<circle cx="'+X(0).toFixed(1)+'" cy="'+Y(clip(e0v)).toFixed(1)+'" r="3.2" style="fill:var(--acc)"/>');
-  g.push('<circle cx="'+X(14).toFixed(1)+'" cy="'+Y(clip(e14)).toFixed(1)+'" r="3.2" style="fill:var(--acc)"/>');
+  g.push(trait(0,e0v,14,e14,'stroke:var(--acc);stroke-width:2;fill:none'));
+  /* les deux points repères ne s'affichent que s'ils sont réellement dans
+     le cadre : un point posé sur le bord mentirait sur sa valeur         */
+  if(e0v>=Em && e0v<=EM) g.push('<circle cx="'+X(0).toFixed(1)+'" cy="'+Y(e0v).toFixed(1)+'" r="3.2" style="fill:var(--acc)"/>');
+  if(e14>=Em && e14<=EM) g.push('<circle cx="'+X(14).toFixed(1)+'" cy="'+Y(e14).toFixed(1)+'" r="3.2" style="fill:var(--acc)"/>');
   g.push('<text class="lbs" x="'+((L+R)/2)+'" y="'+(B+31)+'" text-anchor="middle" style="fill:var(--mut);font-size:12px">pH</text>');
   ephFig.innerHTML='<svg viewBox="0 0 610 288" role="img" aria-label="Tracé de la frontière saisie, sur le plan potentiel-pH.">'+g.join('')+'</svg>';
 
@@ -4674,7 +4738,9 @@ function ephDraw(){
        ? '<p class="tool-note"><b>La pente n\'a pas été calculée</b>, elle a été lue : '+(a>0?'+':'−')+' 0,06 × '+Math.max(0,+ephH.value||0)
          +' ÷ '+Math.max(1,+ephN.value||1)+' = '+fr(a,4)+'. Deux nombres sur la demi-équation, rien d\'autre. '+'Sur le diagramme, une vraie frontière <b>s\'arrête aux bornes de son domaine</b> : ici le trait va d\'un bout à l\'autre pour que tu puisses le lire.</p>'
        : '')
-    + (hors ? '<p class="tool-note"><b>La droite sort du cadre.</b> Les deux points lus restent justes ; c\'est le tracé qui est coupé.</p>' : '');
+    + (hors ? '<p class="tool-note"><b>La droite sort du cadre.</b> Le trait s\'arrête au bord'
+         + (a!==0 ? ', à pH '+fr(Math.max(0,Math.min(14,(( a<0?Em:EM )-b)/a)),2) : '')
+         + ' ; sa pente est conservée, et le tableau ci-dessus donne les vraies valeurs à pH 0, 7 et 14.</p>' : '');
   S.tools.eph={mode:ephMode,n:ephN.value,h:ephH.value,cote:$('#eph-cote').value,a:ephA.value,b:ephB.value,fer:ephFer.checked,eau:ephEau.checked};
   save();
 }
@@ -4768,22 +4834,22 @@ function powK(m,e){
 var ERREURS = [
   ['la touche ln au lieu de log',
    "Tu as pris le logarithme <b>népérien</b>. C'est la touche <b>ln</b> ; le décimal est <b>ctrl + 10ˣ</b>. Le rapport entre les deux vaut 2,30 : ton terme logarithmique est 2,30 fois trop grand.",
-   function(c,r,ph){ return c.e0 + 2.302585*(r.k*r.t - r.k*c.h*ph); }],
+   function(c,r,ph){ return c.e0 + 2.302585*(r.k*r.t + r.a*ph); }],
   ['le terme en pH oublié',
    "Tu as calculé le terme de concentration et tu t'es arrêté là. Les <b>H⁺</b> sont <i>dans</i> le log : ils en sortent avec le coefficient de la demi-équation.",
    function(c,r,ph){ return c.e0 + r.k*r.t; }],
   ['le signe du terme en pH inversé',
    "Le terme en pH se <b>retranche</b>. Il vient de <span class='f'>log[H⁺] = − pH</span> : le signe moins est dans la définition du pH, pas ailleurs.",
-   function(c,r,ph){ return c.e0 + r.k*r.t + r.k*c.h*ph; }],
+   function(c,r,ph){ return c.e0 + r.k*r.t - r.a*ph; }],
   ['oubli de diviser par n',
    "Tu as utilisé <b>0,06</b> et non <b>0,06 / n</b>. Le <i>n</i> est le nombre d'électrons de la demi-équation — ici "+'',
-   function(c,r,ph){ return c.e0 + 0.06*(r.t - c.h*ph); }],
+   function(c,r,ph){ return c.e0 + 0.06*r.t + c.n*r.a*ph; }],
   ['oxydant et réducteur intervertis',
    "Tu as mis le <b>réducteur en haut</b> et l'oxydant en bas. La convention est l'inverse, et elle vient de l'écriture du couple <span class='f'>Ox / Red</span>.",
-   function(c,r,ph){ return c.e0 + r.k*(-r.t) - r.k*c.h*ph; }],
+   function(c,r,ph){ return c.e0 + r.k*(-r.t) + r.a*ph; }],
   ['E° oublié',
    "Tu n'as calculé que la <b>correction</b>. Le potentiel standard est le point de départ : la loi de Nernst dit de combien on s'en écarte, pas quelle est la valeur absolue.",
-   function(c,r,ph){ return r.k*r.t - r.k*c.h*ph; }]
+   function(c,r,ph){ return r.k*r.t + r.a*ph; }]
 ];
 function tiDraw(){
   var v=nerVals(), c=v.c, r=nernst(c,v.ox,v.rd,v.ph);
@@ -4797,7 +4863,7 @@ function tiDraw(){
     if(c.rdP) seq += powK(v.rdm,v.rde);
     seq += K(')');
   }
-  if(c.h) seq += K('−')+numK(Math.round(0.06*c.h/c.n*1e6)/1e6)+K('×')+numK(v.ph);
+  if(c.h) seq += K(r.a<0?'−':'+')+numK(Math.round(Math.abs(r.a)*1e6)/1e6)+K('×')+numK(v.ph);
   seq += K('ctrl',1)+K('enter',1);
 
   var rep = tiRep.value==='' ? null : +tiRep.value;
@@ -5007,9 +5073,14 @@ GEN['2c'] = function(){
       + '<div class="eqs"><div class="row"><span class="e f">'
       + (q.oxProton ? '' : '<span class="ox">'+q.ox+'</span>')
       + (cote==='gauche'&&reste? (q.oxProton?'':' + ')+(reste>1?reste+' ':'')+'H<sub>2</sub>O':'')
-      + ' + <span class="el">'+(q.n>1?q.n+' ':'')+'e<sup>−</sup></span> = <span class="rd">'+q.rd+'</span>'
+      + ' + <span class="el">'+(q.n>1?q.n+' ':'')+'e<sup>−</sup></span> = <span class="rd">'
+      + (q.c>1?q.c+' ':'')+q.rd+'</span>'   /* le coefficient du réducteur : 2 Cr³⁺, pas Cr³⁺ */
       + (cote==='droite'&&reste? ' + '+(reste>1?reste+' ':'')+'H<sub>2</sub>O':'')
       + ' + '+(q.h>1?q.h+' ':'')+'OH<sup>−</sup></span><span class="lab">plus aucun H⁺</span></div></div>'
+      + '<p style="margin-top:9px" class="tool-note"><b>Un bilan formel.</b> Passer en milieu basique conserve les atomes et '
+      + 'les charges, mais n\'affirme rien sur les espèces réellement présentes : à ce pH, '
+      + '<span class="f">'+q.rd+'</span> précipiterait le plus souvent en hydroxyde. '
+      + 'L\'exercice demande l\'équilibrage, pas la spéciation.</p>'
   };
 };
 
@@ -5277,7 +5348,8 @@ function toolsRestore(){
   if(!echB.value) echB.value='Fe3+/Fe2+';
   if(t.ner){ var n=t.ner;
     if(n.c) nerC.value=n.c;
-    ['e0','n','h'].forEach(function(k){ if(n[k]!=null) $('#ner-'+k).value=n[k]; });
+    ['e0','n','h','oxp','rdp'].forEach(function(k){ if(n[k]!=null) $('#ner-'+k).value=n[k]; });
+    if(n.cote) nerCote.value=n.cote;
     ['oxm','oxe','rdm','rde'].forEach(function(k){ if(n[k]!=null) $('#ner-'+k).value=n[k]; });
     if(n.ph!=null){ nerPhN.value=n.ph; nerPhR.value=n.ph; }
   } else { nerC.value='MnO4-/Mn2+'; }

@@ -311,6 +311,21 @@ numéro de diapositive** (73 pages pour 59 diapositives, à cause des animations
 la diapositive 53 y est page 60. Le site renvoie aux **numéros imprimés**, et le
 dit à l'étape 1.
 
+### Ce que couvre le mode « autre couple » du calculateur
+
+Il figeait les exposants à 1, interdisait un coefficient nul et supposait les
+protons du côté de l'oxydant : il ne pouvait donc décrire ni un solide, ni un
+coefficient stœchiométrique, ni une réduction qui **produit** des protons —
+c'est-à-dire pas la frontière `Cu2+/Cu2O` du sujet 2022, pourtant traitée dans
+le site, de coefficient directeur **+0,06**.
+
+Le noyau `nernst()` porte maintenant `hCote` (`'ox'` par défaut, `'rd'` pour
+les protons côté réducteur), qui retourne le signe de la pente. Le mode
+personnalisé expose le côté des protons et les deux coefficients, `0` valant
+« n'entre pas dans le log » — solide, liquide pur, solvant, ou gaz à 1 bar.
+Les vingt-cinq couples de la table gardent exactement leur pente, et un test
+le vérifie couple par couple.
+
 ### Les deux diagrammes des annales, redessinés
 
 Le manganèse (2024) et le chrome (2023) sont tracés dans leurs corrigés, à
@@ -523,14 +538,14 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 
 ## 10 bis. L'état des tests
 
-**105 tests**, répartis en huit fichiers, tous branchés en `pre-commit` et en CI :
+**110 tests**, répartis en huit fichiers, tous branchés en `pre-commit` et en CI :
 
 | Fichier | Ce qu'il garde |
 |---|---|
 | `squelette.test.mjs` | le fil, le thème, l'impression, la casse chimique, les débordements de 375 à 1280 px, le contraste sur fond accent, l'intégrité des figures, l'absence de CSS mort, l'absence de coulisses dans le texte lu, l'homogénéité des apostrophes |
-| `paillasse.test.mjs` | les quatre outils, avec les valeurs de contrôle des exercices 12 et 13 et du sujet 2024 |
-| `gestes.test.mjs` | les dix entraîneurs, les bilans de charge, d'oxygène et d'hydrogène des douze demi-équations recopiés d'une vérification à la main, **chaque demi-équation rendue passée au vérificateur d'équations** (tous les éléments), et les vingt n.o. |
-| `equilibre.test.mjs` | le moteur d'équilibrage sur 28 équations de référence, l'outil de la paillasse, et le mode « équation entière » du geste 2b **sur les douze demi-équations du banc, tirage forcé** |
+| `paillasse.test.mjs` | les cinq outils, les valeurs de contrôle des exercices 12 et 13 et du sujet 2024, **la pente lue sur le chemin SVG du traceur**, le mode « autre couple » avec solide, coefficients et protons côté réducteur, et les exposants parenthésés |
+| `gestes.test.mjs` | les dix entraîneurs, les bilans de charge, d'oxygène et d'hydrogène des douze demi-équations recopiés d'une vérification à la main, **l'équation de chaque correction générée passée au vérificateur** — `demiEq`, geste 2b dans ses deux modes, geste 2c sur tous ses couples — et les vingt n.o. |
+| `equilibre.test.mjs` | le moteur d'équilibrage sur 28 équations de référence, l'outil de la paillasse, le mode « équation entière » du geste 2b **sur les douze demi-équations du banc, tirage forcé**, et **le côté des électrons sur six demi-équations, déduit de la chimie** |
 | `annales.test.mjs` | les quatre annales, le chronomètre, les valeurs des quatre corrigés officiels, et les trois diagrammes E-pH redessinés — cuivre 2022, manganèse 2024, chrome 2023 — dont les points lettrés se recalculent depuis les seules données des sujets |
 | `controle.test.mjs` | la couverture, les formes déclarées, **la garde de la convention 6**, et la garde de la garde |
 | `pedagogie.test.mjs` | l'ordre exemple → essai → contrôle, les 26 réponses des onze essais recalculées par des oracles indépendants, les indices, la réinitialisation, l'apparence des commandes, et le fait qu'un entraîneur ne livre pas sa propre réponse |
@@ -543,7 +558,7 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 ## 11. Pour reprendre
 
 > **L'ordre des travaux est terminé.** Les sept points sont faits, le site
-> couvre tout le dossier, et 105 tests le gardent.
+> couvre tout le dossier, et 110 tests le gardent.
 >
 > S'il faut y revenir, trois choses valent d'être sues avant de toucher au
 > fichier :
@@ -586,6 +601,26 @@ côtés, recombiner en `H2O`. C'est demandé à chaque sujet.
 >   réducteur), demandé dans l'entraîneur, et chaque rendu passe désormais
 >   au vérificateur d'équations. Devant un test intermittent : le forcer,
 >   pas le relancer.
+> - **Un test écrit d'après la sortie du code consacre le bug.** Le test des
+>   pistes de l'outil d'équilibrage affirmait « 5 e⁻ à droite » pour le
+>   permanganate : il avait été recopié sur ce que le code affichait, pas
+>   pensé depuis la chimie. Le code envoyait les électrons du côté du
+>   déficit de charge, comme un atome manquant — alors que l'électron est
+>   négatif et va du côté trop **positif**. Quatre demi-équations sur quatre
+>   étaient inversées, préréglage du permanganate compris. Devant un test
+>   qui vérifie une réponse *chimique* : l'écrire depuis la chimie, avec un
+>   oracle indépendant, jamais depuis l'affichage obtenu.
+> - **Un graphique peut contredire son propre tableau.** Le traceur E-pH
+>   ramenait les ordonnées hors cadre sur le bord, puis reliait les points
+>   déplacés : pour `E = 1,13 − 0,18·pH`, la pente dessinée devenait −0,166
+>   et le trait donnait −0,035 V à pH 7 là où le tableau affichait −0,13 V.
+>   Un vrai découpage remplace l'écrasement — on cherche le pH de sortie et
+>   on coupe là. Le test lit désormais la pente **sur le chemin SVG**, pas
+>   dans le tableau.
+> - **Deux exposants collés se lisent comme un seul.** `[F⁻]²` à 10⁻¹
+>   s'écrivait `10⁻¹²`. Cinq couples de la table étaient concernés ; le
+>   terme des protons, lui, était déjà parenthésé. Toute puissance élevée à
+>   un exposant passe maintenant par `pwExp`, qui met les parenthèses.
 > - **`npm run captures` avant de conclure.** Les tests vérifient la mécanique,
 >   pas l'allure. Trois bugs de ce projet — le γ qui ne se dessinait pas, le
 >   proton compté deux fois, les étiquettes superposées — n'ont été trouvés

@@ -113,6 +113,42 @@ test('chaque demi-équation d\'entraînement conserve charge, oxygène et hydrog
   await ctx.close();
 });
 
+/* ── 2 bis · les corrections générées, passées au vérificateur ───────
+   `demiEq` n'est pas le seul endroit qui écrit une équation : le geste 2c
+   fabrique la sienne pour le milieu basique. Elle a longtemps perdu le 2
+   du dichromate, que la garde ci-dessus ne pouvait pas voir puisqu'elle
+   ne regardait que `demiEq`. On passe donc au vérificateur l'équation de
+   chaque correction générée, sur chacun des couples tirables.          */
+test('les équations des corrections générées sont toutes équilibrées', async () => {
+  const { ctx, page } = await open();
+  const bilan = await page.evaluate(() => {
+    const R = window.__redox, out = [];
+    const extrait = html => { const m = html.match(/<span class="e f">(.*?)<\/span><span class="lab">/s); return m ? m[1].replace(/<[^>]+>/g, '') : null; };
+    const vrai = Math.random;
+    /* 2c · milieu basique : un tirage forcé par couple éligible */
+    const pool = R.EQUIL.filter(x => !x.rdEau);
+    for (let i = 0; i < pool.length; i++) {
+      Math.random = () => (i + 0.5) / pool.length;
+      const eq = extrait(R.GEN['2c']().corr);
+      const v = eq ? R.verifieEquation(eq) : { err: 'aucune équation dans la correction' };
+      if (!eq || !v.ok) out.push('2c · ' + (eq || '—') + ' — ' + (v.err || ('écart de charge ' + v.dq + ', atomes ' + (v.lignes || []).filter(l => l.dif).map(l => l.el).join(' '))));
+    }
+    /* 2b · milieu acide, les deux modes */
+    for (let i = 0; i < R.EQUIL.length; i++) {
+      Math.random = () => (i + 0.5) / R.EQUIL.length;
+      for (const mode of ['coef', 'eq']) {
+        const eq = extrait(R.GEN['2b'](mode).corr);
+        const v = eq ? R.verifieEquation(eq) : { err: 'aucune équation' };
+        if (!eq || !v.ok) out.push('2b/' + mode + ' · ' + (eq || '—') + ' — ' + (v.err || ('écart de charge ' + v.dq)));
+      }
+    }
+    Math.random = vrai;
+    return out;
+  });
+  assert.deepEqual(bilan, []);
+  await ctx.close();
+});
+
 /* ── 3 · les nombres d'oxydation, recalculés élément par élément ──── */
 const NOREF = {
   'ClO4': 7, 'CO3': 4, 'TiCl4': 4, 'MnO4': 7, 'Cr2O7': 6, 'SO4': 6, 'NO3': 5,

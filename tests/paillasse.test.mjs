@@ -126,12 +126,108 @@ test('le traceur lit la pente sur la demi-équation', async () => {
   await ctx.close();
 });
 
+/* Le tableau de valeurs ne dit rien du dessin. Une version de ce traceur
+   ramenait les ordonnées hors cadre sur le bord, puis reliait les points
+   déplacés : la pente dessinée devenait −0,166 pour une droite à −0,18,
+   et le graphique contredisait son propre tableau. On lit donc la pente
+   SUR le chemin SVG, et on vérifie que le trait s'arrête au bon pH.    */
+test('le trait dessiné a la pente saisie, même quand la droite sort du cadre', async () => {
+  const { ctx, page } = await open('eph');
+  await page.click('#eph-m2');
+  const cas = [[-0.18, 1.13, 12.944], [-0.06, 0, 14], [0.06, 0.5, 14], [-0.3, 1.5, 9], [-0.096, 1.486, 14]];
+  const fautes = [];
+  for (const [a, b, phFin] of cas) {
+    await set(page, '#eph-a', a); await set(page, '#eph-b', b);
+    const t = await page.evaluate(() => {
+      const acc = [...document.querySelectorAll('#eph-fig svg path')]
+        .find(p => /var\(--acc\)/.test(p.getAttribute('style') || ''));
+      if (!acc) return null;
+      const m = acc.getAttribute('d').match(/M([\d.]+) ([\d.]+) L([\d.]+) ([\d.]+)/);
+      if (!m) return null;
+      /* le repère du traceur, recopié ici pour ne rien lui emprunter */
+      const L = 52, R = 596, T = 16, B = 250, EM = 1.6, Em = -1.2;
+      const n = m.slice(1).map(Number);
+      const pH = x => (x - L) * 14 / (R - L), E = y => EM - (y - T) * (EM - Em) / (B - T);
+      return { ph1: pH(n[0]), e1: E(n[1]), ph2: pH(n[2]), e2: E(n[3]) };
+    });
+    if (!t) { fautes.push(`a=${a} : aucun trait dessiné`); continue; }
+    const pente = (t.e2 - t.e1) / (t.ph2 - t.ph1);
+    if (Math.abs(pente - a) > 2e-3) fautes.push(`a=${a} : pente dessinée ${pente.toFixed(4)}`);
+    if (Math.abs(t.ph2 - phFin) > 0.05) fautes.push(`a=${a} : le trait s'arrête à pH ${t.ph2.toFixed(2)}, attendu ${phFin}`);
+    /* le trait doit rester dans la bande, sans jamais la dépasser */
+    for (const e of [t.e1, t.e2]) if (e < -1.2 - 1e-6 || e > 1.6 + 1e-6) fautes.push(`a=${a} : un point à ${e.toFixed(3)} V, hors cadre`);
+    /* et il doit coïncider avec l'équation, pas seulement avoir sa pente */
+    const milieu = (t.ph1 + t.ph2) / 2;
+    const attendu = b + a * milieu, dessine = t.e1 + pente * (milieu - t.ph1);
+    if (Math.abs(attendu - dessine) > 5e-3) fautes.push(`a=${a} : à pH ${milieu.toFixed(1)} le trait donne ${dessine.toFixed(3)} au lieu de ${attendu.toFixed(3)}`);
+  }
+  assert.deepEqual(fautes, []);
+  await ctx.close();
+});
+
 test('le traceur retrouve les deux frontières obliques du fer', async () => {
   const { ctx, page } = await open('eph');
   for (const [n, h, b, attendu] of [[1, 1, 0.236, /E = 0,236 − 0,06 · pH/], [2, 2, -0.053, /E = −0,053 − 0,06 · pH/]]) {
     await set(page, '#eph-n', n); await set(page, '#eph-h', h); await set(page, '#eph-b', b);
     assert.match(await page.textContent('#eph-read'), attendu);
   }
+  await ctx.close();
+});
+
+/* Le mode « autre couple » a longtemps figé les exposants à 1, interdit un
+   solide et supposé les protons du côté de l'oxydant. Il ne pouvait donc
+   pas représenter la frontière Cu²⁺/Cu₂O du sujet 2022, pourtant traitée
+   dans le site, dont le coefficient directeur vaut +0,06.               */
+test('le calculateur couvre un solide, des coefficients et des protons côté réducteur', async () => {
+  const { ctx, page } = await open('ner');
+  await page.selectOption('#ner-c', '*');
+  await set(page, '#ner-e0', 0.203); await set(page, '#ner-n', 2); await set(page, '#ner-h', 2);
+  await page.selectOption('#ner-cote', 'rd');
+  await set(page, '#ner-oxp', 2); await set(page, '#ner-rdp', 0);
+  const vu = await page.evaluate(() => ({
+    rdMasque: document.getElementById('ner-rd-fld').hidden,
+    demi: (document.querySelector('#ner-out .e2') || {}).textContent || '',
+    texte: document.getElementById('ner-out').textContent.replace(/\s+/g, ' ')
+  }));
+  assert.equal(vu.rdMasque, true, 'un réducteur de coefficient 0 sort du log, son champ se masque');
+  assert.match(vu.demi, /2 Ox.*2 e−.*=.*Red.*2 H\+/, 'la demi-équation reconstruite porte les coefficients et les protons à droite');
+  assert.match(vu.texte, /\+ 0,06 · pH/, 'la pente est positive');
+  /* le calcul lui-même, recalculé ici sans passer par l'interface */
+  const a = await page.evaluate(() => window.__redox.nernst({ e0: 0.203, n: 2, h: 2, oxP: 2, rdP: 0, hCote: 'rd' }, 1e-2, 1, 0).a);
+  assert.ok(Math.abs(a - 0.06) < 1e-12, 'pente +0,06 : ' + a);
+  /* et les vingt-cinq couples de la table gardent la leur */
+  const fautes = await page.evaluate(() => window.__redox.COUPLES
+    .map(c => ({ key: c.key, a: window.__redox.nernst(c, 1, 1, 0).a, attendu: -0.06 * c.h / c.n }))
+    .filter(x => Math.abs(x.a - x.attendu) > 1e-12)
+    .map(x => x.key + ' : ' + x.a + ' au lieu de ' + x.attendu));
+  assert.deepEqual(fautes, [], 'aucun couple de la table ne change de pente');
+  await ctx.close();
+});
+
+/* Deux exposants collés se lisent comme un seul : [F⁻]² à 10⁻¹ s'écrivait
+   « 10⁻¹² », soit 10⁻¹² au lieu de (10⁻¹)². Cinq couples de la table sont
+   concernés. Le terme des protons était déjà parenthésé ; les deux autres
+   ne l'étaient pas.                                                      */
+test('une concentration élevée à une puissance est parenthésée', async () => {
+  const { ctx, page } = await open('ner');
+  const touches = await page.evaluate(() => window.__redox.COUPLES.filter(c => c.oxP > 1 || c.rdP > 1).map(c => c.key));
+  assert.ok(touches.length >= 5, 'au moins cinq couples ont un exposant supérieur à 1');
+  const fautes = [];
+  for (const k of touches) {
+    await pick(page, '#ner-c', k);
+    await page.evaluate(() => {
+      for (const [id, v] of [['ner-oxm', '1'], ['ner-rdm', '1'], ['ner-oxe', '-1'], ['ner-rde', '-1']]) {
+        const e = document.getElementById(id);
+        if (e && e.offsetParent) { e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); }
+      }
+    });
+    const html = await page.evaluate(() => [...document.querySelectorAll('#ner-out .e2')].map(e => e.innerHTML).join(' '));
+    /* deux <sup> qui se suivent immédiatement : les exposants se télescopent */
+    if (/<\/sup>\s*<sup>/.test(html)) fautes.push(k + ' : deux exposants collés');
+    const txt = await page.evaluate(() => [...document.querySelectorAll('#ner-out .e2')].map(e => e.textContent).join(' '));
+    if (/10−\d\d(?!\))/.test(txt) && !/\(10−\d\)/.test(txt)) fautes.push(k + ' : « ' + txt.match(/10−\d\d/)[0] +' » se lit comme un seul exposant');
+  }
+  assert.deepEqual(fautes, []);
   await ctx.close();
 });
 
